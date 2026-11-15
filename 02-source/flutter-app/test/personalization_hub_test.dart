@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mochi_app/core/models/mochi_models.dart';
-import 'package:mochi_app/design/theme/mochi_presets.dart';
 import 'package:mochi_app/core/services/tutor_prompt.dart';
+import 'package:mochi_app/design/theme/mochi_presets.dart';
 
 void main() {
   group('Personalization Hub Acceptance', () {
@@ -37,22 +37,13 @@ void main() {
     test(
       'MochiPresets returns correct colors for all 6 presets with fallback',
       () {
-        expect(
-          MochiPresets.accentFor('electricViolet'),
-          MochiPresets.electricViolet,
-        );
-        expect(
-          MochiPresets.accentFor('cupertinoBlue'),
-          MochiPresets.cupertinoBlue,
-        );
+        expect(MochiPresets.accentFor('electricViolet'), MochiPresets.violet);
+        expect(MochiPresets.accentFor('cupertinoBlue'), MochiPresets.blue);
         expect(MochiPresets.accentFor('neonEmerald'), MochiPresets.neonEmerald);
         expect(MochiPresets.accentFor('cyberAmber'), MochiPresets.cyberAmber);
         expect(MochiPresets.accentFor('sunsetCoral'), MochiPresets.sunsetCoral);
         expect(MochiPresets.accentFor('oceanCyan'), MochiPresets.oceanCyan);
-        expect(
-          MochiPresets.accentFor('unknown_key'),
-          MochiPresets.electricViolet,
-        );
+        expect(MochiPresets.accentFor('unknown_key'), MochiPresets.violet);
       },
     );
 

@@ -40,7 +40,7 @@ class ProfileModel {
     this.mainGoal = '',
     this.robotName = 'Mochi',
     ColorThemeModel? colorTheme,
-    this.themePreset = 'electricViolet',
+    this.themePreset = 'ocenCyan',
     this.themeMode = 'system',
     this.backgroundPreset = 'lavender',
     this.glassOpacity = 0.85,

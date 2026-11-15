@@ -16,7 +16,7 @@ abstract final class MochiTheme {
     Color? accent,
     MochiVisuals visuals = const MochiVisuals(),
   }) => build(
-    accent: accent ?? MochiPresets.electricViolet,
+    accent: accent ?? MochiPresets.violet,
     brightness: Brightness.light,
     visuals: visuals,
   );
@@ -24,7 +24,7 @@ abstract final class MochiTheme {
     Color? accent,
     MochiVisuals visuals = const MochiVisuals(),
   }) => build(
-    accent: accent ?? MochiPresets.electricViolet,
+    accent: accent ?? MochiPresets.violet,
     brightness: Brightness.dark,
     visuals: visuals,
   );
