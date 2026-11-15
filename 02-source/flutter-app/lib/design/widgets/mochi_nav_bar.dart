@@ -41,6 +41,22 @@ class MochiNavBar extends StatelessWidget {
     this.height = MochiSpacing.navBar,
   });
 
+
+  static double calculateBottomObstruction(
+    BuildContext context, {
+    bool visible = true,
+    double height = MochiSpacing.navBar,
+  }) {
+    final safeBottom = MediaQuery.paddingOf(context).bottom;
+
+    final navBarHeight = height + (MochiSpacing.xs * 2);
+
+    final spacing = MochiSpacing.md;
+
+    return safeBottom +
+        (visible ? navBarHeight + spacing : spacing);
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = MochiPalette.of(context);

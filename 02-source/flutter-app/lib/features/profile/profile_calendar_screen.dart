@@ -43,8 +43,13 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
             ),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                // Zone 2: Profile Card
+                const SizedBox(height: 16),
+                // Zone 1: Profile Card
                 _buildProfileCard(context, store, palette),
+                const SizedBox(height: 16),
+
+                // Zone 2: Achievement Statistics
+                _buildStatsSection(context, store, palette),
                 const SizedBox(height: 16),
 
                 // Zone 3: Sync Error Banner
@@ -54,19 +59,17 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
                 ],
 
                 // Zone 4: Learning Hub Tile
-                _buildLearningHubTile(context, store, palette),
-                const SizedBox(height: 16),
+                // _buildLearningHubTile(context, store, palette),
+                // const SizedBox(height: 16),
+                
 
-                // Zone 5: Achievement Statistics
-                _buildStatsSection(context, store, palette),
-                const SizedBox(height: 16),
-
-                // Zone 6: Monthly Study Calendar
+                // Zone 5: Monthly Study Calendar
                 _buildCalendarCard(context, store, palette),
                 const SizedBox(height: 16),
 
-                // Zone 8: Recent Study Journal
+                // Zone 6: Recent Study Journal
                 _buildSessionHistory(context, store, palette),
+                
               ]),
             ),
           ),
@@ -75,7 +78,7 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
     );
   }
 
-  // Zone 2: Profile Card (layered)
+  // Zone 1: Profile Card (layered)
   Widget _buildProfileCard(
     BuildContext context,
     MochiStore store,
@@ -139,9 +142,8 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              IconButton(
-                                icon: const Icon(Icons.storefront_rounded),
-                                tooltip: 'Cửa hàng phụ kiện Robot',
+                              MochiIconButton(
+                                icon: Icons.storefront_outlined,
                                 onPressed: () {
                                   Navigator.push(
                                     context,
@@ -149,10 +151,11 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
                                       builder: (ctx) => RobotShopScreen(),
                                     ),
                                   );
-                                },
+                                }, tooltip: 'Cửa hàng robot',
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.settings_outlined),
+                              const SizedBox(width: 8),
+                              MochiIconButton(
+                                icon: Icons.settings_outlined,
                                 tooltip: 'Cài đặt',
                                 onPressed: () {
                                   Navigator.push(
@@ -263,41 +266,6 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
                 ),
               ],
             ),
-            const Divider(height: 24),
-            Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              alignment: WrapAlignment.spaceAround,
-              children: [
-                _buildStatPill(
-                  'Chuỗi kỷ lục',
-                  '${store.longestStreak} ngày',
-                  Icons.local_fire_department,
-                  palette.streak,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (ctx) => RobotShopScreen()),
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(10),
-                  child: _buildStatPill(
-                    'Cửa hàng sao',
-                    '${store.stars} sao',
-                    Icons.storefront,
-                    palette.warning,
-                  ),
-                ),
-                _buildStatPill(
-                  'Tổng thời gian',
-                  '${store.totalStudyMinutes} phút',
-                  Icons.timer,
-                  palette.action,
-                ),
-              ],
-            ),
           ],
         ),
       ),
@@ -364,7 +332,6 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
     );
   }
 
-  // Zone 5: Achievement Statistics
   Widget _buildStatsSection(
     BuildContext context,
     MochiStore store,
@@ -374,36 +341,26 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
       padding: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: MochiStatRow(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            MochiStatTile(
-              label: 'Chuỗi kỷ lục',
-              value: '${store.longestStreak}',
-              unit: 'ngày',
-              icon: Icons.local_fire_department,
-              iconTone: MochiChipTone.warning,
+            _buildStatPill(
+              'XP',
+              '${store.xp}',
+              Icons.star_rounded,
+              palette.accent,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (ctx) => RobotShopScreen()),
-                );
-              },
-              child: MochiStatTile(
-                label: 'Cửa hàng sao',
-                value: '${store.stars}',
-                unit: 'sao',
-                icon: Icons.storefront,
-                iconTone: MochiChipTone.warning,
-              ),
+            _buildStatPill(
+              'Chuỗi kỷ lục',
+              '${store.longestStreak} ngày',
+              Icons.local_fire_department,
+              palette.streak,
             ),
-            MochiStatTile(
-              label: 'Tổng thời gian',
-              value: '${store.totalStudyMinutes}',
-              unit: 'phút',
-              icon: Icons.timer,
-              iconTone: MochiChipTone.accent,
+            _buildStatPill(
+              'Tổng thời gian',
+              '${store.totalStudyMinutes} phút',
+              Icons.timer,
+              palette.action,
             ),
           ],
         ),
@@ -411,7 +368,7 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
     );
   }
 
-  // Zone 6: Monthly Study Calendar
+  // Zone 5: Monthly Study Calendar
   Widget _buildCalendarCard(
     BuildContext context,
     MochiStore store,
@@ -631,14 +588,25 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
     );
   }
 
-  // Zone 8: Recent Study Journal
+  // Zone 6: Recent Study Journal
   Widget _buildSessionHistory(
     BuildContext context,
     MochiStore store,
     MochiPalette palette,
   ) {
     if (store.sessions.isEmpty) {
-      return const SizedBox.shrink();
+      return MochiCard(
+        padding: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Center(
+            child: Text(
+              'Chưa có nhật ký học tập nào.',
+              style: TextStyle(color: palette.muted, fontSize: 13),
+            ),
+          ),
+        ),
+      );
     }
 
     return MochiCard(

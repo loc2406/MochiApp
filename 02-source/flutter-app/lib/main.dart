@@ -136,6 +136,8 @@ class _RootGateState extends State<RootGate> {
   bool _importOpening = false;
   bool _isBottomBarVisible = true;
   Timer? _barRestore;
+  bool _hideBarAtScrollEnd = true;
+
   @override
   void initState() {
     super.initState();
@@ -148,6 +150,62 @@ class _RootGateState extends State<RootGate> {
         (_) => _offerNotifications(),
       );
     }
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if (notification.depth != 0 ||
+        notification.metrics.axis != Axis.vertical ||
+        _currentIndex == 2) {
+      return false;
+    }
+
+    final metrics = notification.metrics;
+
+    // Ngưỡng cuối trang thay đổi theo kích thước vùng hiển thị.
+    final endThreshold = (metrics.viewportDimension * 0.035).clamp(24.0, 56.0);
+
+    final canScroll = metrics.maxScrollExtent > 0;
+    final isNearEnd = canScroll && metrics.extentAfter <= endThreshold;
+
+    if (notification is ScrollStartNotification) {
+      _barRestore?.cancel();
+    }
+
+    if (notification is ScrollUpdateNotification) {
+      final dy = notification.scrollDelta ?? 0;
+
+      // Ưu tiên ẩn khi đã đến gần cuối trang.
+      if (_hideBarAtScrollEnd && isNearEnd) {
+        if (_isBottomBarVisible) {
+          setState(() => _isBottomBarVisible = false);
+        }
+      } else if (dy > 4 && _isBottomBarVisible) {
+        // Vuốt xuống.
+        setState(() => _isBottomBarVisible = false);
+      } else if (dy < -4 && !_isBottomBarVisible) {
+        // Vuốt lên.
+        setState(() => _isBottomBarVisible = true);
+      }
+    }
+
+    if (notification is ScrollEndNotification) {
+      _barRestore?.cancel();
+
+      // Không tự hiện lại nếu người dùng vẫn đang ở cuối trang.
+      if (_hideBarAtScrollEnd && isNearEnd) {
+        if (_isBottomBarVisible) {
+          setState(() => _isBottomBarVisible = false);
+        }
+      } else {
+        _barRestore = Timer(const Duration(milliseconds: 900), () {
+          if (mounted && !_isBottomBarVisible) {
+            setState(() => _isBottomBarVisible = true);
+          }
+        });
+      }
+    }
+
+    return false;
   }
 
   Future<void> _offerNotifications() async {
@@ -281,10 +339,13 @@ class _RootGateState extends State<RootGate> {
         // Scaffold acts as a pure full-screen canvas without carving out a dead white strip.
         // FloatingBarInset calculates the exact obstruction for scrollable inner pages.
         final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
-        final safeBottom = MediaQuery.paddingOf(context).bottom;
-        final barObstruction = _isBottomBarVisible
-            ? (MochiSpacing.navBar + 20.0 + safeBottom)
-            : (safeBottom + 12.0);
+
+        final navVisible = _isBottomBarVisible && !keyboardOpen;
+
+        final barObstruction = MochiNavBar.calculateBottomObstruction(
+          context,
+          visible: navVisible,
+        );
 
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -299,37 +360,9 @@ class _RootGateState extends State<RootGate> {
               Positioned.fill(
                 child: FloatingBarInset(
                   bottomObstruction: barObstruction,
-                  isBarVisible: _isBottomBarVisible,
+                  isBarVisible: navVisible,
                   child: NotificationListener<ScrollNotification>(
-                    onNotification: (scrollNotification) {
-                      if (scrollNotification.depth != 0 ||
-                          scrollNotification.metrics.axis != Axis.vertical ||
-                          _currentIndex == 2)
-                        return false;
-                      if (scrollNotification is ScrollStartNotification) {
-                        _barRestore?.cancel();
-                      }
-                      if (scrollNotification is ScrollEndNotification) {
-                        _barRestore?.cancel();
-                        _barRestore = Timer(
-                          const Duration(milliseconds: 900),
-                          () {
-                            if (mounted && !_isBottomBarVisible) {
-                              setState(() => _isBottomBarVisible = true);
-                            }
-                          },
-                        );
-                      }
-                      if (scrollNotification is ScrollUpdateNotification) {
-                        final dy = scrollNotification.scrollDelta ?? 0;
-                        if (dy > 4 && _isBottomBarVisible) {
-                          setState(() => _isBottomBarVisible = false);
-                        } else if (dy < -4 && !_isBottomBarVisible) {
-                          setState(() => _isBottomBarVisible = true);
-                        }
-                      }
-                      return false;
-                    },
+                    onNotification: _handleScrollNotification,
                     child: IndexedStack(index: _currentIndex, children: pages),
                   ),
                 ),
