@@ -1,0 +1,66 @@
+{
+  "research_date": "2026-11-02",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "sources": [
+    {
+      "id": "MOET-GENERAL-2018",
+      "title": "Bộ GDĐT — Chương trình tổng thể CTGDPT 2018",
+      "kind": "official_primary",
+      "url": "https://moet.gov.vn/upload/2007219/20250814/ddba4a78cfcdd6c1f6f6715b19777b51chuong-trinh-tong-the-ctgdpt-2018.pdf",
+      "local_file": "/home/ben/mochi_flutter/docs/research/production-ai-20261102/ctgdpt-tong-the.pdf",
+      "sha256": "118b2a825cf304f2b3c5f937aeb897fd47c3f588cfc67ac500953e7de65aa7bc",
+      "note": "Đã đọc bản trích xuất 52 trang; trang5–6 xác nhận thiết kế mở, quyền chủ động nhà trường. Không coi là bản hợp nhất toàn bộ sửa đổi đến2026."
+    },
+    {
+      "id": "MOET-ASSESSMENT-UPDATE",
+      "title": "Bộ GDĐT — trang công bố văn bản sửa đổi quy định đánh giá (89/2026/TT-BGDĐT)",
+      "kind": "official_primary",
+      "url": "https://moet.gov.vn/van-ban/van-ban-quy-pham-phap-luat/thong-tu-sua-doi-bo-sung-mot-so-dieu-cua-quy-dinh-danh-gia-hoc-sinh-tieu-hoc-ban-hanh-kem-theo-thong-tu-so-27-2020-tt-bg.html",
+      "local_file": "/home/ben/mochi_flutter/docs/research/production-ai-20261102/official-detail-4.txt",
+      "sha256": "c519afe17cc747729b73df778ca133c51816c58399f5cfbb613820c9428286f7",
+      "note": "Đọc metadata trang, tải PDF ký số10trang; PDF dạng ảnh chưa OCR. Không suy diễn nội dung sửa đổi hoặc tỷ trọng đề thi."
+    },
+    {
+      "id": "RETRIEVAL-PRACTICE",
+      "title": "Roediger & Karpicke 2006 — Test-enhanced learning",
+      "kind": "research_primary_abstract",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16507066/",
+      "local_file": "/home/ben/mochi_flutter/docs/research/production-ai-20261102/source-3.txt",
+      "sha256": "c73b56809bab146f05dc39b4febc810c0af63c8e0be42887bce285e5d799faa8",
+      "note": "Nghiên cứu nhớ đoạn văn, không phải thử nghiệm MOCHI/Toán Việt Nam; không chứng minh bảo đảm điểm10."
+    },
+    {
+      "id": "SPACING",
+      "title": "Cepeda et al. 2006 — Distributed practice in verbal recall tasks",
+      "kind": "research_meta_analysis_abstract",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16719566/",
+      "local_file": "/home/ben/mochi_flutter/docs/research/production-ai-20261102/source-4.txt",
+      "sha256": "c5a5bd7bb02ee7fa32699670a21b9ada47069e2b7d8b02d13134b05e9b97d39b",
+      "note": "Tổng quan nhiệm vụ nhớ bằng lời; cơ sở đề xuất ôn cách quãng, không xác lập lịch ôn tối ưu cho mọi học sinh."
+    },
+    {
+      "id": "GROQ-SCHEMA",
+      "title": "Groq — Structured Outputs",
+      "kind": "official_product_docs",
+      "url": "https://console.groq.com/docs/structured-outputs",
+      "local_file": "/home/ben/mochi_flutter/docs/research/production-ai-20261102/source-6.txt",
+      "sha256": "fb3fb0be7e40da2170d3fd06eb9c8c572cc5e8d978c8a4f4db8cfd3689b1d0c7",
+      "note": "Docs liệt kê gpt-oss-120b hỗ trợ strict schema; schema không chứng minh toán đúng hoặc nội dung đúng chương trình."
+    },
+    {
+      "id": "SUPABASE-KEYS",
+      "title": "Supabase — API keys",
+      "kind": "official_product_docs",
+      "url": "https://supabase.com/docs/guides/api/api-keys",
+      "local_file": "/home/ben/mochi_flutter/docs/research/production-ai-20261102/source-5.txt",
+      "sha256": "d193633c5d4d9981d9d5e929ce00f51d13b366615c148594657fa81de5862c7a",
+      "note": "Publishable key có thể nằm client; secret/service_role chỉ backend. Không suy rộng đây là hướng dẫn khóa Groq."
+    }
+  ],
+  "limits": [
+    "Chưa xác minh bản CTGDPT môn Toán hợp nhất và toàn bộ sửa đổi hiện hành.",
+    "Chưa có SGK/edition, kế hoạch dạy học hoặc phạm vi thi của lớp người dùng.",
+    "Google/Brave/DDG hạn chế tự động; không vượt CAPTCHA. Nguồn chính đọc trực tiếp từ MOET/PubMed/tài liệu nhà cung cấp.",
+    "Không có nguồn dữ liệu mở đã xác minh cung cấp tiến độ từng học sinh/lớp toàn quốc."
+  ]
+}

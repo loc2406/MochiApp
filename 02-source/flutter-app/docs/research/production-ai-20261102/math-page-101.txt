@@ -1,0 +1,24 @@
+                       Nội dung                                                                Yêu cầu cần đạt
+                                                            – Nhận biết được khái niệm góc nhị diện, góc phẳng nhị diện.
+                                                            –  Xác  định  và  tính  được  số    đo  góc  nhị   diện,  góc  phẳng  nhị    diện  trong
+                                                            những trường hợp đơn giản (ví dụ: nhận biết được mặt phẳng vuông góc
+                                                            với cạnh nhị diện).
+                                                            – Sử dụng được kiến thức về góc giữa đường thẳng và mặt phẳng, góc nhị
+                                                            diện để mô tả một số hình ảnh trong thực tiễn.
+                         Hình  chóp  cụt  đều  và  thể      – Nhận biết được hình chóp cụt đều.
+                         tích                               – Tính được thể tích khối chóp cụt đều.
+                                                            – Vận dụng được kiến thức về hình chóp cụt đều để mô tả một số hình ảnh
+                                                            trong thực tiễn.
+Thực hành trong phòng máy tính với phần mềm toán học (nếu nhà trường có điều kiện thực hiện)
+– Sử dụng phần mềm để hỗ trợ việc học các kiến thức hình học.
+– Thực hành sử dụng phần mềm để vẽ đường thẳng, mặt phẳng, giao điểm, giao tuyến, tạo hình trong không gian, xác định
+hình biểu diễn.
+– Thực hành sử dụng phần mềm hỗ trợ đồ hoạ và vẽ kĩ thuật.
+THỐNG KÊ VÀ XÁC SUẤT
+Thống kê
+Phân  tích  và  xử  lí   Các số đặc trưng của mẫu           – Tính được các số đặc trưng          đo xu thế trung tâm cho        mẫu số liệu ghép
+dữ liệu                  số liệu ghép nhóm                  nhóm: số trung bình cộng (hay số trung bình), trung vị (median), tứ phân
+                                                            vị (quartiles), mốt (mode).
+                                                            – Hiểu được ý nghĩa và vai trò của các số đặc trưng nói trên của mẫu số
+
+                                                                        101

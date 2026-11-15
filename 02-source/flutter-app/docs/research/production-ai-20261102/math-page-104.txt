@@ -1,0 +1,24 @@
+                                                    NỘI DUNG CHUYÊN ĐỀ LỚP 11:
+                              ỨNG DỤNG TOÁN HỌC VÀO GIẢI QUYẾT VẤN ĐỀ THỰC TIỄN,
+                      ĐẶC BIỆT LÀ MỘT SỐ VẤN ĐỀ LIÊN QUAN ĐẾN ĐỒ HỌA VÀ VẼ KĨ THUẬT
+     Chuyên đề 11.1: Phép biến hình phẳng.
+     Chuyên đề 11.2: Một số yếu tố vẽ kĩ thuật.
+     Chuyên đề 11.3: Làm quen với một số yếu tố của Lí thuyết đồ thị.
+      Chuyên đề                          Chủ đề                                                 Yêu cầu cần đạt
+Chuyên đề 11.1: Phép         Phép   dời   hình.   Phép   đối     – Nhận biết được khái niệm phép dời hình.
+biến hình phẳng              xứng  trục.  Phép  đối  xứng        – Nhận biết được      tính chất của phép đối xứng trục, phép đối xứng
+                             tâm.  Phép  tịnh  tiến.  Phép       tâm, phép tịnh tiến và phép quay.
+                             quay                                – Xác định được ảnh của điểm, đoạn thẳng, tam giác, đường tròn qua
+                                                                 phép đối xứng trục, phép đối xứng tâm, phép tịnh tiến và phép quay.
+                                                                 – Vận dụng được các phép dời hình nói trên trong đồ hoạ và trong
+                                                                 một số vấn đề thực tiễn (ví dụ: tạo các hoa văn, hình khối,...).
+                             Phép  đồng  dạng  phối  cảnh        – Nhận biết được khái niệm phép đồng dạng phối cảnh (phép vị tự),
+                             (phép   vị   tự).   Phép   đồng     phép đồng dạng.
+                             dạng                                – Nhận biết được tính chất của phép vị tự.
+                                                                 – Xác định được ảnh của điểm, đoạn thẳng, tam giác, đường tròn qua
+                                                                 phép vị tự.
+                                                                 – Vận dụng được phép đồng dạng trong đồ hoạ và trong một số vấn
+                                                                 đề thực tiễn (ví dụ: tạo các hoa văn, hình khối,...).
+Chuyên  đề    11.2:   Một    Một số yếu tố vẽ kĩ thuật           – Nhận biết được hình biểu diễn của một hình, khối.
+
+                                                                       104

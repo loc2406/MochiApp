@@ -1,0 +1,5 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android" android:drawable="@drawable/mochii_splash_vector">
+    <target android:name="mascot" android:animation="@animator/mochii_splash_bob" />
+    <target android:name="eyes" android:animation="@animator/mochii_splash_blink" />
+    <target android:name="star" android:animation="@animator/mochii_splash_star" />
+</animated-vector>

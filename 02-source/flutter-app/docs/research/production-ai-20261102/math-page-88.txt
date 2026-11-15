@@ -1,0 +1,26 @@
+      Chuyên đề                           Chủ đề                                                  Yêu cầu cần đạt
+Chuyên đề 10.1:               Phương  pháp  quy  nạp  toán         – Mô tả được các bước chứng minh tính đúng đắn của một mệnh đề
+Phương pháp quy nạp           học                                  toán học bằng phương pháp quy nạp.
+toán học. Nhị thức                                                 – Chứng minh được tính đúng đắn của một mệnh đề toán học bằng
+Newton                                                             phương pháp quy nạp toán học.
+                                                                   – Vận dụng được phương pháp quy nạp toán học để giải quyết một
+                                                                   số vấn đề thực tiễn.
+                              Nhị thức Newton                      – Khai triển được nhị thức Newton (a + b)n bằng cách vận dụng tổ hợp.
+                                                                   – Xác  định  được  các  hệ     số  trong  nhị   thức  Newton  thông  qua  tam
+                                                                   giác Pascal.
+                                                                   – Xác định được hệ số của xk trong khai triển (ax + b)n thành đa thức.
+
+Chuyên đề 10.2: Hệ            Hệ  phương  trình  bậc  nhất         – Nhận biết được khái niệm nghiệm của hệ phương trình bậc nhất
+phương trình bậc              ba ẩn                                ba ẩn.
+nhất ba ẩn                                                         –  Giải  được  hệ  phương  trình  bậc  nhất  ba  ẩn  bằng  phương  pháp
+                                                                   Gauss.
+                                                                   – Tìm được nghiệm hệ phương trình bậc nhất ba ẩn bằng máy tính
+                                                                   cầm tay.
+                              Vận  dụng  hệ  phương  trình         – Vận dụng được cách giải hệ phương trình bậc nhất ba ẩn vào giải
+                              bậc  nhất  ba  ẩn  để  giải   một    quyết một số bài toán Vật lí (tính điện trở, tính cường độ dòng điện
+                              số bài toán liên môn và thực         trong  dòng    điện  không  đổi,...),  Hoá  học  (cân  bằng  phản  ứng,...),
+                              tiễn                                 Sinh học (bài tập nguyên phân, giảm phân,...).
+                                                                   – Vận dụng cách giải hệ phương trình bậc nhất ba ẩn để giải quyết
+                                                                   một số vấn đề thực tiễn cuộc sống (ví dụ: bài toán lập kế hoạch sản
+
+                                                                         88

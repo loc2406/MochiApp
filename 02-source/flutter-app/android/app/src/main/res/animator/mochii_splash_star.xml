@@ -1,0 +1,1 @@
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android" android:propertyName="rotation" android:valueFrom="-8" android:valueTo="8" android:valueType="floatType" android:duration="420" android:repeatCount="1" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />

@@ -1,0 +1,26 @@
+Nội dung                                                                  Yêu cầu cần đạt
+  thức cộng; công thức nhân           quan hệ giữa các giá trị        lượng giác của các góc lượng giác có liên quan
+  đôi;   công   thức   biến   đổi     đặc biệt: bù nhau, phụ nhau, đối nhau, hơn kém nhau .
+  tích thành tổng; công thức          – Sử dụng được máy tính cầm tay để tính giá trị lượng giác của một góc
+  biến đổi tổng thành tích)           lượng giác khi biết số đo của góc đó.
+                                      – Mô tả được các phép biến đổi lượng giác cơ bản: công thức cộng; công
+                                      thức góc nhân đôi; công thức biến đổi tích thành tổng và công thức biến
+                                      đổi tổng thành tích.
+                                      – Giải quyết được một số vấn đề thực tiễn gắn với giá trị lượng giác của
+                                      góc lượng giác và các phép biến đổi lượng giác.
+  Hàm  số    lượng  giác  và  đồ      – Nhận biết được được các khái niệm về hàm số chẵn, hàm số lẻ, hàm số
+  thị                                 tuần hoàn.
+                                      – Nhận biết được các đặc trưng hình học của đồ thị hàm số chẵn, hàm số
+                                      lẻ, hàm số tuần hoàn.
+                                      – Nhận biết được được định nghĩa các hàm lượng giác y = sin x, y = cos x,
+                                      y = tan x, y = cot x thông qua đường tròn lượng giác.
+                                      – Mô tả được bảng giá trị của bốn hàm số lượng giác đó trên một chu kì.
+                                      – Vẽ được đồ thị của các hàm số y = sin x, y = cos x, y = tan x, y = cot x.
+                                      – Giải thích được: tập xác định; tập giá trị; tính chất chẵn, lẻ; tính tuần
+                                      hoàn;   chu   kì;   khoảng   đồng   biến,   nghịch   biến   của   các   hàm   số
+                                      y = sin x, y = cos x, y = tan x, y = cot x dựa vào đồ thị.
+                                      – Giải quyết được một số vấn đề thực tiễn gắn với hàm số lượng giác (ví
+                                      dụ: một số bài toán có liên quan đến dao động điều hoà trong Vật lí,...).
+
+
+                                                    90

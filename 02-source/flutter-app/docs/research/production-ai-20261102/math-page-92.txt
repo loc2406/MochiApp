@@ -1,0 +1,27 @@
+                        Nội dung                                                                     Yêu cầu cần đạt
+                          Cấp số nhân. Số hạng tổng             – Nhận biết được một dãy số là cấp số nhân.
+                          quát   của   cấp   số       nhân.     – Giải thích được công thức xác định số hạng tổng quát của cấp số nhân.
+                          Tổng  của  n  số       hạng  đầu      – Tính được tổng của n số hạng đầu tiên của cấp số nhân.
+                          tiên của cấp số nhân                  – Giải quyết được một số vấn đề thực tiễn gắn với cấp số nhân để giải một
+                                                                số bài toán liên quan đến thực tiễn (ví dụ: một số vấn đề trong Sinh học,
+                                                                trong Giáo dục dân số,...).
+Một số yếu tố giải tích
+Giới  hạn.  Hàm  số       Giới hạn của dãy số. Phép             – Nhận biết được khái niệm giới hạn của dãy số.
+liên tục                  toán giới hạn dãy số. Tổng            – Giải thích được một số giới hạn cơ bản như:                lim         0 (k      *);1      
+                          của một cấp số nhân lùi vô                                                                         n nk
+                          hạn                                    lim         0qn(|   |   1q); limc    c với c là hằng số.
+                                                                 n                      n
+                                                                – Vận dụng được các phép toán giới hạn dãy số để tìm giới hạn của một
+                                                                                                        2      1            4       1n                    n                  2
+                                                                số dãy số đơn giản (ví dụ:         lim           ; lim             ).
+                                                                                                   n                               n                   n                   n
+                                                                – Tính được tổng của một cấp số nhân lùi vô hạn và vận dụng                          được   kết
+                                                                quả đó để giải quyết một số tình huống thực tiễn giả định hoặc liên quan
+                                                                đến thực tiễn.
+                          1.2. Giới hạn của hàm số.             – Nhận biết được khái niệm giới hạn hữu hạn của hàm số, giới hạn hữu
+                          Phép toán giới hạn hàm số             hạn một phía của hàm số tại một điểm.
+                                                                – Nhận biết được khái niệm giới hạn hữu hạn của hàm số tại vô cực và mô
+
+
+
+                                                                              92

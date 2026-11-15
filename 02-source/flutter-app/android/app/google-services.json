@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "410872848423",
+    "project_id": "mochii-aab7d",
+    "storage_bucket": "mochii-aab7d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410872848423:android:36379d850fd271713e2e02",
+        "android_client_info": {
+          "package_name": "com.mochi.study.mochi_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZ8SB4UQtL6KK09ev48UNNuwiRVu63ylE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

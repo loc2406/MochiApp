@@ -1,0 +1,50 @@
+pkg=com.mochi.study.mochi_app user=UserHandle{0} id=103 tag=null importance=3 key=0|com.mochi.study.mochi_app|103|null|10394: Notification(channel=*** shortcut=null contentView=null vibrate=null sound=null defaults=0 flags=AUTO_CANCEL color=0x00000000 vis=PRIVATE))
+      uid=10394 userId=0
+      opPkg=com.mochi.study.mochi_app
+      icon=Icon(typ=RESOURCE pkg=com.mochi.study.mochi_app id=0x7f07007a)
+      flags=AUTO_CANCEL
+      originalFlags=AUTO_CANCEL
+      pri=1
+      key=0|com.mochi.study.mochi_app|103|null|10394
+      seen=false
+      groupKey=0|com.mochi.study.mochi_app|103|null|10394
+      notification=
+            fullscreenIntent=null
+            contentIntent=PendingIntent{95bd6dd: PendingIntentRecord{9fae163 com.mochi.study.mochi_app startActivity (allowlist: 1239998:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
+            deleteIntent=null
+            number=0
+            groupAlertBehavior=0
+            when=1793557370136/1793557370136
+            tickerText=null
+            vis=0
+            contentView=null
+            bigContentView=null
+            headsUpContentView=null
+            color=0x00000000
+            timeout=PT72H
+            extras={
+                android.title=String (Mochii-Học cùng nhau)
+                android.reduced.images=Boolean (true)
+                android.chronometerCountDown=Boolean (false)
+                android.subText=null
+                isGameNtfDnd=Boolean (false)
+                android.showChronometer=Boolean (false)
+                android.text=String (Thông báo trên thiết bị đang hoạt động. Đây là thông báo kiểm tra, không phải push từ Firebase.)
+                android.progress=Integer (0)
+                android.progressMax=Integer (0)
+                specialType=String (floating_window_notification)
+                isDeferLaunchActivity=Boolean (false)
+                android.appInfo=ApplicationInfo (ApplicationInfo{3800252 com.mochi.study.mochi_app})
+                NOT_SHOW_MEDIA_NOTIFICATION_FLG=Boolean (false)
+                android.showWhen=Boolean (true)
+                android.largeIcon=null
+                android.infoText=null
+                isRequestSingleLine=Boolean (false)
+                android.progressIndeterminate=Boolean (false)
+                android.remoteInputHistory=null
+                android.colorized=Boolean (false)
+                android.shortCriticalText=null
+                isGameMode=Boolean (false)
+            }
+      publicNotification=
+         

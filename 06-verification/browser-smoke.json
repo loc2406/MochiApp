@@ -1,0 +1,33 @@
+[
+  {
+    "name": "desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "status": 200,
+    "base": "http://127.0.0.1:18500/mochi/",
+    "firstFrame": true,
+    "loaderCount": 0,
+    "pageErrors": [],
+    "httpFailures": []
+  },
+  {
+    "name": "mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "status": 200,
+    "base": "http://127.0.0.1:18500/mochi/",
+    "firstFrame": true,
+    "loaderCount": 0,
+    "pageErrors": [],
+    "httpFailures": []
+  },
+  {
+    "name": "presentation",
+    "title": "Mochii — Học cùng nhau | Thuyết trình dự án",
+    "downloadHref": "/downloads/Mochii-1.4.10-2047.apk?build=2030"
+  }
+]

@@ -1,0 +1,25 @@
+      Chuyên đề                           Chủ đề                                                  Yêu cầu cần đạt
+                                                                  xuất, mô hình cân bằng thị trường, phân bố vốn đầu tư,...).
+Chuyên đề 10.3: Ba           Ba   đường   conic   và       ứng    – Xác định được các yếu tố          đặc trưng của đường conic (đỉnh, tiêu
+đường conic và ứng           dụng                                 điểm, tiêu cự, độ dài trục, tâm sai, đường chuẩn, bán kính qua tiêu)
+dụng                                                              khi biết phương trình chính tắc của đường conic đó.
+                                                                  – Nhận biết được       đường conic như là giao của mặt phẳng với mặt
+                                                                  nón.
+                                                                  – Giải quyết được một số vấn đề thực tiễn gắn với ba đường conic
+                                                                  (ví dụ: giải thích một số hiện tượng trong Quang học, xác định quỹ
+                                                                  đạo chuyển động của các hành tinh trong hệ Mặt Trời,...).
+
+
+                                                                      LỚP 11
+                       Nội dung                                                               Yêu cầu cần đạt
+ĐẠI SỐ VÀ MỘT SỐ YẾU TỐ GIẢI TÍCH
+Đại số
+Hàm số lượng giác        Góc lượng giác. Số đo của          – Nhận biết được các khái niệm cơ bản về góc lượng giác: khái niệm góc
+và   phương   trình      góc   lượng   giác.   Đường        lượng giác; số đo của góc lượng giác; hệ thức Chasles cho các góc lượng
+lượng giác               tròn   lượng   giác.  Giá   trị    giác; đường tròn lượng giác.
+                         lượng  giác  của  góc  lượng       – Nhận biết được khái niệm giá trị lượng giác của một góc lượng giác.
+                         giác, quan hệ giữa các giá         – Mô tả được bảng giá trị lượng giác của một số góc lượng giác thường
+                         trị lượng  giác.  Các  phép        gặp; hệ thức cơ bản giữa các giá trị lượng giác của một góc lượng giác;
+                         biến  đổi  lượng  giác  (công
+
+                                                                         89

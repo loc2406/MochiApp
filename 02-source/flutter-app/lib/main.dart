@@ -1,0 +1,419 @@
+import 'shared/widgets/floating_bar_inset.dart';
+
+import 'dart:async';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'core/services/fcm_service.dart';
+import 'core/mochii_bootstrap.dart';
+import 'shared/widgets/mochii_loading.dart';
+import 'core/services/smart_reminder_service.dart';
+
+import 'package:flutter/rendering.dart';
+
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import 'core/database/mochi_store.dart';
+import 'design/mochi_design.dart';
+import 'core/services/notification_service.dart';
+import 'shared/widgets/mochi_icons.dart';
+import 'features/onboarding/onboarding_screen.dart';
+import 'features/today/today_screen.dart';
+import 'features/planner/planner_screen.dart';
+import 'features/ai_tutor/ai_tutor_screen.dart';
+import 'features/flashcards/review_screen.dart';
+import 'core/services/live_bridge_service.dart';
+import 'features/live_study/live_import_screen.dart';
+import 'features/profile/profile_calendar_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (FCMService.supported) {
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  }
+  runApp(
+    MochiiBootstrap(
+      appBuilder: (store, startup, status, retry) => MochiApp(
+        store: store,
+        enableNotifications: true,
+        startup: startup,
+        startupLabel: status,
+        onStartupRetry: retry,
+      ),
+    ),
+  );
+}
+
+class MochiApp extends StatelessWidget {
+  final MochiVisuals visuals;
+  final MochiStore? store;
+  final bool enableNotifications;
+  final Future<void>? startup;
+  final String startupLabel;
+  final VoidCallback? onStartupRetry;
+  const MochiApp({
+    super.key,
+    this.store,
+    this.visuals = const MochiVisuals(),
+    this.enableNotifications = false,
+    this.startup,
+    this.startupLabel = 'Đang mở dữ liệu học tập…',
+    this.onStartupRetry,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => store ?? (MochiStore()..init()),
+      child: Consumer<MochiStore>(
+        builder: (context, store, _) {
+          final accent = MochiPresets.accentFor(store.profile.themePreset);
+          final active = visuals.copyWith(
+            highContrast: store.profile.highContrast,
+            reduceMotion: store.profile.reducedMotion,
+            haptics: store.profile.hapticEnabled,
+            backdrop: visuals.backdrop.copyWith(
+              preset: store.profile.backgroundPreset,
+            ),
+          );
+          return MaterialApp(
+            title: 'Mochii-Học cùng nhau',
+            debugShowCheckedModeBanner: false,
+            theme: MochiTheme.light(accent: accent, visuals: active),
+            darkTheme: MochiTheme.dark(accent: accent, visuals: active),
+            themeMode: MochiTheme.modeFrom(store.profile.themeMode),
+            builder: (context, child) => MochiBackground(
+              child: MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  disableAnimations:
+                      active.reduceMotion ||
+                      MediaQuery.disableAnimationsOf(context),
+                ),
+                child: child ?? const SizedBox.shrink(),
+              ),
+            ),
+            themeAnimationDuration: const Duration(milliseconds: 280),
+            home: startup == null
+                ? RootGate(enableNotifications: enableNotifications)
+                : FutureBuilder<void>(
+                    future: startup,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return MochiiLoadingScreen(
+                          failed: true,
+                          onRetry: onStartupRetry,
+                          status: 'Chưa mở được ứng dụng. Bạn thử lại nhé.',
+                        );
+                      }
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return MochiiLoadingScreen(status: startupLabel);
+                      }
+                      return RootGate(enableNotifications: enableNotifications);
+                    },
+                  ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class RootGate extends StatefulWidget {
+  final bool enableNotifications;
+  const RootGate({super.key, this.enableNotifications = false});
+
+  @override
+  State<RootGate> createState() => _RootGateState();
+}
+
+class _RootGateState extends State<RootGate> {
+  int _currentIndex = 0;
+  bool _importOpening = false;
+  bool _isBottomBarVisible = true;
+  Timer? _barRestore;
+  @override
+  void initState() {
+    super.initState();
+    LiveBridgeService.channel.setMethodCallHandler((call) async {
+      if (call.method == 'sessionReady') await _checkLiveImport();
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkLiveImport());
+    if (widget.enableNotifications && NotificationService.supported) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _offerNotifications(),
+      );
+    }
+  }
+
+  Future<void> _offerNotifications() async {
+    try {
+      final service = NotificationService();
+      if (await service.notificationsEnabled()) return;
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool('mochi_notification_permission_requested_v2') == true ||
+          !mounted) {
+        return;
+      }
+      final allowed = await service.requestPermission();
+      await prefs.setBool('mochi_notification_permission_requested_v2', true);
+      if (allowed) unawaited(SmartReminderService().refresh());
+      if (!allowed && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Chưa bật thông báo. Bạn có thể bật lại trong Tôi > Thông báo để nhận nhắc lịch học.',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Notification permission check failed: $e');
+    }
+  }
+
+  Future<void> _checkLiveImport() async {
+    if (_importOpening) return;
+    try {
+      final raw = await LiveBridgeService.takePending();
+      if (raw == null || !mounted) return;
+      final session = LiveSessionImport.parse(raw);
+      _importOpening = true;
+      await Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => LiveImportScreen(session: session)),
+      );
+    } on MissingPluginException {
+      // Non-Android platforms do not expose the external-app bridge.
+    } catch (_) {
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Chưa nhận được lời thoại hợp lệ. Không thể nhập một đường dẫn thay cho nội dung.',
+            ),
+          ),
+        );
+    } finally {
+      _importOpening = false;
+    }
+  }
+
+  @override
+  void dispose() {
+    _barRestore?.cancel();
+    LiveBridgeService.channel.setMethodCallHandler(null);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final store = context.watch<MochiStore>();
+
+    if (!store.isLoaded) {
+      return const MochiiLoadingScreen();
+    }
+
+    if (store.isFirstTime) {
+      return OnboardingScreen(
+        onComplete: () {
+          setState(() {});
+        },
+      );
+    }
+
+    final pages = [
+      TodayScreen(
+        onNavigateToPlanner: () => setState(() {
+          _currentIndex = 1;
+          _isBottomBarVisible = true;
+        }),
+        onNavigateToAITutor: () => setState(() {
+          _currentIndex = 2;
+          _isBottomBarVisible = true;
+        }),
+      ),
+      const PlannerScreen(),
+      AITutorScreen(
+        onRequestLogin: () => setState(() {
+          _currentIndex = 4;
+          _isBottomBarVisible = true;
+        }),
+      ),
+      ReviewScreen(active: _currentIndex == 3),
+      const ProfileCalendarScreen(),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isDesktop = constraints.maxWidth >= 768;
+
+        if (isDesktop) {
+          // Desktop dashboard: persistent Mochi sidebar + full-width workspace.
+          return Scaffold(
+            backgroundColor: Colors.transparent,
+            body: MochiBackground(
+              child: Row(
+                children: [
+                  _buildDesktopSidebar(context, store),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 20,
+                      ),
+                      child: IndexedStack(
+                        index: _currentIndex,
+                        children: pages,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Overlay navigation island architecture:
+        // Scaffold acts as a pure full-screen canvas without carving out a dead white strip.
+        // FloatingBarInset calculates the exact obstruction for scrollable inner pages.
+        final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+        final safeBottom = MediaQuery.paddingOf(context).bottom;
+        final barObstruction = _isBottomBarVisible
+            ? (MochiSpacing.navBar + 20.0 + safeBottom)
+            : (safeBottom + 12.0);
+
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          extendBody: true,
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            fit: StackFit.expand,
+            children: [
+              const Positioned.fill(
+                child: MochiBackground(child: SizedBox.expand()),
+              ),
+              Positioned.fill(
+                child: FloatingBarInset(
+                  bottomObstruction: barObstruction,
+                  isBarVisible: _isBottomBarVisible,
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (scrollNotification) {
+                      if (scrollNotification.depth != 0 ||
+                          scrollNotification.metrics.axis != Axis.vertical ||
+                          _currentIndex == 2)
+                        return false;
+                      if (scrollNotification is ScrollStartNotification) {
+                        _barRestore?.cancel();
+                      }
+                      if (scrollNotification is ScrollEndNotification) {
+                        _barRestore?.cancel();
+                        _barRestore = Timer(
+                          const Duration(milliseconds: 900),
+                          () {
+                            if (mounted && !_isBottomBarVisible) {
+                              setState(() => _isBottomBarVisible = true);
+                            }
+                          },
+                        );
+                      }
+                      if (scrollNotification is ScrollUpdateNotification) {
+                        final dy = scrollNotification.scrollDelta ?? 0;
+                        if (dy > 4 && _isBottomBarVisible) {
+                          setState(() => _isBottomBarVisible = false);
+                        } else if (dy < -4 && !_isBottomBarVisible) {
+                          setState(() => _isBottomBarVisible = true);
+                        }
+                      }
+                      return false;
+                    },
+                    child: IndexedStack(index: _currentIndex, children: pages),
+                  ),
+                ),
+              ),
+              if (!keyboardOpen)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: IgnorePointer(
+                    ignoring: !_isBottomBarVisible,
+                    child: AnimatedSlide(
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOutCubic,
+                      offset: _isBottomBarVisible
+                          ? Offset.zero
+                          : const Offset(0, 2),
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 200),
+                        opacity: _isBottomBarVisible ? 1.0 : 0.0,
+                        child: _buildFloatingNavBar(context),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  List<MochiNavItem> _navItems() => [
+    MochiNavItem(
+      label: 'Hôm nay',
+      iconBuilder: (color) => MochiVectorIcon('home', size: 20, color: color),
+    ),
+    MochiNavItem(
+      label: 'Kế hoạch',
+      iconBuilder: (color) => MochiVectorIcon('plan', size: 20, color: color),
+    ),
+    MochiNavItem(label: 'AI Tutor', icon: Icons.auto_awesome, prominent: true),
+    MochiNavItem(
+      label: 'Ôn tập',
+      iconBuilder: (color) =>
+          MochiVectorIcon('flashcard', size: 20, color: color),
+    ),
+    MochiNavItem(
+      label: 'Tôi',
+      iconBuilder: (color) =>
+          MochiVectorIcon('calendar', size: 20, color: color),
+    ),
+  ];
+
+  void _selectTab(int index) {
+    setState(() {
+      _currentIndex = index;
+      _isBottomBarVisible = true;
+    });
+  }
+
+  Widget _buildDesktopSidebar(BuildContext context, MochiStore store) =>
+      MochiSidebar(
+        items: _navItems(),
+        currentIndex: _currentIndex,
+        onSelected: _selectTab,
+        userName: store.profile.name,
+        userSubtitle: store.cloudService.hasActiveUser
+            ? (store.cloudService.userEmail ?? 'Đã đồng bộ')
+            : 'Chế độ khách',
+        streakLabel: 'Chuỗi ${store.currentStreak} ngày học',
+      );
+
+  Widget _buildFloatingNavBar(BuildContext context) => SafeArea(
+    child: Center(
+      heightFactor: 1,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 460),
+        child: MochiNavBar(
+          items: _navItems(),
+          currentIndex: _currentIndex,
+          onSelected: _selectTab,
+        ),
+      ),
+    ),
+  );
+}

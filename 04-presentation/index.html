@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Mochii – Học cùng nhau. Bài thuyết trình dự án 10–15 phút: vấn đề, giải pháp, demo, kiến trúc và kiểm chứng.">
+  <title>Mochii — Học cùng nhau | Thuyết trình dự án</title>
+  <link rel="icon" href="assets/brand/mochii-logo.png">
+  <link rel="stylesheet" href="deck.css">
+</head>
+<body>
+  <header class="toolbar">
+    <a class="brand" href="#slide-1" aria-label="Mochii, về trang đầu"><img src="assets/brand/mochii-logo.png" alt=""><span>Mochii<span class="brand-tagline">Học cùng nhau</span></span></a>
+    <span class="deck-label">Thuyết trình dự án <span>10–15 phút</span></span>
+    <nav class="tools" aria-label="Công cụ thuyết trình">
+      <a class="tool-btn" href="/mochi/" target="_blank" rel="noopener" data-icon="play">Mở demo</a>
+      <a class="tool-btn" href="/downloads/Mochii-1.4.10-2047.apk" data-download-link data-icon="download">Tải APK</a>
+      <button class="tool-btn" id="presenter-button" title="Mở cửa sổ người nói (P)" data-icon="speaker">Lời dẫn</button>
+      <button class="tool-btn" id="fullscreen-button" title="Toàn màn hình (F)" data-icon="expand">Toàn màn hình</button>
+    </nav>
+  </header>
+  <main id="deck" aria-label="Nội dung thuyết trình"><p class="initial-status" role="status">Đang mở bộ slide…</p></main>
+  <footer class="navigation" aria-label="Điều khiển slide">
+    <button id="previous" class="nav-button" aria-label="Trang trước" data-icon="left"></button>
+    <div id="indicators" class="indicators" aria-label="Chọn trang"></div>
+    <span id="counter" class="counter" aria-live="polite">01 / 12</span>
+    <button id="next" class="nav-button" aria-label="Trang tiếp theo" data-icon="right"></button>
+    <span class="keyboard-hint">← → Chuyển trang · P Lời dẫn · F Toàn màn hình</span>
+  </footer>
+  <div id="notice" class="notice" role="status" hidden></div>
+  <script src="deck.js" defer></script>
+</body>
+</html>

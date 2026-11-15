@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <base href="/mochi/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Mochii-Học cùng nhau: lập kế hoạch, tập trung và ôn tập.">
+  <meta name="theme-color" content="#F7F3FC">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Mochii">
+  <link rel="icon" href="favicon.png">
+  <link rel="manifest" href="manifest.json">
+  <title>Mochii-Học cùng nhau</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f7f3fc;font-family:system-ui,'Segoe UI',sans-serif}
+    #loading-container{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#f7f3fc;color:#654398;padding:24px;overflow:auto;transition:opacity .18s ease}
+    .loading-content{margin:auto;text-align:center;max-width:400px}.loading-art{height:auto;width:min(290px,70vw,45vh);display:block;margin:0 auto 12px;border-radius:22px}.loading-title{font-size:36px;letter-spacing:-1px;margin:0 0 6px;font-weight:800}.loading-sub{font-size:15px;line-height:1.6;color:#766287;margin:0}#loading-status{font-size:13px;line-height:1.5;color:#59476b;margin:26px 0 0}#loading-help{font-size:12px;line-height:1.6;color:#766287;margin:14px 0 0;max-width:330px}#loading-retry{font:inherit;background:#7650b3;color:white;border:0;border-radius:12px;padding:12px 20px;margin-top:18px;cursor:pointer}#loading-retry:focus-visible{outline:3px solid #b38cdc;outline-offset:4px}[hidden]{display:none!important}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+  <script>
+    window._mochiiFirstFrame=false;
+    window._setMochiiStatus=function(text){var el=document.getElementById('loading-status');if(el)el.textContent=text;};
+    window._showMochiiStartupError=function(){if(window._mochiiFirstFrame)return;window._setMochiiStatus('Chưa mở được ứng dụng. Bạn thử tải lại nhé.');var retry=document.getElementById('loading-retry');if(retry)retry.hidden=false;};
+    window.addEventListener('flutter-first-frame',function(){window._mochiiFirstFrame=true;var loader=document.getElementById('loading-container');if(loader)loader.remove();});
+    window.addEventListener('error',function(e){if(e.target&&e.target.tagName==='SCRIPT')window._showMochiiStartupError();},true);
+    window.addEventListener('unhandledrejection',function(){window._showMochiiStartupError();});
+    setTimeout(function(){if(!window._mochiiFirstFrame){var help=document.getElementById('loading-help');if(help)help.hidden=false;var retry=document.getElementById('loading-retry');if(retry)retry.hidden=false;}},15000);
+  </script>
+</head>
+<body>
+  <div id="loading-container">
+    <div class="loading-content">
+      <picture><source media="(prefers-reduced-motion: reduce)" srcset="splash/mochii-poster.png"><img class="loading-art" src="splash/mochii-reading.webp" alt="Mochii đang đọc sách và lật trang" width="290" height="318"></picture>
+      <h1 class="loading-title">Mochii</h1><p class="loading-sub">Học cùng nhau, từng bước nhỏ.</p>
+      <p id="loading-status" role="status" aria-live="polite">Mochii đang chuẩn bị góc học tập…</p>
+      <p id="loading-help" hidden>Khởi tạo lâu hơn dự kiến. Kiểm tra mạng hoặc tải lại trang. Màn chờ chỉ kết thúc khi ứng dụng thực sự vẽ khung hình đầu tiên.</p>
+      <button id="loading-retry" type="button" onclick="location.reload()" hidden>Tải lại</button>
+    </div>
+  </div>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

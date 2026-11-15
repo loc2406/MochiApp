@@ -1,0 +1,328 @@
+00:00 +0: loading /home/ben/handovers/.mochii-build-20261104/test/ai_personalization_test.dart
+00:00 +0: /home/ben/handovers/.mochii-build-20261104/test/ai_personalization_test.dart: Flashcard request asks for understanding, conditions and examples
+00:00 +1: /home/ben/handovers/.mochii-build-20261104/test/concise_settings_test.dart: personalization uses concise copy and opens contextual note
+00:00 +2: /home/ben/handovers/.mochii-build-20261104/test/concise_settings_test.dart: personalization uses concise copy and opens contextual note
+00:00 +3: /home/ben/handovers/.mochii-build-20261104/test/concise_settings_test.dart: personalization uses concise copy and opens contextual note
+00:07 +4: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: task date/time are strict and invalid dates do not roll into another month
+00:07 +5: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: due and overdue follow-up use recorded task times and local task wording
+00:07 +6: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: completed and deleted tasks have no pending task reminders
+00:08 +7: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: unscheduled tasks do not invent a due time
+00:08 +8: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: quiet hours defer to the next allowed window, across month boundaries
+00:08 +9: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: automatic reminders are capped at two a day and spaced at least three hours
+00:08 +10: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: opening/replanning does not reset the already-reserved daily quota
+00:08 +11: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: inactivity reminders are prepared without a background AI process
+00:08 +12: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: resuming study resets study inactivity, returning to app resets app inactivity
+00:08 +13: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: old unfinished tasks get a delayed nudge, never a notification instantly on launch
+00:08 +14: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: IDs are stable, scoped away from timers and preserved when wording changes
+00:08 +15: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: AI copy is validated and interpolated locally
+00:08 +16: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: AI malformed, missing-placeholder, overlong, URL and emoji text is rejected
+00:08 +17: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: AI requests generic templates, not learner names, tasks or activity history
+00:08 +18: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: AI service failure remains a failure so rules are not mislabelled as AI
+00:08 +19: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: store preserves scheduled times and gives rapid task creation unique IDs
+00:08 +20: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: coordinator schedules native alarms and cancels done tasks without cancelling timers
+00:08 +21: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: smart reminder settings fit 320px at text scale 1.0
+00:08 +22: /home/ben/handovers/.mochii-build-20261104/test/smart_reminder_test.dart: smart reminder settings fit 320px at text scale 2.0
+00:10 +23: /home/ben/handovers/.mochii-build-20261104/test/knowledge_explanation_test.dart: formula-only content fails prose requirement
+00:10 +24: /home/ben/handovers/.mochii-build-20261104/test/knowledge_explanation_test.dart: enrichment preserves source and recall history and is reusable
+00:10 +25: /home/ben/handovers/.mochii-build-20261104/test/knowledge_explanation_test.dart: formula-only AI output is rejected rather than saved
+00:14 +26: /home/ben/handovers/.mochii-build-20261104/test/ai_message_body_test.dart: Only markdown wrapper removed, actual code and operators preserved
+00:14 +27: /home/ben/handovers/.mochii-build-20261104/test/ai_message_body_test.dart: Markdown and math at width 280.0 text scale 1.0
+00:16 +28: /home/ben/handovers/.mochii-build-20261104/test/ai_message_body_test.dart: Markdown and math at width 280.0 text scale 2.0
+00:16 +29: /home/ben/handovers/.mochii-build-20261104/test/ai_message_body_test.dart: Markdown and math at width 360.0 text scale 1.0
+00:16 +30: /home/ben/handovers/.mochii-build-20261104/test/ai_message_body_test.dart: Markdown and math at width 360.0 text scale 2.0
+00:16 +31: /home/ben/handovers/.mochii-build-20261104/test/ai_message_body_test.dart: Markdown and math at width 800.0 text scale 1.0
+00:16 +32: /home/ben/handovers/.mochii-build-20261104/test/ai_message_body_test.dart: Markdown and math at width 800.0 text scale 2.0
+00:17 +33: /home/ben/handovers/.mochii-build-20261104/test/ai_message_body_test.dart: Invalid formula and long code do not crash
+00:18 +34: /home/ben/handovers/.mochii-build-20261104/test/ai_features_advanced_test.dart: extractTimetable parses valid JSON from model response
+00:18 +35: /home/ben/handovers/.mochii-build-20261104/test/ai_features_advanced_test.dart: generateQuiz returns valid question structure
+00:18 +36: /home/ben/handovers/.mochii-build-20261104/test/ai_features_advanced_test.dart: parseScheduleAction detects reschedule request
+00:20 +37: /home/ben/handovers/.mochii-build-20261104/test/knowledge_explanation_widget_test.dart: meaning and example precede optional formula at scale 1.0
+00:21 +38: /home/ben/handovers/.mochii-build-20261104/test/knowledge_explanation_widget_test.dart: meaning and example precede optional formula at scale 2.0
+00:23 +39: /home/ben/handovers/.mochii-build-20261104/test/account_sync_test.dart: merge preserves separate task edits, additions and deletions
+00:23 +40: /home/ben/handovers/.mochii-build-20261104/test/account_sync_test.dart: same field conflict is not silently overwritten
+00:23 +41: /home/ben/handovers/.mochii-build-20261104/test/account_sync_test.dart: new authenticated account gets empty database state, not guest profile
+00:23 +42: /home/ben/handovers/.mochii-build-20261104/test/account_sync_test.dart: edit during network write is not marked clean or overwritten by polling
+00:23 +43: /home/ben/handovers/.mochii-build-20261104/test/account_sync_test.dart: offline outbox survives restart and merges a different device edit
+00:23 +44: /home/ben/handovers/.mochii-build-20261104/test/account_sync_test.dart: switch account offline never displays previous identity
+00:23 +45: /home/ben/handovers/.mochii-build-20261104/test/account_sync_test.dart: logout does not leave previous account data visible
+00:25 +46: /home/ben/handovers/.mochii-build-20261104/test/live_bridge_test.dart: Structured import keeps Vietnamese and marks partial transcript
+00:25 +47: /home/ben/handovers/.mochii-build-20261104/test/live_bridge_test.dart: Shared URL is not falsely treated as transcript
+00:25 +48: /home/ben/handovers/.mochii-build-20261104/test/live_bridge_test.dart: Invalid roles and oversized input rejected
+00:25 +49: /home/ben/handovers/.mochii-build-20261104/test/live_bridge_test.dart: Repeat import saves one history record
+00:26 +50: /home/ben/handovers/.mochii-build-20261104/test/ai_live_acceptance_test.dart: Live tutor tone, maths, recent context
+00:28 +50 ~1: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_test.dart: Recent history, one current question, no welcome, profile context
+MOCHI_AI source=groq_cloud model=openai/gpt-oss-120b id=verified-id status=200 finish=stop latency_ms=14
+00:28 +51 ~1: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_test.dart: Length finish reason is not presented as a complete answer
+MOCHI_AI source=groq_cloud model=openai/gpt-oss-120b id=null status=200 finish=length latency_ms=1
+00:28 +52 ~1: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_test.dart: Service failure is explicit, not a fake offline tutor answer
+00:28 +53 ~1: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_test.dart: Malformed success response retries fallback and preserves provenance
+MOCHI_AI source=groq_cloud model=qwen/qwen3.8-27b id=fallback-id status=200 finish=stop latency_ms=1
+00:30 +54 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests Onboarding completion sets learner name and creates initial goals
+supabase.supabase_flutter: INFO: ***** Supabase init completed ***** 
+00:30 +55 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests Completing task increments stars and awards XP without double count
+00:30 +55 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests Onboarding completion sets learner name and creates initial goals
+supabase.supabase_flutter: INFO: Supabase is already initialized. Skipping reinitialization. 
+00:30 +56 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests Atomic study session awards stars, XP, and updates streak
+00:30 +56 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests Onboarding completion sets learner name and creates initial goals
+supabase.supabase_flutter: INFO: Supabase is already initialized. Skipping reinitialization. 
+00:30 +57 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests Robot shop purchases deduct stars and equip items
+00:30 +57 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests Onboarding completion sets learner name and creates initial goals
+supabase.supabase_flutter: INFO: Supabase is already initialized. Skipping reinitialization. 
+00:30 +58 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests Spaced repetition algorithm calculates intervals properly
+00:30 +58 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests Onboarding completion sets learner name and creates initial goals
+supabase.supabase_flutter: INFO: Supabase is already initialized. Skipping reinitialization. 
+00:30 +59 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests JSON Backup export and import preserves data accurately
+00:30 +59 ~1: /home/ben/handovers/.mochii-build-20261104/test/mochi_unit_test.dart: Mochi Study Core Logic Unit Tests Onboarding completion sets learner name and creates initial goals
+supabase.supabase_flutter: INFO: Supabase is already initialized. Skipping reinitialization. 
+00:36 +60 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: (setUpAll)
+00:36 +60 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: initialization is idempotent, creates FCM channel, and does not prompt for permission
+00:36 +61 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: local test uses the native notification API and monochrome icon
+00:36 +62 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: denied permission is reported instead of pretending the test was sent
+00:36 +63 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: permission request is an explicit action
+00:36 +64 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: timer falls back to inexact when special exact-alarm access is missing
+SCHEDULED_TIMER_NOTIFICATION_SUCCESS at 2026-11-04 10:48:55.230286Z
+00:36 +65 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: timer uses exact mode only when Android grants exact-alarm access
+00:36 +66 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: timer cancellation targets the same native reminder ID
+00:36 +67 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: FCM initialization fetches a real registration-token API, not an FID
+00:36 +68 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: foreground FCM notification is displayed exactly once through the local API
+00:36 +69 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: data-only messages do not invent a visible alert
+00:36 +70 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: token refresh updates the copyable registration token
+00:36 +71 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: notification tap is captured without displaying it again
+00:36 +72 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: FCM offline failure is visible and retry recovers
+FCM connection error: [firebase_messaging/unavailable] 
+00:36 +73 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: first launch requests native permission once without developer UI
+00:37 +74 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: first launch requests native permission once without developer UI
+00:38 +75 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: notification controls fit a 320px display at text scale 1.0
+00:38 +76 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: notification controls fit a 320px display at text scale 2.0
+00:38 +77 ~1: /home/ben/handovers/.mochii-build-20261104/test/notification_service_test.dart: (tearDownAll)
+00:48 +77 ~1: /home/ben/handovers/.mochii-build-20261104/test/review_journey_test.dart: due policy does not repeat remembered cards ahead of schedule or teach unstudied topics
+00:48 +78 ~1: /home/ben/handovers/.mochii-build-20261104/test/review_journey_test.dart: invalid source ids and excess budget are rejected
+00:48 +79 ~1: /home/ben/handovers/.mochii-build-20261104/test/review_journey_test.dart: session persists schedule, requires cards before quiz, idempotent ratings, wrong answer brings review closer
+00:48 +80 ~1: /home/ben/handovers/.mochii-build-20261104/test/review_journey_test.dart: editing knowledge invalidates stale session and returns card to due queue
+00:48 +81 ~1: /home/ben/handovers/.mochii-build-20261104/test/review_journey_test.dart: automatic revision opens cards then quiz then management at width 320.0
+00:49 +82 ~1: /home/ben/handovers/.mochii-build-20261104/test/review_journey_test.dart: automatic revision opens cards then quiz then management at width 1366.0
+00:51 +83 ~1: /home/ben/handovers/.mochii-build-20261104/test/study_schedule_test.dart: No overlaps; remaining work moves to next day within budget
+00:51 +84 ~1: /home/ben/handovers/.mochii-build-20261104/test/study_schedule_test.dart: Past times move forward, not tomorrow reminders disguised as today
+00:51 +85 ~1: /home/ben/handovers/.mochii-build-20261104/test/study_schedule_test.dart: Oversized task is rejected rather than overflowing free time
+00:54 +86 ~1: /home/ben/handovers/.mochii-build-20261104/test/timer_duration_test.dart: Visible custom duration, validation and reset at Size(390.0, 844.0)
+00:55 +87 ~1: /home/ben/handovers/.mochii-build-20261104/test/timer_duration_test.dart: Visible custom duration, validation and reset at Size(320.0, 568.0)
+00:56 +88 ~1: /home/ben/handovers/.mochii-build-20261104/test/timer_duration_test.dart: Visible custom duration, validation and reset at Size(844.0, 390.0)
+01:00 +89 ~1: /home/ben/handovers/.mochii-build-20261104/test/learning_hub_screen_test.dart: Learning hub adapts 320.0 scale 1.0 and edits real progress
+01:01 +90 ~1: /home/ben/handovers/.mochii-build-20261104/test/learning_hub_screen_test.dart: Learning hub adapts 320.0 scale 2.0 and edits real progress
+01:02 +91 ~1: /home/ben/handovers/.mochii-build-20261104/test/learning_hub_screen_test.dart: Learning hub adapts 768.0 scale 1.0 and edits real progress
+01:02 +92 ~1: /home/ben/handovers/.mochii-build-20261104/test/learning_hub_screen_test.dart: Learning hub adapts 768.0 scale 1.0 and edits real progress
+01:02 +93 ~1: /home/ben/handovers/.mochii-build-20261104/test/learning_hub_screen_test.dart: Learning hub adapts 768.0 scale 1.0 and edits real progress
+01:02 +94 ~1: /home/ben/handovers/.mochii-build-20261104/test/learning_hub_screen_test.dart: Learning hub adapts 768.0 scale 2.0 and edits real progress
+01:03 +95 ~1: /home/ben/handovers/.mochii-build-20261104/test/learning_hub_screen_test.dart: Learning hub adapts 1366.0 scale 1.0 and edits real progress
+01:04 +96 ~1: /home/ben/handovers/.mochii-build-20261104/test/learning_hub_screen_test.dart: Learning hub adapts 1366.0 scale 2.0 and edits real progress
+01:04 +97 ~1: /home/ben/handovers/.mochii-build-20261104/test/learning_hub_screen_test.dart: Add assignment keeps two goal links on one task and previews unified capacity
+01:06 +98 ~1: /home/ben/handovers/.mochii-build-20261104/test/live_study_pack_acceptance_test.dart: Actual Gemini camera-session exchange produces real study pack
+01:08 +98 ~2: /home/ben/handovers/.mochii-build-20261104/test/widget_test.dart: MochiApp loads test
+01:10 +99 ~2: /home/ben/handovers/.mochii-build-20261104/test/unified_learning_test.dart: twelve subjects share one budget including breaks, mandatory work gets capacity first
+01:10 +100 ~2: /home/ben/handovers/.mochii-build-20261104/test/unified_learning_test.dart: school lessons exclude actual time; no assumption every unlisted school hour is free
+01:10 +101 ~2: /home/ben/handovers/.mochii-build-20261104/test/unified_learning_test.dart: long homework splits across days without duplicating parent or moving due date
+01:10 +102 ~2: /home/ben/handovers/.mochii-build-20261104/test/unified_learning_test.dart: a shared activity is scheduled once for multiple goals
+01:10 +103 ~2: /home/ben/handovers/.mochii-build-20261104/test/unified_learning_test.dart: self-reported confident topic skips new whole-lesson teaching but not homework
+01:10 +104 ~2: /home/ben/handovers/.mochii-build-20261104/test/unified_learning_test.dart: progress and study events round-trip and do not promote mastery from timer events
+01:10 +105 ~2: /home/ben/handovers/.mochii-build-20261104/test/unified_learning_test.dart: parity needs anchor and respects effective date, not guessed school week numbering
+01:10 +106 ~2: /home/ben/handovers/.mochii-build-20261104/test/unified_learning_test.dart: catalog gives source-backed math headings only for the actually reviewed grade
+01:10 +107 ~2: /home/ben/handovers/.mochii-build-20261104/test/unified_learning_test.dart: stale preview cannot apply; repeat checkbox cannot farm reward; split focus does not complete parent
+01:12 +108 ~2: /home/ben/handovers/.mochii-build-20261104/test/personalization_hub_test.dart: Personalization Hub Acceptance ProfileModel defaults and serialization preserve all OS27 preferences
+01:12 +109 ~2: /home/ben/handovers/.mochii-build-20261104/test/personalization_hub_test.dart: Personalization Hub Acceptance AppleOS27Colors returns correct colors for all 6 presets with fallback
+01:12 +110 ~2: /home/ben/handovers/.mochii-build-20261104/test/personalization_hub_test.dart: Personalization Hub Acceptance TutorPrompt enforces strict persona allowlist and detail level
+01:13 +111 ~2: /home/ben/handovers/.mochii-build-20261104/test/keyboard_layout_regression_test.dart: Tutor keyboard resizes once and composer has no doubled bottom gap
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value greater than <450>
+  Actual: <420.90000000000003>
+   Which: is not a value greater than <450>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///home/ben/handovers/.mochii-build-20261104/test/keyboard_layout_regression_test.dart:30:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///home/ben/handovers/.mochii-build-20261104/test/keyboard_layout_regression_test.dart line 30
+The test description was:
+  Tutor keyboard resizes once and composer has no doubled bottom gap
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:15 +111 ~2 -1: /home/ben/handovers/.mochii-build-20261104/test/keyboard_layout_regression_test.dart: Tutor keyboard resizes once and composer has no doubled bottom gap [E]
+  Test failed. See exception logs above.
+  The test description was: Tutor keyboard resizes once and composer has no doubled bottom gap
+  
+Warning: At least one test in this suite creates an HttpClient. When running a test suite that uses
+TestWidgetsFlutterBinding, all HTTP requests will return status code 400, and no network request
+will actually be made. Any test expecting a real network connection and status code will fail.
+To test code that needs an HttpClient, provide your own HttpClient implementation to the code under
+test, so that your test can consistently provide a testable response to the code under test.
+01:16 +111 ~2 -1: /home/ben/handovers/.mochii-build-20261104/test/ai_gateway_client_test.dart: no anonymous provider request or embedded API secret
+01:16 +112 ~2 -1: /home/ben/handovers/.mochii-build-20261104/test/ai_gateway_client_test.dart: forwards authenticated request to gateway, not provider, and preserves UTF8
+01:19 +113 ~2 -1: /home/ben/handovers/.mochii-build-20261104/test/navigation_hit_test.dart: Bottom bar stays at bottom and Today checkbox accepts taps
+01:20 +114 ~2 -1: /home/ben/handovers/.mochii-build-20261104/test/navigation_hit_test.dart: Floating bar returns after scrolling stops
+01:21 +115 ~2 -1: /home/ben/handovers/.mochii-build-20261104/test/navigation_hit_test.dart: Planner add action is above the navigation bar and clickable
+01:22 +116 ~2 -1: /home/ben/handovers/.mochii-build-20261104/test/navigation_hit_test.dart: Planner add action is above the navigation bar and clickable
+01:22 +117 ~2 -1: /home/ben/handovers/.mochii-build-20261104/test/navigation_hit_test.dart: Planner add action is above the navigation bar and clickable
+01:22 +118 ~2 -1: /home/ben/handovers/.mochii-build-20261104/test/navigation_hit_test.dart: Planner add action is above the navigation bar and clickable
+01:22 +119 ~2 -1: /home/ben/handovers/.mochii-build-20261104/test/navigation_hit_test.dart: Planner add action is above the navigation bar and clickable
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value less than <804.5>
+  Actual: <810.0>
+   Which: is not a value less than <804.5>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///home/ben/handovers/.mochii-build-20261104/test/navigation_hit_test.dart:79:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///home/ben/handovers/.mochii-build-20261104/test/navigation_hit_test.dart line 79
+The test description was:
+  Planner add action is above the navigation bar and clickable
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:22 +119 ~2 -2: /home/ben/handovers/.mochii-build-20261104/test/navigation_hit_test.dart: Planner add action is above the navigation bar and clickable [E]
+  Test failed. See exception logs above.
+  The test description was: Planner add action is above the navigation bar and clickable
+  
+01:25 +119 ~2 -2: /home/ben/handovers/.mochii-build-20261104/test/mochii_loading_test.dart: loading fits Size(320.0, 568.0) with large text
+01:26 +120 ~2 -2: /home/ben/handovers/.mochii-build-20261104/test/mochii_loading_test.dart: loading fits Size(844.0, 390.0) with large text
+01:26 +121 ~2 -2: /home/ben/handovers/.mochii-build-20261104/test/mochii_loading_test.dart: real initialization can stay pending without delaying the first screen
+01:26 +122 ~2 -2: /home/ben/handovers/.mochii-build-20261104/test/mochii_loading_test.dart: reduced motion stops the decorative animation ticker
+01:26 +123 ~2 -2: /home/ben/handovers/.mochii-build-20261104/test/mochii_loading_test.dart: startup error has a retry action, not an endless pretend progress state
+01:26 +124 ~2 -2: /home/ben/handovers/.mochii-build-20261104/test/mochii_loading_test.dart: release metadata is read from the installed Android package
+01:28 +125 ~2 -2: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(320.0, 700.0) scale=1.0
+MOCHI_AI source=groq_cloud model=openai/gpt-oss-120b id=screen-test status=200 finish=stop latency_ms=12
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "AI trực tuyến": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart:98:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart line 98
+The test description was:
+  Tutor send/receive Size(320.0, 700.0) scale=1.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:29 +125 ~2 -3: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(320.0, 700.0) scale=1.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Tutor send/receive Size(320.0, 700.0) scale=1.0
+  
+01:29 +125 ~2 -3: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(320.0, 700.0) scale=2.0
+MOCHI_AI source=groq_cloud model=openai/gpt-oss-120b id=screen-test status=200 finish=stop latency_ms=1
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "AI trực tuyến": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart:98:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart line 98
+The test description was:
+  Tutor send/receive Size(320.0, 700.0) scale=2.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:30 +125 ~2 -4: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(320.0, 700.0) scale=2.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Tutor send/receive Size(320.0, 700.0) scale=2.0
+  
+01:30 +125 ~2 -4: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(640.0, 360.0) scale=1.0
+MOCHI_AI source=groq_cloud model=openai/gpt-oss-120b id=screen-test status=200 finish=stop latency_ms=1
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "AI trực tuyến": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart:98:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart line 98
+The test description was:
+  Tutor send/receive Size(640.0, 360.0) scale=1.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:30 +125 ~2 -5: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(640.0, 360.0) scale=1.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Tutor send/receive Size(640.0, 360.0) scale=1.0
+  
+01:30 +125 ~2 -5: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(640.0, 360.0) scale=2.0
+MOCHI_AI source=groq_cloud model=openai/gpt-oss-120b id=screen-test status=200 finish=stop latency_ms=1
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "AI trực tuyến": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart:98:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart line 98
+The test description was:
+  Tutor send/receive Size(640.0, 360.0) scale=2.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:30 +125 ~2 -6: /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(640.0, 360.0) scale=2.0 [E]
+  Test failed. See exception logs above.
+  The test description was: Tutor send/receive Size(640.0, 360.0) scale=2.0
+  
+01:30 +125 ~2 -6: /home/ben/handovers/.mochii-build-20261104/test/schedule_change_test.dart: validates future available slot, rejects stale task, lock, invalid date and conflict
+01:30 +126 ~2 -6: /home/ben/handovers/.mochii-build-20261104/test/schedule_change_test.dart: does not move deadlines or consume a second study budget
+01:30 +127 ~2 -6: /home/ben/handovers/.mochii-build-20261104/test/schedule_change_test.dart: confirm updates exact task and persistent proposal atomically, repeat cannot reapply
+01:30 +128 ~2 -6: /home/ben/handovers/.mochii-build-20261104/test/schedule_change_test.dart: wrong owner and deleted task never report success
+01:30 +129 ~2 -6: /home/ben/handovers/.mochii-build-20261104/test/schedule_change_test.dart: JSON response-format prompt satisfies live provider contract and binds real task snapshot
+01:33 +130 ~2 -6: /home/ben/handovers/.mochii-build-20261104/test/tutor_quiz_interaction_test.dart: rejects malformed answers and repeated options
+01:33 +131 ~2 -6: /home/ben/handovers/.mochii-build-20261104/test/tutor_quiz_interaction_test.dart: answer is persisted once without granting mastery/rewards
+01:33 +132 ~2 -6: /home/ben/handovers/.mochii-build-20261104/test/tutor_quiz_interaction_test.dart: quiz hides answers until selection and unlocks next, scale=1.0
+01:34 +133 ~2 -6: /home/ben/handovers/.mochii-build-20261104/test/tutor_quiz_interaction_test.dart: quiz hides answers until selection and unlocks next, scale=2.0
+01:34 +134 ~2 -6: Some tests failed.
+
+Failing tests:
+  /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(320.0, 700.0) scale=1.0
+  /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(320.0, 700.0) scale=2.0
+  /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(640.0, 360.0) scale=1.0
+  /home/ben/handovers/.mochii-build-20261104/test/ai_tutor_screen_test.dart: Tutor send/receive Size(640.0, 360.0) scale=2.0
+  ... and 2 more

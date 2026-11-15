@@ -1,0 +1,13 @@
+ M README.md
+ M lib/core/services/live_bridge_service.dart
+ M lib/core/services/notification_service.dart
+ M lib/core/theme/apple_glass_theme.dart
+ M lib/features/ai_tutor/ai_tutor_screen.dart
+ M lib/features/live_study/live_import_screen.dart
+ M lib/features/profile/profile_calendar_screen.dart
+ M lib/features/settings/settings_screen.dart
+ M test/ai_features_advanced_test.dart
+ M test/live_bridge_test.dart
+?? lib/features/settings/personalization_card.dart
+?? lib/shared/widgets/note_button.dart
+?? test/concise_settings_test.dart

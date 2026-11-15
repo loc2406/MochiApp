@@ -1,0 +1,3275 @@
+LỚP 11:
+ 
+ỨNG D
+ỤNG TOÁN HỌC V
+ÀO GI
+ẢI QUYẾT 
+V
+Ấ
+N Đ
+Ề THỰC TIỄN,
+ 
+ 
+Đ
+ẶC BIỆT L
+À M
+ỘT SỐ 
+V
+ẤN 
+Đ
+Ề LI
+ÊN QUAN Đ
+ẾN ĐỒ HỌA V
+À V
+Ẽ KĨ
+ 
+THU
+ẬT
+ 
+Chuyên đề 
+11.1:
+ 
+Phép bi
+ến h
+ình ph
+ẳng
+.
+ 
+ 
+Chuy
+ên đề 
+11.2:
+ 
+M
+ột số yếu tố
+ 
+vẽ kĩ
+ 
+thuật
+.
+ 
+ 
+Chuyên đề 
+11.3:
+ 
+Làm quen 
+v
+ới một số
+ 
+y
+ế
+u t
+ố của Lí
+ 
+thuy
+ết đồ thị
+.
+ 
+ 
+Chuyên đ
+ề
+ 
+Ch
+ủ đề
+ 
+Yêu c
+ầu cần đạt
+ 
+Chuyên đề 
+11.1: 
+Phép 
+bi
+ến h
+ình ph
+ẳng
+ 
+Phép d
+ời h
+ình
+. Phép đ
+ối 
+x
+ứng trục. Phép đối xứng 
+tâm. Phép t
+ịnh tiến. Phép
+ 
+quay
+ 
+–
+ 
+Nh
+ận biết
+ 
+đư
+ợc khái niệm phép dời h
+ình. 
+ 
+–
+ 
+Nh
+ận biết
+ 
+đư
+ợc 
+tính ch
+ất của phép đối xứng trục, phép đối xứng 
+tâm, phép t
+ịnh tiến v
+à phép quay.
+ 
+ 
+–
+ 
+Xác đ
+ịnh đ
+ư
+ợc ảnh của điểm, đoạn thẳng, tam giác, đ
+ư
+ờng tr
+òn qua 
+phép đ
+ối xứng trục, phép đối xứng tâm, p
+hép t
+ịnh tiến v
+à phép quay.
+ 
+–
+ 
+V
+ận dụng đ
+ư
+ợc các phép dời h
+ình nói trên trong 
+đ
+ồ hoạ v
+à
+ 
+trong 
+m
+ột số vấn đề thực tiễn (ví dụ: 
+t
+ạo các hoa văn, h
+ình kh
+ối
+,...)
+.
+ 
+Phép đ
+ồng dạng phối cảnh 
+(phép v
+ị tự). 
+Phép đ
+ồng 
+d
+ạng 
+ 
+–
+ 
+Nh
+ận biết
+ 
+đư
+ợc khái niệm 
+phép đ
+ồng dạng
+ 
+ph
+ối cảnh
+ 
+(
+phép v
+ị tự
+)
+, 
+phép đ
+ồng dạng.
+ 
+ 
+–
+ 
+Nh
+ận biết đ
+ư
+ợc tính chất của phép vị tự.
+ 
+–
+ 
+Xác đ
+ịnh đ
+ư
+ợc ảnh của điểm, đoạn thẳng, tam giác, đ
+ư
+ờng tr
+òn qua 
+phép v
+ị tự.
+ 
+–
+ 
+V
+ận dụng đ
+ư
+ợc phép đồng dạng trong đồ hoạ v
+à trong m
+ột số vấn 
+đ
+ề thực tiễn
+ 
+(ví d
+ụ: tạo các
+ 
+hoa văn, h
+ình kh
+ối,...). 
+ 
+Chuyên đề 
+11.2: 
+Một 
+M
+ột số yếu tố 
+vẽ kĩ
+ 
+thuật
+ 
+–
+ 
+Nhận biết được hình biểu diễn của một hình
+, 
+khối
+.
+ 
+
+--- PAGE 105 ---
+105
+ 
+Chuyên đ
+ề
+ 
+Ch
+ủ đề
+ 
+Yêu c
+ầu cần đạt
+ 
+số yếu tố vẽ kĩ
+ 
+thuật
+ 
+–
+ 
+Nh
+ận biết đ
+ư
+ợc một số
+ 
+nguyên t
+ắc c
+ơ b
+ản của vẽ kĩ
+ 
+thu
+ật.
+ 
+–
+ 
+Đ
+ọc đ
+ư
+ợc thông tin từ một số bản vẽ
+ 
+k
+ĩ
+ 
+thu
+ật đ
+ơn gi
+ản.
+ 
+–
+ 
+V
+ẽ đ
+ư
+ợc bản vẽ kĩ
+ 
+thu
+ật đ
+ơ
+n gi
+ản (gắn với phép chiếu song song 
+và phép chi
+ếu vuông góc)
+.
+ 
+Chuyên đề 
+11.3: 
+Là
+m 
+quen v
+ới một v
+ài y
+ếu 
+t
+ố của Lí
+ 
+thuy
+ết đồ thị
+ 
+Gi
+ới thiệu một số b
+ài toán 
+v
+ề t
+ìm 
+đư
+ờng đi trong 
+nh
+ững mô h
+ình xu
+ất phát từ 
+th
+ực tiễn
+ 
+–
+ 
+Nh
+ận biết đ
+ư
+ợc khái niệm 
+đ
+ồ thị.
+ 
+–
+ 
+Nh
+ận biết
+ 
+đư
+ợc đ
+ư
+ờng đi Euler, đ
+ư
+ờng đi Hamilton từ đồ thị.
+ 
+–
+ 
+Nh
+ận biết 
+đư
+ợc thuật toán về t
+ìm 
+đư
+ờng đi tối 
+ưu trong nh
+ững 
+trư
+ờng hợp đ
+ơn gi
+ản.
+ 
+–
+ 
+S
+ử dụng kiến thức về 
+đ
+ồ thị để giải quyết một số t
+ình h
+u
+ống li
+ên 
+quan đ
+ến thực tiễn (ví dụ
+: xác đ
+ịnh đ
+ư
+ờng 
+đi, xác đ
+ịnh đ
+ư
+ờng đi 
+ng
+ắn nhất,...).
+ 
+ 
+L
+Ớ
+P 12
+ 
+N
+ộ
+i dung
+ 
+Yêu c
+ầ
+u c
+ầ
+n đ
+ạ
+t
+ 
+M
+ỘT SỐ YẾU TỐ GIẢI TÍCH
+ 
+M
+ộ
+t s
+ố
+ 
+y
+ế
+u t
+ố
+ 
+g
+i
+ả
+i tích
+ 
+Ứ
+ng d
+ụ
+ng đ
+ạ
+o 
+hàm đ
+ể
+ 
+kh
+ả
+o sát 
+và v
+ẽ
+ 
+đ
+ồ
+ 
+th
+ị
+ 
+c
+ủ
+a 
+hàm s
+ố
+ 
+T
+ính đơn đi
+ệ
+u c
+ủ
+a hàm s
+ố
+ 
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t 
+đư
+ợ
+c tính đ
+ồ
+ng bi
+ế
+n, ngh
+ị
+ch bi
+ế
+n c
+ủ
+a m
+ộ
+t hàm s
+ố
+ 
+trên m
+ộ
+t 
+kho
+ả
+ng d
+ự
+a vào d
+ấ
+u c
+ủ
+a đ
+ạ
+o hàm c
+ấ
+p m
+ộ
+t c
+ủ
+a nó.
+ 
+–
+ 
+Th
+ể
+ 
+hi
+ệ
+n đư
+ợ
+c 
+tính đ
+ồ
+ng bi
+ế
+n, ngh
+ị
+ch bi
+ế
+n 
+c
+ủ
+a hàm s
+ố
+ 
+trong b
+ả
+ng bi
+ế
+n 
+thiên.
+ 
+
+--- PAGE 106 ---
+106
+ 
+N
+ộ
+i dung
+ 
+Yêu c
+ầ
+u c
+ầ
+n đ
+ạ
+t
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t đư
+ợ
+c 
+tính đơn đi
+ệ
+u, 
+đi
+ể
+m c
+ự
+c tr
+ị
+, giá tr
+ị
+ 
+c
+ự
+c tr
+ị
+ 
+c
+ủ
+a hàm s
+ố
+ 
+t
+hông qua b
+ả
+ng bi
+ế
+n thiên ho
+ặ
+c thông qua hình 
+ả
+nh hình h
+ọ
+c c
+ủ
+a đ
+ồ
+ 
+th
+ị
+ 
+hàm s
+ố
+.
+ 
+G
+iá tr
+ị
+ 
+l
+ớ
+n nh
+ấ
+t, giá tr
+ị
+ 
+nh
+ỏ
+ 
+nh
+ấ
+t c
+ủ
+a hàm s
+ố
+ 
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t đư
+ợ
+c giá tr
+ị
+ 
+l
+ớ
+n nh
+ấ
+t, giá tr
+ị
+ 
+nh
+ỏ
+ 
+nh
+ấ
+t c
+ủ
+a hàm s
+ố
+ 
+trên m
+ộ
+t t
+ậ
+p 
+xác đ
+ị
+nh cho trư
+ớ
+c.
+ 
+–
+ 
+Xác đ
+ị
+nh
+ 
+đư
+ợ
+c giá tr
+ị
+ 
+l
+ớ
+n nh
+ấ
+t, 
+giá tr
+ị
+ 
+nh
+ỏ
+ 
+nh
+ấ
+t c
+ủ
+a hàm s
+ố
+ 
+b
+ằ
+ng đ
+ạ
+o 
+hàm trong nh
+ữ
+ng trư
+ờ
+ng h
+ợ
+p đơn gi
+ả
+n.
+ 
+Kh
+ả
+o sát và v
+ẽ
+ 
+đ
+ồ
+ 
+th
+ị
+ 
+c
+ủ
+a 
+hàm s
+ố
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t đư
+ợ
+c hình 
+ả
+nh hình h
+ọ
+c c
+ủ
+a đư
+ờ
+ng ti
+ệ
+m c
+ậ
+n ngang, đư
+ờ
+ng 
+ti
+ệ
+m c
+ậ
+n đ
+ứ
+ng, đư
+ờ
+ng ti
+ệ
+m c
+ậ
+n xiên c
+ủ
+a đ
+ồ
+ 
+th
+ị
+ 
+hàm s
+ố
+.
+ 
+–
+ 
+Mô t
+ả
+ 
+đư
+ợ
+c sơ đ
+ồ
+ 
+t
+ổ
+ng qu
+át đ
+ể
+ 
+kh
+ả
+o sát hàm s
+ố
+ 
+(tìm t
+ậ
+p xác đ
+ị
+nh, xét 
+chi
+ề
+u bi
+ế
+n thiên, tìm c
+ự
+c tr
+ị
+, tìm ti
+ệ
+m c
+ậ
+n, l
+ậ
+p b
+ả
+ng bi
+ế
+n thiên, v
+ẽ
+ 
+đ
+ồ
+ 
+th
+ị
+).
+ 
+–
+ 
+Kh
+ả
+o sát đư
+ợ
+c t
+ậ
+p xác đ
+ị
+nh, chi
+ề
+u bi
+ế
+n thiên, c
+ự
+c tr
+ị
+, ti
+ệ
+m c
+ậ
+n, b
+ả
+ng 
+bi
+ế
+n thiên và v
+ẽ
+ 
+đ
+ồ
+ 
+th
+ị
+ 
+c
+ủ
+a các hàm s
+ố
+:
+ 
+y
+ 
+= 
+ax
+3 
++ 
+bx
+2 
++ 
+cx
+ 
++ 
+d
+ 
+(
+a
+ 
+
+ 
+0); 
+
+
+
+ax b
+y
+cx d
+(
+c
+ 
+
+ 
+0, 
+ad
+ 
+
+ 
+bc
+ 
+
+ 
+0); 
+ 
+2
+ 
+
+
+ax bx c
+y
+mx n
+(
+a
+ 
+
+ 
+0, 
+m
+ 
+
+ 
+0 và đa th
+ứ
+c t
+ử
+ 
+không chia h
+ế
+t cho đa th
+ứ
+c 
+m
+ẫ
+u).
+ 
+–
+ 
+Nh
+ận biết đ
+ư
+ợc tính đối xứng (trục đối xứng, tâm đối xứng) của đồ thị 
+các hàm s
+ố tr
+ên.
+ 
+ 
+Ứ
+ng d
+ụ
+ng đ
+ạ
+o hàm 
+đ
+ể
+ 
+gi
+ả
+i 
+quy
+ế
+t m
+ộ
+t s
+ố
+ 
+v
+ấ
+n đ
+ề
+ 
+liên 
+V
+ậ
+n d
+ụ
+ng đư
+ợ
+c đ
+ạ
+o hàm và kh
+ả
+o sát hàm s
+ố
+ 
+đ
+ể
+ 
+gi
+ả
+i quy
+ế
+t m
+ộ
+t s
+ố
+ 
+v
+ấ
+n đ
+ề
+ 
+liên quan đ
+ế
+n th
+ự
+c ti
+ễ
+n.
+ 
+
+--- PAGE 107 ---
+107
+ 
+N
+ộ
+i dung
+ 
+Yêu c
+ầ
+u c
+ầ
+n đ
+ạ
+t
+ 
+quan đ
+ế
+n th
+ự
+c ti
+ễ
+n
+ 
+Nguyên hàm. Tích 
+phân
+ 
+Nguyên hàm
+. B
+ả
+ng 
+nguyên 
+hàm c
+ủ
+a m
+ộ
+t s
+ố
+ 
+hàm s
+ố
+ 
+sơ 
+c
+ấ
+p
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t
+ 
+đư
+ợ
+c khái ni
+ệ
+m nguyên 
+hàm c
+ủ
+a m
+ộ
+t hàm s
+ố
+.
+ 
+–
+ 
+Gi
+ả
+i thích
+ 
+đư
+ợ
+c tính ch
+ấ
+t cơ b
+ả
+n c
+ủ
+a nguyên hàm.
+ 
+–
+ 
+Xác đ
+ị
+nh đư
+ợ
+c nguyên hàm c
+ủ
+a m
+ộ
+t s
+ố
+ 
+hàm s
+ố
+ 
+sơ c
+ấ
+p 
+như:
+ 
+ 
+ 
+
+
+1 ;
+y x
+
+
+  
+1
+;
+
+y
+x
+sin ;
+
+y x
+cos ;
+
+y x
+ 
+2
+1
+;
+cos
+
+y
+x
+2
+1
+;
+sin
+
+y
+x
+; .
+ 
+x x
+y a y e
+ 
+–
+ 
+Tính
+ 
+đư
+ợ
+c nguyên hàm trong nh
+ữ
+ng trư
+ờ
+ng h
+ợ
+p đơn gi
+ả
+n.
+ 
+Tích phân
+. 
+Ứ
+ng d
+ụ
+ng hình 
+h
+ọ
+c c
+ủ
+a tích phân
+ 
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t
+ 
+đư
+ợ
+c đ
+ị
+nh ngh
+ĩa v
+à các tính ch
+ấ
+t c
+ủ
+a tích phân.
+ 
+–
+ 
+Tính đư
+ợ
+c tích phân trong nh
+ữ
+ng tr
+ư
+ờ
+ng h
+ợ
+p đơn gi
+ả
+n.
+ 
+–
+ 
+S
+ử
+ 
+d
+ụ
+ng đư
+ợ
+c tích phân đ
+ể
+ 
+tính di
+ệ
+n tích c
+ủ
+a m
+ộ
+t s
+ố
+ 
+hình ph
+ẳ
+ng, th
+ể
+ 
+tích 
+c
+ủ
+a m
+ộ
+t s
+ố
+ 
+hình kh
+ố
+i.
+ 
+–
+ 
+V
+ậ
+n d
+ụ
+ng đư
+ợ
+c tích phân đ
+ể
+ 
+gi
+ả
+i m
+ộ
+t s
+ố
+ 
+bài toán có liên quan đ
+ế
+n th
+ự
+c ti
+ễ
+n.
+ 
+Th
+ự
+c hành trong phòng máy tính v
+ớ
+i ph
+ầ
+n m
+ề
+m 
+toán
+ 
+h
+ọ
+c (
+n
+ế
+u nhà
+ 
+trư
+ờ
+ng có
+ 
+đi
+ề
+u ki
+ệ
+n th
+ự
+c hi
+ệ
+n)
+ 
+–
+ 
+S
+ử
+ 
+d
+ụ
+ng ph
+ầ
+n m
+ề
+m đ
+ể
+ 
+h
+ỗ
+ 
+tr
+ợ
+ 
+vi
+ệ
+c h
+ọ
+c các ki
+ế
+n th
+ứ
+c
+ 
+đ
+ạ
+i s
+ố
+ 
+và gi
+ả
+i tích.
+ 
+–
+ 
+Th
+ự
+c hành s
+ử
+ 
+d
+ụ
+ng ph
+ầ
+n m
+ề
+m đ
+ể
+ 
+v
+ẽ
+ 
+các đ
+ồ
+ 
+th
+ị
+; minh ho
+ạ
+ 
+s
+ự
+ 
+tương giao c
+ủ
+a các đ
+ồ
+ 
+th
+ị
+; th
+ự
+c hi
+ệ
+n các phép bi
+ế
+n đ
+ổ
+i đ
+ồ
+ 
+th
+ị
+; 
+t
+ạ
+o hoa văn, h
+ình kh
+ố
+i.
+ 
+–
+ 
+Th
+ự
+c hành s
+ử
+ 
+d
+ụ
+ng ph
+ầ
+n m
+ề
+m đ
+ể
+ 
+t
+ạ
+o mô hình kh
+ố
+i tròn xoay trong m
+ộ
+t s
+ố
+ 
+bài toán 
+ứ
+ng d
+ụ
+ng tích phân xác đ
+ị
+nh.
+ 
+HÌNH H
+Ọ
+C VÀ ĐO LƯ
+Ờ
+NG
+ 
+Hình h
+ọ
+c không gian
+ 
+
+--- PAGE 108 ---
+108
+ 
+N
+ộ
+i dung
+ 
+Yêu c
+ầ
+u c
+ầ
+n đ
+ạ
+t
+ 
+Phương pháp t
+o
+ạ
+ 
+đ
+ộ
+ 
+trong không 
+gian
+ 
+ 
+To
+ạ
+ 
+đ
+ộ
+ 
+c
+ủ
+a vectơ 
+ 
+đ
+ố
+i v
+ớ
+i m
+ộ
+t h
+ệ
+ 
+tr
+ụ
+c to
+ạ
+ 
+đ
+ộ
+. 
+Bi
+ể
+u th
+ứ
+c t
+o
+ạ
+ 
+đ
+ộ
+ 
+c
+ủ
+a cá
+c 
+phép toán vectơ
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t đư
+ợ
+c
+ 
+vectơ 
+và các phép toán v
+ectơ trong không gian
+ 
+(t
+ổ
+ng và 
+hi
+ệ
+u 
+c
+ủ
+a 
+hai vectơ, tích c
+ủ
+a m
+ộ
+t s
+ố
+ 
+v
+ớ
+i 
+m
+ộ
+t 
+vectơ, tích vô hư
+ớ
+ng c
+ủ
+a hai 
+vectơ)
+.
+ 
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t đư
+ợ
+c 
+to
+ạ
+ 
+đ
+ộ
+ 
+c
+ủ
+a m
+ộ
+t vectơ đ
+ố
+i v
+ớ
+i 
+h
+ệ
+ 
+tr
+ụ
+c to
+ạ
+ 
+đ
+ộ
+.
+ 
+ 
+–
+ 
+Xác đ
+ị
+nh đư
+ợ
+c đ
+ộ
+ 
+dà
+i c
+ủ
+a m
+ộ
+t vectơ khi bi
+ế
+t to
+ạ
+ 
+đ
+ộ
+ 
+hai đ
+ầ
+u mút c
+ủ
+a nó 
+và bi
+ể
+u th
+ứ
+c to
+ạ
+ 
+đ
+ộ
+ 
+c
+ủ
+a các phép toán vectơ.
+ 
+–
+ 
+Xác đ
+ị
+nh
+ 
+đư
+ợ
+c bi
+ể
+u th
+ứ
+c to
+ạ
+ 
+đ
+ộ
+ 
+c
+ủ
+a các phép toán vectơ.
+ 
+–
+ 
+V
+ậ
+n d
+ụ
+ng đư
+ợ
+c to
+ạ
+ 
+đ
+ộ
+ 
+c
+ủ
+a vectơ đ
+ể
+ 
+gi
+ả
+i m
+ộ
+t s
+ố
+ 
+bài toán có liên quan 
+đ
+ế
+n th
+ự
+c ti
+ễ
+n.
+ 
+Phương tr
+ình m
+ặ
+t ph
+ẳ
+ng
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t đư
+ợ
+c phương tr
+ình t
+ổ
+ng quát c
+ủ
+a 
+m
+ặ
+t ph
+ẳ
+ng.
+ 
+–
+ 
+Thi
+ế
+t l
+ậ
+p đư
+ợ
+c phương tr
+ình t
+ổ
+ng quát c
+ủ
+a 
+m
+ặ
+t ph
+ẳ
+ng trong h
+ệ
+ 
+tr
+ụ
+c to
+ạ
+ 
+đ
+ộ
+ 
+Oxyz
+ 
+theo m
+ộ
+t trong 
+ba cách cơ b
+ả
+n
+: 
+qua m
+ộ
+t đi
+ể
+m và bi
+ế
+t 
+vectơ pháp 
+tuy
+ế
+n; qua m
+ộ
+t đi
+ể
+m và bi
+ế
+t 
+c
+ặ
+p vectơ ch
+ỉ
+ 
+phương
+ 
+(
+suy ra vectơ pháp 
+tuy
+ế
+n 
+nh
+ờ
+ 
+vào vi
+ệ
+c tìm vect
+ơ vuông góc v
+ớ
+i
+ 
+c
+ặ
+p vectơ ch
+ỉ
+ 
+phương
+)
+; qua 
+ba đi
+ể
+m không th
+ẳ
+ng hàng
+.
+ 
+–
+ 
+Thi
+ế
+t l
+ậ
+p đư
+ợ
+c đi
+ề
+u ki
+ệ
+n đ
+ể
+ 
+hai 
+m
+ặ
+t ph
+ẳ
+ng
+ 
+song song, vuông góc v
+ớ
+i 
+nhau.
+ 
+–
+ 
+Tính đư
+ợ
+c kho
+ả
+ng cách t
+ừ
+ 
+m
+ộ
+t đi
+ể
+m đ
+ế
+n m
+ộ
+t
+ 
+m
+ặ
+t ph
+ẳ
+ng b
+ằ
+ng phương 
+p
+háp to
+ạ
+ 
+đ
+ộ
+.
+ 
+–
+ 
+V
+ậ
+n d
+ụ
+ng
+ 
+đư
+ợ
+c ki
+ế
+n th
+ứ
+c v
+ề
+ 
+phương tr
+ình m
+ặ
+t ph
+ẳ
+ng 
+đ
+ể
+ 
+gi
+ả
+i m
+ộ
+t s
+ố
+ 
+bài 
+toán liên quan đ
+ế
+n th
+ự
+c ti
+ễ
+n.
+ 
+Phương tr
+ình 
+đư
+ờ
+ng th
+ẳ
+ng 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t đư
+ợ
+c phương tr
+ình chính t
+ắ
+c, phương tr
+ình tham s
+ố
+, vectơ ch
+ỉ
+ 
+
+--- PAGE 109 ---
+109
+ 
+N
+ộ
+i dung
+ 
+Yêu c
+ầ
+u c
+ầ
+n đ
+ạ
+t
+ 
+trong không gian
+ 
+phương c
+ủ
+a đư
+ờ
+ng th
+ẳ
+ng
+ 
+tro
+ng không gian
+.
+ 
+–
+ 
+Thiết l
+ậ
+p được phương trình c
+ủ
+a 
+đư
+ờ
+ng th
+ẳ
+ng trong h
+ệ
+ 
+tr
+ụ
+c to
+ạ
+ 
+đ
+ộ
+ 
+theo 
+một trong hai cách cơ b
+ả
+n: qua m
+ộ
+t đi
+ể
+m và bi
+ế
+t m
+ộ
+t vectơ ch
+ỉ
+ 
+phương, 
+qua hai đi
+ể
+m
+.
+ 
+–
+ 
+Xác đ
+ị
+nh đư
+ợ
+c đi
+ề
+u ki
+ệ
+n đ
+ể
+ 
+hai đư
+ờ
+ng th
+ẳ
+ng chéo nhau, c
+ắ
+t nhau, 
+ 
+song song ho
+ặ
+c 
+vuông góc v
+ớ
+i nhau. 
+ 
+–
+ 
+Thiết l
+ậ
+p được 
+công th
+ức tính góc giữa hai đ
+ư
+ờng thẳng, giữa đ
+ư
+ờng 
+th
+ẳng v
+à m
+ặt phẳng, giữa hai mặt phẳng.
+ 
+–
+ 
+V
+ậ
+n d
+ụ
+ng
+ 
+đư
+ợ
+c ki
+ế
+n th
+ứ
+c v
+ề
+ 
+phương tr
+ình 
+đư
+ờ
+ng th
+ẳ
+ng trong không 
+gian 
+đ
+ể
+ 
+gi
+ả
+i m
+ộ
+t s
+ố
+ 
+bài toán liên quan đ
+ế
+n th
+ự
+c ti
+ễ
+n.
+ 
+Ph
+ương tr
+ình m
+ặ
+t c
+ầ
+u
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t đư
+ợ
+c phương tr
+ình m
+ặ
+t c
+ầ
+u.
+ 
+–
+ 
+Xác đ
+ị
+nh đư
+ợ
+c tâm, bán kính c
+ủ
+a m
+ặ
+t c
+ầ
+u khi bi
+ế
+t phương tr
+ình c
+ủ
+a nó.
+ 
+–
+ 
+Thi
+ế
+t l
+ậ
+p đư
+ợ
+c phương tr
+ình c
+ủ
+a m
+ặ
+t c
+ầ
+u khi bi
+ế
+t tâm và bán kính. 
+ 
+–
+ 
+V
+ậ
+n d
+ụ
+ng
+ 
+đư
+ợ
+c ki
+ế
+n th
+ứ
+c v
+ề
+ 
+phương tr
+ình m
+ặ
+t c
+ầ
+u 
+đ
+ể
+ 
+gi
+ả
+i
+ 
+m
+ộ
+t s
+ố
+ 
+bài 
+toán liên quan đ
+ế
+n th
+ự
+c ti
+ễ
+n.
+ 
+Th
+ự
+c hành trong phòng máy tính v
+ớ
+i ph
+ầ
+n m
+ề
+m toán h
+ọ
+c (
+n
+ế
+u nhà trư
+ờ
+ng có
+ 
+đi
+ề
+u ki
+ệ
+n th
+ự
+c hi
+ệ
+n)
+ 
+–
+ 
+S
+ử
+ 
+d
+ụ
+ng ph
+ầ
+n m
+ề
+m đ
+ể
+ 
+h
+ỗ
+ 
+tr
+ợ
+ 
+vi
+ệ
+c h
+ọ
+c các ki
+ế
+n th
+ứ
+c
+ 
+h
+ình h
+ọ
+c.
+ 
+–
+ 
+Th
+ự
+c hành s
+ử
+ 
+d
+ụ
+ng ph
+ầ
+n m
+ề
+m đ
+ể
+ 
+bi
+ể
+u th
+ị
+ 
+đi
+ể
+m, vectơ, các
+ 
+phép toán vectơ trong h
+ệ
+ 
+tr
+ụ
+c to
+ạ
+ 
+đ
+ộ
+ 
+Oxyz
+. 
+ 
+–
+ 
+Th
+ự
+c hành s
+ử
+ 
+d
+ụ
+ng ph
+ầ
+n m
+ề
+m đ
+ể
+ 
+v
+ẽ
+ 
+đư
+ờ
+ng th
+ẳ
+ng, m
+ặ
+t ph
+ẳ
+ng, m
+ặ
+t c
+ầ
+u trong h
+ệ
+ 
+tr
+ụ
+c to
+ạ
+ 
+đ
+ộ
+ 
+Oxyz
+; xem xét s
+ự
+ 
+thay đ
+ổ
+i hình 
+d
+ạ
+ng khi thay đ
+ổ
+i các y
+ế
+u t
+ố
+ 
+trong phương tr
+ình c
+ủ
+a chúng.
+ 
+ 
+
+--- PAGE 110 ---
+110
+ 
+N
+ộ
+i dung
+ 
+Yêu c
+ầ
+u c
+ầ
+n đ
+ạ
+t
+ 
+T
+H
+Ố
+NG KÊ VÀ XÁC SU
+Ấ
+T
+ 
+Th
+ố
+ng kê
+ 
+Phân tích
+ 
+và 
+x
+ử lí
+ 
+d
+ữ
+ 
+li
+ệ
+u
+ 
+Các s
+ố
+ 
+đ
+ặ
+c trưng c
+ủ
+a m
+ẫ
+u 
+s
+ố
+ 
+li
+ệ
+u
+ 
+ghép nhóm
+ 
+ 
+–
+ 
+Tính đư
+ợc 
+các 
+s
+ố đặc tr
+ưng 
+đo m
+ức độ phân tán cho 
+m
+ẫu số liệu
+ 
+ghép 
+nhóm
+:
+ 
+kho
+ảng biến thi
+ên, kho
+ảng tứ phân vị, ph
+ương sai, đ
+ộ lệch chuẩn
+.
+ 
+–
+ 
+Gi
+ải thích
+ 
+đư
+ợc ý nghĩa v
+à vai trò c
+ủa 
+các
+ 
+s
+ố đặc tr
+ưng 
+nói trên 
+c
+ủa mẫu 
+s
+ố liệu trong thực tiễn.
+ 
+–
+ 
+Ch
+ỉ
+ 
+ra đư
+ợc 
+nh
+ững 
+k
+ết luận nhờ ý nghĩa của 
+các 
+s
+ố đặc tr
+ưng 
+nói trên 
+c
+ủa mẫu số liệu trong tr
+ư
+ờng hợp đ
+ơn gi
+ản.
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t đư
+ợ
+c m
+ố
+i liên h
+ệ
+ 
+gi
+ữ
+a th
+ố
+ng kê v
+ớ
+i 
+nh
+ữ
+ng 
+ki
+ế
+n th
+ứ
+c 
+c
+ủ
+a
+ 
+các 
+môn
+ 
+h
+ọ
+c khác
+ 
+tr
+ong Chương tr
+ình l
+ớ
+p 12 
+và trong th
+ự
+c ti
+ễ
+n.
+ 
+Xác su
+ấ
+t
+ 
+Khái ni
+ệ
+m v
+ề
+ 
+xác 
+su
+ấ
+t 
+có đi
+ề
+u ki
+ệ
+n
+ 
+Xác su
+ấ
+t có đi
+ề
+u ki
+ệ
+n
+ 
+–
+ 
+Nh
+ậ
+n bi
+ế
+t đư
+ợ
+c khái ni
+ệ
+m v
+ề
+ 
+xác su
+ấ
+t có đi
+ề
+u ki
+ệ
+n.
+ 
+–
+ 
+Gi
+ả
+i thích đư
+ợ
+c ý ngh
+ĩa c
+ủ
+a xác su
+ấ
+t có đi
+ề
+u ki
+ệ
+n trong nh
+ữ
+ng tình 
+hu
+ố
+ng th
+ự
+c ti
+ễ
+n quen t
+hu
+ộ
+c. 
+ 
+Các quy t
+ắ
+c tính 
+xác su
+ấ
+t
+ 
+ 
+Các quy t
+ắ
+c tính xác su
+ấ
+t
+ 
+–
+ 
+Mô t
+ả
+ 
+đư
+ợ
+c công th
+ứ
+c xác su
+ấ
+t toàn ph
+ầ
+n, công th
+ứ
+c Bayes thông qua 
+b
+ảng 
+d
+ữ liệu thống k
+ê
+ 
+2x2 
+và
+ 
+sơ đ
+ồ
+ 
+hình cây.
+ 
+–
+ 
+S
+ử
+ 
+d
+ụ
+ng đư
+ợ
+c công th
+ứ
+c Bayes đ
+ể
+ 
+tính xác su
+ấ
+t có đi
+ề
+u ki
+ệ
+n và v
+ậ
+n d
+ụ
+ng
+ 
+vào m
+ộ
+t 
+s
+ố
+ 
+bài toán th
+ự
+c ti
+ễ
+n.
+ 
+–
+ 
+S
+ử
+ 
+d
+ụ
+ng đư
+ợ
+c sơ đ
+ồ
+ 
+hình cây 
+đ
+ể
+ 
+tính xác su
+ấ
+t có đi
+ề
+u ki
+ệ
+n trong m
+ộ
+t s
+ố
+ 
+bài toán th
+ự
+c ti
+ễ
+n liên quan t
+ớ
+i th
+ố
+ng kê.
+ 
+
+--- PAGE 111 ---
+111
+ 
+N
+ộ
+i dung
+ 
+Yêu c
+ầ
+u c
+ầ
+n đ
+ạ
+t
+ 
+Th
+ự
+c hành trong phòng máy tính v
+ớ
+i ph
+ầ
+n m
+ề
+m toán h
+ọ
+c
+ 
+(
+n
+ế
+u nhà trư
+ờ
+ng 
+có đi
+ề
+u ki
+ệ
+n th
+ự
+c hi
+ệ
+n)
+ 
+–
+ 
+S
+ử
+ 
+d
+ụ
+ng ph
+ầ
+n m
+ề
+m đ
+ể
+ 
+h
+ỗ
+ 
+tr
+ợ
+ 
+vi
+ệ
+c h
+ọ
+c các ki
+ế
+n th
+ứ
+c 
+t
+h
+ố
+ng kê
+ 
+và xác su
+ấ
+t
+.
+ 
+–
+ 
+Th
+ự
+c hành s
+ử
+ 
+d
+ụ
+ng ph
+ầ
+n m
+ề
+m đ
+ể
+ 
+tính 
+phân b
+ố
+ 
+nh
+ị
+ 
+th
+ứ
+c, tính toán th
+ố
+ng kê
+.
+ 
+HO
+Ạ
+T Đ
+Ộ
+NG TH
+Ự
+C HÀNH VÀ TR
+Ả
+I NGHI
+Ệ
+M
+ 
+Nhà trư
+ờ
+ng t
+ổ
+ 
+ch
+ứ
+c cho h
+ọ
+c sinh m
+ộ
+t s
+ố
+ 
+ho
+ạ
+t đ
+ộ
+ng sau và có th
+ể
+ 
+b
+ổ
+ 
+sung các ho
+ạ
+t đ
+ộ
+ng khác tu
+ỳ
+ 
+vào đi
+ề
+u ki
+ệ
+n c
+ụ
+ 
+th
+ể
+.
+ 
+Ho
+ạ
+t đ
+ộ
+ng 1: 
+Th
+ự
+c hành 
+ứ
+ng d
+ụ
+ng các ki
+ế
+n th
+ứ
+c toán h
+ọ
+c vào th
+ự
+c ti
+ễ
+n và các ch
+ủ
+ 
+đ
+ề
+ 
+liên môn, ch
+ẳ
+ng h
+ạ
+n: 
+ 
+–
+ 
+Th
+ự
+c hành t
+ổ
+ng h
+ợ
+p các ho
+ạ
+t đ
+ộ
+ng liên quan đ
+ế
+n tính toán, đo lư
+ờ
+ng, ư
+ớ
+c lư
+ợ
+ng và t
+ạ
+o l
+ậ
+p hình
+.
+ 
+–
+ 
+V
+ậ
+n d
+ụ
+ng ki
+ế
+n th
+ứ
+c v
+ề
+ 
+phương
+ 
+pháp to
+ạ
+ 
+đ
+ộ
+ 
+trong 
+h
+ình h
+ọ
+c không gian đ
+ể
+ 
+tìm hi
+ể
+u h
+ệ
+ 
+th
+ố
+ng GPS, tìm hi
+ể
+u v
+ề
+ 
+đ
+ồ
+ 
+ho
+ạ
+, v
+ẽ
+ 
+k
+ĩ
+ 
+thu
+ậ
+t và thi
+ế
+t k
+ế
+ 
+trong Công ngh
+ệ
+.
+ 
+–
+ 
+V
+ậ
+n d
+ụ
+ng ki
+ế
+n th
+ứ
+c v
+ề
+ 
+đ
+ạ
+o hàm đ
+ể
+ 
+gi
+ả
+i thích các quy lu
+ậ
+t c
+ủ
+a V
+ậ
+t lí
+ 
+(quy lu
+ậ
+t âm h
+ọ
+c, quang h
+ọ
+c), Hoá h
+ọ
+c và gi
+ả
+i quy
+ế
+t 
+bài toán
+ 
+t
+ố
+i ưu v
+ề
+ 
+kinh t
+ế
+, th
+ờ
+i gian, quãng 
+đư
+ờ
+ng,...
+ 
+ 
+Ho
+ạ
+t đ
+ộ
+ng 2:
+ 
+V
+ậ
+n d
+ụ
+ng các ki
+ế
+n th
+ứ
+c 
+toán h
+ọc v
+ào
+ 
+m
+ột số vấn đề li
+ên quan đ
+ến t
+ài chính
+.
+ 
+Ho
+ạ
+t đ
+ộ
+ng 3
+: 
+T
+ổ
+ 
+ch
+ứ
+c 
+các ho
+ạ
+t đ
+ộ
+ng ngoài gi
+ờ
+ 
+chính khoá: 
+câu l
+ạ
+c b
+ộ
+ 
+toán h
+ọ
+c; 
+cu
+ộ
+c thi v
+ề
+ 
+T
+oán
+; 
+d
+ự
+ 
+án h
+ọ
+c t
+ậ
+p
+;
+ 
+ra báo 
+tư
+ờ
+ng (ho
+ặ
+c n
+ộ
+i san) v
+ề
+ 
+Toán, ch
+ẳ
+ng h
+ạ
+n: câu l
+ạ
+c b
+ộ
+ 
+v
+ề
+ 
+ứ
+ng d
+ụ
+ng toán h
+ọ
+c trong khoa h
+ọ
+c máy tính và công ngh
+ệ
+ 
+thông tin. 
+ 
+Ho
+ạ
+t đ
+ộ
+ng 4
+ 
+(n
+ế
+u nhà trư
+ờ
+ng có đi
+ề
+u ki
+ệ
+n th
+ự
+c hi
+ệ
+n): 
+T
+ổ
+ 
+ch
+ứ
+c giao lưu h
+ọ
+c sinh gi
+ỏ
+i 
+Toán 
+trong trư
+ờ
+ng và trư
+ờ
+ng b
+ạ
+n, giao 
+lưu v
+ớ
+i các ch
+uyên gia 
+nhằm hiểu vai trò của Toán học trong thực tiễn và trong các ngành nghề
+,...
+ 
+ 
+ 
+ 
+ 
+
+--- PAGE 112 ---
+112
+ 
+N
+ỘI DUNG CHUY
+ÊN Đ
+Ề 

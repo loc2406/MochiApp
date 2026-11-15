@@ -1,0 +1,27 @@
+Nội dung                                                               Yêu cầu cần đạt
+  Hai           mặt           phẳng  – Nhận biết được hai mặt phẳng vuông góc trong không gian.
+  vuông  góc.  Hình  lăng  trụ       – Xác định được điều kiện để hai mặt phẳng vuông góc.
+  đứng,   lăng  trụ   đều,  hình     – Giải thích được tính chất cơ bản về hai mặt phẳng vuông góc.
+  hộp  đứng,     hình  hộp  chữ      – Giải thích được tính chất cơ bản của hình lăng trụ              đứng, lăng trụ đều,
+  nhật,   hình   lập   phương,       hình hộp đứng, hình hộp chữ nhật, hình lập phương, hình chóp đều.
+  hình chóp đều.                     – Vận dụng được kiến thức về hai mặt phẳng vuông góc để mô tả một số
+
+                                     hình ảnh trong thực tiễn.
+  Khoảng  cách  trong  không         – Xác định được khoảng cách từ một điểm đến một đường thẳng; khoảng
+  gian                               cách từ một điểm đến một mặt phẳng; khoảng cách giữa hai đường thẳng
+                                     song  song;  khoảng  cách  giữa  đường  thẳng  và  mặt  phẳng  song  song;
+                                     khoảng cách giữa hai mặt phẳng song song trong những trường hợp đơn
+                                     giản.
+                                     –  Nhận  biết   được    đường  vuông  góc  chung  của  hai  đường  thẳng  chéo
+                                     nhau; tính được khoảng cách giữa hai đường thẳng chéo nhau trong những
+                                     trường hợp đơn giản (ví dụ: có một đường thẳng vuông góc với mặt phẳng
+                                     chứa đường thẳng còn lại).
+                                     – Sử dụng được kiến thức về khoảng cách trong không gian để mô tả một
+                                     số hình ảnh trong thực tiễn.
+  Góc  giữa  đường  thẳng       và   – Nhận biết được khái niệm góc giữa đường thẳng và mặt phẳng.
+  mặt  phẳng.  Góc  nhị      diện    – Xác định và tính được góc giữa đường thẳng và mặt phẳng trong những
+  và góc phẳng nhị diện              trường hợp đơn giản (ví dụ: đã biết hình chiếu vuông góc của đường thẳng
+                                     lên mặt phẳng).
+
+
+                                                 100

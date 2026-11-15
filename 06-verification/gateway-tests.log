@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: unauthenticated calls never reach provider
+ok 1 - unauthenticated calls never reach provider
+  ---
+  duration_ms: 23.520457
+  type: 'test'
+  ...
+# Subtest: server validates session, preserves Vietnamese, clamps token budget and never exposes secret
+ok 2 - server validates session, preserves Vietnamese, clamps token budget and never exposes secret
+  ---
+  duration_ms: 8.583152
+  type: 'test'
+  ...
+# Subtest: untrusted browser origins and models are rejected
+ok 3 - untrusted browser origins and models are rejected
+  ---
+  duration_ms: 6.303988
+  type: 'test'
+  ...
+# Subtest: user capacity is enforced before the twenty-first provider request
+ok 4 - user capacity is enforced before the twenty-first provider request
+  ---
+  duration_ms: 111.649891
+  type: 'test'
+  ...
+# Subtest: upstream errors do not leak provider diagnostics
+ok 5 - upstream errors do not leak provider diagnostics
+  ---
+  duration_ms: 3.024871
+  type: 'test'
+  ...
+# Subtest: image URLs cannot make the gateway/provider fetch arbitrary user-controlled hosts
+ok 6 - image URLs cannot make the gateway/provider fetch arbitrary user-controlled hosts
+  ---
+  duration_ms: 2.050039
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 705.580802

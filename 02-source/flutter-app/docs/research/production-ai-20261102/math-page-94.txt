@@ -1,0 +1,26 @@
+Nội dung                                                                  Yêu cầu cần đạt
+                                      luỹ thừa với số mũ hữu tỉ và luỹ thừa với số mũ thực.
+                                      – Sử dụng được tính chất của phép tính luỹ thừa trong tính toán các biểu
+                                      thức số và rút gọn các biểu thức chứa biến (tính viết và tính nhẩm,                     tính
+                                      nhanh một cách hợp lí).
+                                      – Tính được giá trị biểu thức số có chứa phép tính luỹ thừa bằng sử dụng
+                                      máy tính cầm tay.
+                                      – Giải quyết được một số vấn đề có liên quan đến môn học khác hoặc có
+                                      liên quan đến thực tiễn gắn với phép tính luỹ thừa (ví dụ: bài toán về lãi
+                                      suất, sự tăng trưởng,...).
+  Phép         tính        lôgarit    – Nhận biết được khái niệm lôgarit cơ số a (a > 0, a  1) của một số thực
+  (logarithm). Các tính chất          dương.
+                                      –  Giải  thích  được  các  tính  chất     của  phép  tính  lôgarit  nhờ     sử dụng  định
+                                      nghĩa hoặc các tính chất đã biết trước đó.
+                                      – Sử   dụng được tính chất của phép tính lôgarit trong tính toán các biểu
+                                      thức số và rút gọn các biểu thức chứa biến (tính viết và tính nhẩm,                     tính
+                                      nhanh một cách hợp lí).
+                                      – Tính được giá trị (đúng hoặc gần đúng) của lôgarit bằng cách sử                     dụng
+                                      máy tính cầm tay.
+                                      – Giải quyết được một số vấn đề có liên quan đến môn học khác hoặc có
+                                      liên quan đến thực tiễn gắn với phép tính lôgarit (ví dụ: bài toán liên quan
+                                      đến độ pH trong Hoá học,...).
+
+
+
+                                                    94

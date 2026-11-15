@@ -1,0 +1,16 @@
+{
+  "animated": {
+    "changed": true,
+    "retainedWhileNotReady": true,
+    "src": "http://127.0.0.1:8900/mochi/splash/mochii-reading.webp",
+    "firstFrame": true,
+    "errors": []
+  },
+  "reduced": {
+    "changed": false,
+    "retainedWhileNotReady": true,
+    "src": "http://127.0.0.1:8900/mochi/splash/mochii-poster.png",
+    "firstFrame": true,
+    "errors": []
+  }
+}

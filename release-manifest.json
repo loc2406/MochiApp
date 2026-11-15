@@ -1,0 +1,39 @@
+{
+  "handover_name": "Mochii Handover Package",
+  "package_date": "2026-11-04",
+  "version": "1.4.10",
+  "build_number": 2047,
+  "artifacts": {
+    "android": {
+      "file": "01-release/android/Mochii-1.4.10-2047.apk",
+      "size_bytes": 67851699,
+      "sha256": "4c056bf2f1403efe8fb6ce61eab29127dbb3a114a9782c861369f5e9480d8f9d",
+      "package_name": "com.mochi.study.mochi_app",
+      "min_sdk": 24,
+      "target_sdk": 36,
+      "compile_sdk": 36,
+      "architectures": [
+        "arm64-v8a",
+        "armeabi-v7a",
+        "x86_64"
+      ],
+      "signing": "Android Debug Certificate (needs replacement for store release)"
+    },
+    "web": {
+      "directory": "01-release/web/",
+      "base_href": "/mochi/",
+      "service_worker": true,
+      "manifest": "01-release/web/manifest.json",
+      "verified_browsers": [
+        "Chromium Headless (desktop 1440x1000, mobile 390x844)"
+      ]
+    },
+    "source": {
+      "flutter_app": "02-source/flutter-app/",
+      "ai_gateway": "02-source/ai-gateway/",
+      "origin_commit": "dea67c78cb8bb76d91670bb5f8a2a134a14ec90a",
+      "working_tree_included": true
+    }
+  },
+  "total_files_in_manifest": 509
+}

@@ -1,0 +1,24 @@
+                       Nội dung                                                                 Yêu cầu cần đạt
+                                                             liệu trong thực tiễn.
+                                                             – Rút ra được kết luận nhờ ý nghĩa của các số đặc trưng nói trên của mẫu
+                                                             số liệu trong trường hợp đơn giản.
+                                                             – Nhận biết được mối liên hệ giữa thống kê với những kiến thức của các
+                                                             môn học khác trong Chương trình lớp 11 và trong thực tiễn.
+Xác suất
+Khái  niệm  về     xác   Một  số    khái  niệm  về    xác    Nhận  biết  được  một số khái  niệm  về xác  suất  cổ điển:            hợp và  giao  các
+suất                     suất cổ điển                        biến cố; biến cố độc lập.
+Các  quy  tắc  tính      Các quy tắc tính xác suất           – Tính được xác suất của biến cố hợp bằng cách sử dụng công thức cộng.
+xác suất                                                     – Tính được xác suất của biến cố giao bằng cách sử dụng công thức nhân
+                                                             (cho trường hợp biến cố độc lập).
+                                                             –  Tính  được  xác  suất  của  biến  cố     trong  một  số bài  toán  đơn giản bằng
+                                                             phương pháp tổ hợp.
+                                                             – Tính được xác suất trong một số bài toán đơn giản bằng cách sử dụng sơ
+                                                             đồ hình cây.
+Thực hành trong phòng máy tính với phần mềm toán học (nếu nhà trường có điều kiện thực hiện)
+– Sử dụng phần mềm để hỗ trợ việc học các kiến thức thống kê và xác suất.
+– Sử dụng phần mềm để tính được các số đặc trưng đo xu thế trung tâm cho mẫu số liệu ghép nhóm.
+– Thực hành sử dụng phần mềm để tính xác suất.
+
+
+
+                                                                          102

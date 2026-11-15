@@ -1,0 +1,129 @@
+Analyzing .mochii-build-20261104...                             
+
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/app_release_info.dart:15:11 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:413:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:427:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:464:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:466:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:494:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:538:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:578:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:637:11 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:655:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:724:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:794:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:966:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:968:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:1128:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:1296:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:1329:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/database/mochi_store.dart:1341:9 • curly_braces_in_flow_control_structures
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/database/mochi_store.dart:1359:16 • prefer_interpolation_to_compose_strings
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/learning_models.dart:111:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/learning_models.dart:117:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/review_policy.dart:20:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/review_policy.dart:23:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/review_policy.dart:28:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/review_policy.dart:81:11 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/review_policy.dart:141:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/unified_study_planner.dart:36:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/unified_study_planner.dart:39:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/unified_study_planner.dart:47:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/unified_study_planner.dart:94:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/unified_study_planner.dart:98:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/unified_study_planner.dart:100:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/unified_study_planner.dart:186:13 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/unified_study_planner.dart:202:17 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/learning/unified_study_planner.dart:251:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:53:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:56:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:60:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:64:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:71:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:116:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:119:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:123:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:179:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:182:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:594:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/ai_service.dart:599:7 • curly_braces_in_flow_control_structures
+warning • The declaration '_generateOfflinePlan' isn't referenced. Try removing the declaration of '_generateOfflinePlan' • lib/core/services/ai_service.dart:627:30 • unused_element
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:712:32 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:758:9 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:778:34 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:837:30 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:887:9 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:890:9 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:892:9 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:894:9 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:924:34 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:966:9 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/ai_service.dart:990:32 • prefer_interpolation_to_compose_strings
+warning • Unused import: '../models/mochi_models.dart'. Try removing the import directive • lib/core/services/cloud_sync_service.dart:4:8 • unused_import
+   info • 'anonKey' is deprecated and shouldn't be used. Use publishableKey instead. anonKey will be removed in a future major version. Try replacing the use of the deprecated member with the replacement • lib/core/services/cloud_sync_service.dart:27:9 • deprecated_member_use
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/live_bridge_service.dart:19:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/live_bridge_service.dart:25:11 • curly_braces_in_flow_control_structures
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/core/services/notification_service.dart:314:18 • prefer_interpolation_to_compose_strings
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/notification_service.dart:404:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/notification_service.dart:408:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/schedule_change_policy.dart:34:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/schedule_change_policy.dart:36:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/schedule_change_policy.dart:38:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/schedule_change_policy.dart:49:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/schedule_change_policy.dart:56:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/schedule_change_policy.dart:80:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/schedule_change_policy.dart:106:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/study_schedule.dart:5:5 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/study_schedule.dart:53:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/core/services/study_schedule.dart:99:7 • curly_braces_in_flow_control_structures
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/features/ai_tutor/ai_tutor_screen.dart:95:30 • prefer_interpolation_to_compose_strings
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/ai_tutor/ai_tutor_screen.dart:302:19 • curly_braces_in_flow_control_structures
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/features/ai_tutor/ai_tutor_screen.dart:441:49 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/features/ai_tutor/ai_tutor_screen.dart:464:49 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/features/ai_tutor/ai_tutor_screen.dart:700:70 • prefer_interpolation_to_compose_strings
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/ai_tutor/widgets/schedule_change_card.dart:72:27 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/ai_tutor/widgets/tutor_quiz_card.dart:73:29 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/flashcards/flashcards_screen.dart:312:21 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/flashcards/review_screen.dart:36:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/flashcards/review_screen.dart:44:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/flashcards/review_screen.dart:99:13 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/flashcards/review_screen.dart:160:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/flashcards/review_screen.dart:206:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/flashcards/review_screen.dart:374:29 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/flashcards/review_screen.dart:377:29 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/flashcards/review_screen.dart:382:29 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/flashcards/review_screen.dart:416:35 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/focus/focus_timer_screen.dart:151:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/focus/focus_timer_screen.dart:153:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/focus/focus_timer_screen.dart:616:37 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/focus/focus_timer_screen.dart:624:39 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/learning/learning_hub_screen.dart:25:7 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/learning/learning_hub_screen.dart:308:25 • curly_braces_in_flow_control_structures
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/features/learning/learning_hub_screen.dart:686:51 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/features/learning/learning_hub_screen.dart:705:51 • prefer_interpolation_to_compose_strings
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/live_study/live_import_screen.dart:46:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/live_study/live_import_screen.dart:97:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/live_study/live_import_screen.dart:102:9 • curly_braces_in_flow_control_structures
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre. Try replacing the use of the deprecated member with the replacement • lib/features/planner/planner_screen.dart:527:19 • deprecated_member_use
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/planner/planner_screen.dart:546:23 • curly_braces_in_flow_control_structures
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check. Guard a 'State.context' use with a 'mounted' check on the State, and other BuildContext use with a 'mounted' check on the BuildContext • lib/features/planner/planner_screen.dart:735:19 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check. Guard a 'State.context' use with a 'mounted' check on the State, and other BuildContext use with a 'mounted' check on the BuildContext • lib/features/planner/planner_screen.dart:739:16 • use_build_context_synchronously
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement • lib/features/robot/robot_mascot_widget.dart:130:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement • lib/features/robot/robot_mascot_widget.dart:223:65 • deprecated_member_use
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/features/routine/routine_screen.dart:147:17 • curly_braces_in_flow_control_structures
+   info • The import of 'package:flutter/rendering.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart'. Try removing the import directive • lib/main.dart:12:8 • unnecessary_import
+warning • Unused import: 'features/flashcards/flashcards_screen.dart'. Try removing the import directive • lib/main.dart:29:8 • unused_import
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/main.dart:166:9 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/main.dart:276:25 • curly_braces_in_flow_control_structures
+   info • Unnecessary use of multiple underscores. Try using '_' • lib/main.dart:471:37 • unnecessary_underscores
+   info • Use interpolation to compose strings and values. Try using string interpolation to build the composite string • lib/main.dart:557:21 • prefer_interpolation_to_compose_strings
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/shared/widgets/mochi_assets.dart:38:29 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/shared/widgets/mochi_assets.dart:39:34 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/shared/widgets/mochi_assets.dart:40:37 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/shared/widgets/mochi_assets.dart:41:38 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • test/account_sync_test.dart:50:7 • curly_braces_in_flow_control_structures
+   info • Statements in a for should be enclosed in a block. Try wrapping the statement in a block • test/learning_hub_screen_test.dart:13:5 • curly_braces_in_flow_control_structures
+   info • Don't invoke 'print' in production code. Try using a logging framework • test/test_live_groq.dart:24:5 • avoid_print
+   info • Don't invoke 'print' in production code. Try using a logging framework • test/test_live_groq.dart:25:5 • avoid_print
+
+125 issues found. (ran in 27.7s)

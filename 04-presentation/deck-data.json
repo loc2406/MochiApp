@@ -1,0 +1,355 @@
+[
+  {
+    "kicker": "Dự án ứng dụng hỗ trợ tự học",
+    "title": "Mochii",
+    "accent": "Học cùng nhau.",
+    "lead": "Từ một mục tiêu lớn đến một việc học có thể bắt đầu ngay hôm nay.",
+    "kind": "hero",
+    "tags": [
+      "Lập kế hoạch",
+      "Tập trung",
+      "Ôn tập"
+    ],
+    "seconds": 40,
+    "notes": [
+      "Mở đầu bằng câu hỏi: Khi đặt mục tiêu học tập, điều khó nhất của chúng ta là thiếu mục tiêu hay không biết bắt đầu từ đâu?",
+      "Giới thiệu Mochii là dự án ứng dụng đồng hành tự học. Trọng tâm không phải thêm một chatbot, mà nối kế hoạch với hành động và ôn tập.",
+      "Bài trình bày đi qua vấn đề, giải pháp, demo, kiến trúc và những gì còn cần kiểm chứng."
+    ],
+    "transition": "Trước tiên, hãy nhìn vào một tình huống rất quen thuộc."
+  },
+  {
+    "kicker": "01 / Vấn đề",
+    "title": "Có mục tiêu.",
+    "accent": "Nhưng khó bắt đầu.",
+    "lead": "Người học thường phải tự nối nhiều công cụ rời rạc thành một quy trình học.",
+    "kind": "problem",
+    "cards": [
+      [
+        "target",
+        "Mục tiêu quá lớn",
+        "“Ôn xong một chương” chưa cho biết việc cần làm tối nay."
+      ],
+      [
+        "calendar",
+        "Kế hoạch lệch nhịp sống",
+        "Giờ học, giờ bận và thời gian nghỉ cần được tính cùng nhau."
+      ],
+      [
+        "layers",
+        "Học xong rồi để đó",
+        "Ghi chú, ôn lại và theo dõi tiến độ nằm ở nhiều nơi."
+      ]
+    ],
+    "seconds": 55,
+    "notes": [
+      "Đây là các tình huống thiết kế mà dự án nhắm tới, không phải kết luận từ một khảo sát định lượng.",
+      "Một người học có thể có danh sách công việc, đồng hồ và chatbot, nhưng vẫn phải tự chuyển mục tiêu thành lịch khả thi.",
+      "Vấn đề cốt lõi là khoảng cách từ ý định đến phiên học thực sự. Vì vậy dự án tập trung giảm bước chuyển đổi này."
+    ],
+    "transition": "Mochii tổ chức lại hành trình đó thành một vòng lặp."
+  },
+  {
+    "kicker": "02 / Ý tưởng giải pháp",
+    "title": "Một vòng lặp.",
+    "accent": "Bốn bước liên kết.",
+    "lead": "Kế hoạch phải dẫn đến hành động; hành động phải tạo dữ liệu cho lần học tiếp theo.",
+    "kind": "flow",
+    "steps": [
+      [
+        "target",
+        "Đặt mục tiêu",
+        "Biết mình muốn đạt điều gì."
+      ],
+      [
+        "calendar",
+        "Chia & xếp việc",
+        "Nhiệm vụ nhỏ, thời lượng rõ."
+      ],
+      [
+        "clock",
+        "Học & ghi nhận",
+        "Bắt đầu phiên học, nhận nhắc."
+      ],
+      [
+        "layers",
+        "Ôn & điều chỉnh",
+        "Flashcard, phản tư, tiến độ."
+      ]
+    ],
+    "seconds": 55,
+    "notes": [
+      "Giải thích lần lượt bốn bước. Người học không chỉ nhận một câu trả lời của AI mà có một đầu việc có thể lưu và thực hiện.",
+      "Dữ liệu nhiệm vụ, phiên học và mức độ nhớ quay lại hỗ trợ bước tiếp theo. Robot là nhân vật dẫn đường, không thay thế người học.",
+      "Điểm khác biệt mà dự án theo đuổi là tính liên tục của trải nghiệm, thay vì tuyên bố từng tính năng đều là phát minh mới."
+    ],
+    "transition": "Để dễ hình dung, ta dùng một tình huống minh họa cụ thể."
+  },
+  {
+    "kicker": "03 / Tình huống sử dụng",
+    "title": "Tối nay có 90 phút.",
+    "accent": "Mình nên học gì?",
+    "lead": "Ví dụ minh họa: một học sinh muốn ôn một chương, rảnh từ 19:30 đến 21:00.",
+    "kind": "timeline",
+    "timeline": [
+      [
+        "19:30",
+        "Ôn khái niệm",
+        "25 phút"
+      ],
+      [
+        "20:00",
+        "Làm bài vận dụng",
+        "20 phút"
+      ],
+      [
+        "20:25",
+        "Sửa lỗi & tự kiểm tra",
+        "20 phút"
+      ]
+    ],
+    "takeaway": "Mỗi việc cần có nội dung, thời lượng và một thời điểm có thể thực hiện.",
+    "seconds": 70,
+    "notes": [
+      "Nhấn mạnh đây là ví dụ minh họa luồng sử dụng, không phải kết quả benchmark hay đầu ra AI cố định.",
+      "Mục tiêu lớn được tách thành ba bước. Khoảng nghỉ được chừa giữa các phiên, và tổng thời lượng không vượt khung giờ đã chọn.",
+      "Lịch sinh hoạt là ràng buộc; AI gợi ý nội dung nhưng người học vẫn xem lại trước khi áp dụng. Không nói hệ thống đã giải quyết tuyệt đối mọi xung đột lịch."
+    ],
+    "transition": "Sau đây là thao tác từ mục tiêu đến một nhiệm vụ có thể bắt đầu."
+  },
+  {
+    "kicker": "04 / Demo sản phẩm",
+    "title": "Từ mục tiêu",
+    "accent": "đến phiên học.",
+    "lead": "Một luồng demo ngắn, thay vì đọc danh sách toàn bộ tính năng.",
+    "kind": "screenshot",
+    "image": "assets/home-current.webp",
+    "imageAlt": "Ảnh màn hình ứng dụng Mochii trên Android, với mục tiêu và nhiệm vụ hôm nay.",
+    "bullets": [
+      [
+        "01",
+        "Nhập mục tiêu & thời gian rảnh",
+        "Xác định đầu vào và ràng buộc."
+      ],
+      [
+        "02",
+        "Xem lại kế hoạch AI đề xuất",
+        "Kiểm tra nội dung, ngày giờ, thời lượng."
+      ],
+      [
+        "03",
+        "Áp dụng và chọn “Học ngay”",
+        "Nhiệm vụ đi vào danh sách để thực hiện."
+      ]
+    ],
+    "demo": true,
+    "seconds": 85,
+    "notes": [
+      "Chuyển sang ứng dụng thật bằng nút Mở demo. Nếu mạng không ổn, dùng ảnh màn hình trên slide để đi qua luồng; không giả vờ đó là demo trực tiếp.",
+      "Thao tác đúng ba bước: mở một mục tiêu, xem các nhiệm vụ được đề xuất, rồi trở lại Hôm nay và bắt đầu một nhiệm vụ.",
+      "Không dành thời gian gõ một mục tiêu dài trước hội đồng. Chuẩn bị trước một mục tiêu và chỉ trình diễn phần xem lại, áp dụng.",
+      "Khi quay về slide, tóm tắt: sản phẩm nối được phần lập kế hoạch với phiên học cụ thể."
+    ],
+    "transition": "Để kế hoạch không bị bỏ quên, Mochii còn cần cơ chế nhắc đúng ngữ cảnh."
+  },
+  {
+    "kicker": "05 / Nhắc học thông minh",
+    "title": "AI soạn lời nhắc.",
+    "accent": "Quy tắc chọn lúc nhắc.",
+    "lead": "Tách rõ hai vai trò để thông báo dễ kiểm soát, có thể kiểm thử và vẫn dùng được khi ngoại tuyến.",
+    "kind": "reminders",
+    "bullets": [
+      [
+        "calendar",
+        "Đến lịch hoặc chưa hoàn thành",
+        "Dựa trên ngày giờ nhiệm vụ đã lưu."
+      ],
+      [
+        "clock",
+        "Lâu chưa học hoặc mở app",
+        "Dựa trên hoạt động được ghi nhận trên thiết bị."
+      ],
+      [
+        "shield",
+        "Giới hạn để tránh làm phiền",
+        "Tối đa 2 nhắc tự động/ngày; không hẹn 22:00–08:00."
+      ]
+    ],
+    "footnote": "Ảnh thông báo hệ thống trên Honor. Việc giao nhắc nền còn phụ thuộc quyền và chính sách pin của Android.",
+    "seconds": 70,
+    "notes": [
+      "Nói rõ AI không chạy liên tục để theo dõi người học. Bộ quy tắc dùng dữ liệu có thật để quyết định thời điểm; AI chỉ chuẩn bị câu chữ khi có mạng.",
+      "Nội dung được lưu trên máy. Nếu AI không khả dụng, dùng mẫu theo quy tắc và không gắn nhãn AI giả.",
+      "Lịch được chuẩn bị trước tối đa 7 ngày và làm mới khi mở app. Hoàn thành nhiệm vụ sẽ cập nhật và hủy nhắc không còn phù hợp.",
+      "FCM đã tích hợp để nhận push, nhưng không đồng nghĩa đã có backend tự động gửi mọi thông báo. Không cam kết Android luôn giao đúng giờ dưới mọi chế độ pin."
+    ],
+    "transition": "Sau khi bắt đầu học, người học vẫn cần hỗ trợ hiểu và nhớ kiến thức."
+  },
+  {
+    "kicker": "06 / Hỗ trợ học & ôn tập",
+    "title": "Không chỉ có đáp án.",
+    "accent": "Còn có cách hiểu và cách nhớ.",
+    "lead": "AI Tutor hỗ trợ giải thích; flashcard giúp người học chủ động tự kiểm tra.",
+    "kind": "learning",
+    "cards": [
+      [
+        "message",
+        "AI Tutor",
+        "Trao đổi theo môn học và ngữ cảnh nhiệm vụ; ưu tiên giải thích cách tư duy."
+      ],
+      [
+        "layers",
+        "Flashcard",
+        "Câu hỏi–đáp án về bản chất, điều kiện áp dụng, ví dụ và lỗi thường gặp."
+      ],
+      [
+        "refresh",
+        "Lịch ôn lại",
+        "Ghi nhận mức độ nhớ để sắp xếp lần ôn tiếp theo."
+      ]
+    ],
+    "footnote": "AI có thể sai; cần đối chiếu với tài liệu học tập. Chưa có nghiên cứu người dùng chứng minh hiệu quả học tập của Mochii.",
+    "seconds": 80,
+    "notes": [
+      "Đưa một ví dụ: với một định lý, không chỉ hỏi công thức mà hỏi điều kiện áp dụng và một trường hợp không được áp dụng.",
+      "Giải thích active recall là người học tự nhớ lại trước khi xem đáp án; lịch ôn lại sử dụng mức độ nhớ do chính người học đánh giá.",
+      "Các nguyên lý ôn tập này là định hướng thiết kế, không phải bằng chứng Mochii đã làm tăng điểm số. Trích dẫn nghiên cứu nền tảng nằm trong tài liệu lời dẫn.",
+      "Nêu giới hạn của AI một cách chủ động: câu trả lời cần kiểm tra, đặc biệt với công thức và bài giải."
+    ],
+    "transition": "Bên cạnh nội dung, cảm giác đồng hành cũng là một phần của thiết kế."
+  },
+  {
+    "kicker": "07 / Trải nghiệm & động lực",
+    "title": "Mochii đồng hành,",
+    "accent": "không gây áp lực.",
+    "lead": "Nhân vật có phản hồi, tiến độ nhìn thấy được và thao tác bắt đầu học rõ ràng.",
+    "kind": "experience",
+    "cards": [
+      [
+        "book",
+        "Nhân vật có chuyển động",
+        "Đọc sách, chớp mắt, lật trang trong lúc ứng dụng khởi tạo."
+      ],
+      [
+        "chart",
+        "Tiến độ có thể quan sát",
+        "Nhiệm vụ, phiên học, sao và XP ghi nhận những việc đã làm."
+      ],
+      [
+        "check",
+        "Người học vẫn kiểm soát",
+        "Xem lại kế hoạch, tắt nhắc và chọn thời điểm bắt đầu."
+      ]
+    ],
+    "seconds": 55,
+    "notes": [
+      "Cho thấy chuyển động mở app mới là một chi tiết nhận diện thương hiệu, không phải màn chờ bị kéo dài để trình diễn.",
+      "Sao, XP và chuỗi ngày học là phản hồi, chưa phải thước đo chất lượng học hay năng lực của người dùng.",
+      "Tránh dùng ngôn ngữ gây tội lỗi nếu người học bỏ lỡ một ngày. Mục tiêu trải nghiệm là giúp quay lại, không tạo thêm áp lực."
+    ],
+    "transition": "Đằng sau trải nghiệm đó là kiến trúc gồm phần trên thiết bị và các dịch vụ mạng."
+  },
+  {
+    "kicker": "08 / Kiến trúc triển khai",
+    "title": "Rõ phần nào ở máy.",
+    "accent": "Rõ phần nào cần mạng.",
+    "lead": "Flutter là lớp giao diện chung; dữ liệu cục bộ và dịch vụ mạng có trách nhiệm khác nhau.",
+    "kind": "architecture",
+    "seconds": 70,
+    "notes": [
+      "Giải thích khối trên thiết bị: Flutter, dữ liệu học tập cục bộ bằng SharedPreferences và hệ thống thông báo Android.",
+      "Khối mạng gồm nhà cung cấp AI, Supabase cho tài khoản/đồng bộ và Firebase Cloud Messaging cho push.",
+      "Không nói mọi chức năng đều offline: đồng hồ và nội dung nhắc đã lưu có thể hoạt động trên máy; hỏi AI và đồng bộ cần kết nối.",
+      "Các gói dịch vụ miễn phí có hạn mức. Trước phát hành rộng cần quản lý khóa API, quyền truy cập và chi phí; không có cam kết vận hành 0đ trọn đời."
+    ],
+    "transition": "Để đánh giá dự án, cần tách phần đã làm khỏi phần còn phải đo."
+  },
+  {
+    "kicker": "09 / Kết quả & kiểm chứng",
+    "title": "Có sản phẩm chạy thử.",
+    "accent": "Không đồng nghĩa đã kiểm chứng mọi điều.",
+    "lead": "Đánh giá dựa trên hành vi thực tế, không chỉ ảnh giao diện hoặc số lượng tính năng.",
+    "kind": "evidence",
+    "columns": [
+      [
+        "Đã triển khai",
+        [
+          "APK Android và Web",
+          "Mục tiêu, nhiệm vụ, phiên học",
+          "AI Tutor, flashcard, nhắc học"
+        ]
+      ],
+      [
+        "Đã có kiểm tra",
+        [
+          "Unit và widget tests",
+          "Kiểm tra trực tiếp trên Android",
+          "Thông báo hệ thống và nội dung nhắc AI"
+        ]
+      ],
+      [
+        "Cần tiếp tục đo",
+        [
+          "Độ ổn định trên nhiều hãng máy",
+          "Mạng yếu và xung đột đồng bộ",
+          "Hiệu quả học tập với người dùng thật"
+        ]
+      ]
+    ],
+    "seconds": 75,
+    "notes": [
+      "Nếu hội đồng hỏi kết quả, phân biệt ba cấp: tính năng có trong mã, đã kiểm thử, và đã được đánh giá với người dùng.",
+      "Những gì có thể trình diễn là bản cài chạy được và luồng thao tác; bộ test tự động kiểm tra logic cùng các trạng thái giao diện.",
+      "Kiểm tra trên một Honor không suy rộng thành bảo đảm cho mọi điện thoại. Tương tự, có kết nối AI không chứng minh câu trả lời luôn đúng.",
+      "Không sử dụng các số 0,7 giây, 100% bảo mật hoặc giảm 80% thời gian quên vì dự án chưa có phép đo tương ứng."
+    ],
+    "transition": "Từ những giới hạn đó, nhóm có một hướng đánh giá và phát triển rõ ràng."
+  },
+  {
+    "kicker": "10 / Hướng phát triển",
+    "title": "Bước tiếp theo:",
+    "accent": "đo trải nghiệm và độ tin cậy.",
+    "lead": "Đề xuất thử nghiệm người dùng trong 2 tuần, đồng thời hoàn thiện nền tảng phát hành.",
+    "kind": "roadmap",
+    "cards": [
+      [
+        "chart",
+        "Đánh giá với người học",
+        "Theo dõi số phiên học, tỷ lệ hoàn thành việc đã lên lịch và phản hồi về độ phiền của nhắc học."
+      ],
+      [
+        "shield",
+        "Củng cố độ tin cậy",
+        "Kiểm thử nhiều thiết bị, mạng chập chờn, đồng bộ và quản lý khóa API."
+      ],
+      [
+        "calendar",
+        "Hoàn thiện cá nhân hóa",
+        "Cải thiện ràng buộc lịch, điều chỉnh kế hoạch và quyền riêng tư theo nhu cầu thực tế."
+      ]
+    ],
+    "footnote": "Đây là kế hoạch đánh giá đề xuất, chưa phải kết quả nghiên cứu đã thu thập.",
+    "seconds": 55,
+    "notes": [
+      "Nêu một kế hoạch có thể thực hiện thay vì hứa thêm quá nhiều tính năng: thử với một nhóm người học và thu thập dữ liệu trong hai tuần.",
+      "Chỉ số nên phản ánh hành vi học và cảm nhận, không chỉ số lượt mở app. Cần có đồng ý tham gia và giới hạn dữ liệu thu thập.",
+      "Ưu tiên tiếp theo là ổn định và an toàn khi phát hành, rồi mới mở rộng cá nhân hóa. Tránh khẳng định AI đã tự học toàn bộ thói quen của người dùng."
+    ],
+    "transition": "Xin mời thầy cô và hội đồng trải nghiệm trực tiếp, rồi góp ý cho hướng phát triển."
+  },
+  {
+    "kicker": "Trải nghiệm & thảo luận",
+    "title": "Một bước nhỏ hôm nay.",
+    "accent": "Một thói quen dài lâu.",
+    "lead": "Mochii kết nối kế hoạch, phiên học và ôn tập trong một hành trình có thể bắt đầu được.",
+    "kind": "download",
+    "seconds": 40,
+    "notes": [
+      "Tóm tắt trong một câu: Mochii giúp chuyển mục tiêu thành việc nhỏ và nối việc đó với hành động, nhắc học và ôn lại.",
+      "Mã QR bên trái mở Web; bên phải tải APK hiện hành. Android cần cho phép cài từ nguồn tải xuống và cấp quyền thông báo nếu muốn thử nhắc học.",
+      "Không yêu cầu cả hội đồng cài app ngay trong phần trình bày. Có thể mở Web để xem nhanh hoặc trải nghiệm sau.",
+      "Cảm ơn thầy cô và hội đồng. Mời câu hỏi về quyết định thiết kế, kiến trúc, giới hạn hoặc kế hoạch đánh giá."
+    ],
+    "transition": "Kết thúc phần trình bày; chuyển sang hỏi đáp."
+  }
+]

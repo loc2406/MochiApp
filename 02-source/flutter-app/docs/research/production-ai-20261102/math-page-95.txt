@@ -1,0 +1,26 @@
+                        Nội dung                                                                     Yêu cầu cần đạt
+                          Hàm số mũ. Hàm số                     – Nhận biết được hàm số mũ và hàm số lôgarit. Nêu được một số ví dụ
+                          lôgarit                               thực tế về hàm số mũ, hàm số lôgarit.
+                                                                – Nhận dạng được đồ thị của các hàm số mũ, hàm số lôgarit.
+                                                                – Giải thích được các tính chất của hàm số mũ, hàm số lôgarit thông qua
+                                                                đồ thị của chúng.
+                                                                – Giải quyết được một số vấn đề có liên quan đến môn học khác hoặc có
+                                                                liên quan đến thực tiễn gắn với hàm số mũ và hàm số lôgarit                        (ví dụ: lãi
+                                                                suất, sự tăng trưởng,...).
+                          Phương  trình,  bất  phương           – Giải được phương trình, bất phương trình mũ, lôgarit ở dạng đơn giản
+                          trình mũ và lôgarit                   (ví dụ   2x1   1 ; 2       2x                x             1          3    5; log  (      1)    3x    ; log  (     1)    log  (       1)x                  x               2).
+                                                                                 4                        2                   3                                 3
+                                                                – Giải quyết được một số vấn đề có liên quan đến môn học khác hoặc có
+                                                                liên  quan  đến     thực  tiễn  gắn  với     phương  trình,  bất  phương  trình  mũ  và
+                                                                lôgarit (ví dụ: bài toán liên quan đến độ pH, độ rung chấn,...).
+Đạo hàm                   Khái   niệm   đạo   hàm.          Ý   – Nhận biết được một số bài toán dẫn đến khái niệm đạo hàm như: xác
+                          nghĩa  hình       học   của   đạo     định vận tốc tức thời của một vật chuyển động không đều, xác định tốc độ
+                          hàm                                   thay đổi của nhiệt độ.
+                                                                –  Nhận  biết    được  định  nghĩa  đạo  hàm.         Tính  được  đạo  hàm  của  một  số
+                                                                hàm đơn giản bằng định nghĩa.
+                                                                – Nhận biết được  ý nghĩa hình học của đạo hàm.
+                                                                – Thiết lập được phương trình tiếp tuyến của đồ thị hàm số tại một điểm
+                                                                thuộc đồ thị.
+
+
+                                                                              95

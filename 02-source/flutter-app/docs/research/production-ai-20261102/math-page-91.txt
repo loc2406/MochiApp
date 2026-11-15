@@ -1,0 +1,25 @@
+                       Nội dung                                                                 Yêu cầu cần đạt
+                         Phương  trình  lượng  giác          – Nhận biết được công thức nghiệm của phương trình lượng giác cơ bản:
+                         cơ bản                              sin x = m; cos x = m; tan x = m; cot x = m bằng cách vận dụng đồ thị hàm
+                                                             số lượng giác tương ứng.
+                                                             – Tính được nghiệm gần đúng của phương trình lượng giác cơ bản bằng
+                                                             máy tính cầm tay.
+                                                             – Giải được phương trình lượng giác             ở dạng vận dụng trực tiếp phương
+                                                             trình  lượng  giác  cơ  bản  (ví  dụ:  giải  phương  trình  lượng  giác  dạng
+                                                             sin 2x = sin 3x, sin x = cos 3x).
+                                                             – Giải quyết được một số vấn đề thực tiễn gắn với phương trình lượng giác
+                                                             (ví dụ: một số bài toán liên quan đến dao động điều hòa trong Vật lí,...).
+Dãy   số.   Cấp   số     Dãy  số.  Dãy  số     tăng,  dãy    – Nhận biết được dãy số hữu hạn, dãy số vô hạn.
+cộng. Cấp số nhân        số giảm                             – Thể hiện được cách cho dãy số bằng liệt kê các số hạng; bằng công thức
+                                                             tổng quát; bằng hệ thức truy hồi; bằng cách mô tả.
+                                                             – Nhận biết được tính chất tăng,           giảm,   bị chặn của dãy số trong những
+                                                             trường hợp đơn giản.
+                         Cấp số cộng. Số hạng tổng           – Nhận biết được một dãy số là cấp số cộng.
+                         quát   của   cấp   số      cộng.    – Giải thích được công thức xác định số hạng tổng quát của cấp số cộng.
+                         Tổng  của  n  số      hạng  đầu     – Tính được tổng của n số hạng đầu tiên của cấp số cộng.
+                         tiên của cấp số cộng                – Giải quyết được một số vấn đề thực tiễn gắn với cấp số cộng để giải một
+                                                             số bài toán liên quan đến thực tiễn (ví dụ: một số vấn đề trong Sinh học,
+                                                             trong Giáo dục dân số,...).
+
+
+                                                                           91

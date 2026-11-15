@@ -1,0 +1,12 @@
+{
+  "original_repository": "/home/ben/mochi_flutter",
+  "commit": "dea67c78cb8bb76d91670bb5f8a2a134a14ec90a",
+  "includes_working_tree_changes": true,
+  "snapshot_version": "1.4.10+2047",
+  "notes": [
+    "Source snapshot includes uncommitted files as present during packaging.",
+    "Version normalized from 1.4.9+2046 to 1.4.10+2047 in the copy only.",
+    "Source release helper made portable in the copy only.",
+    "Live app, source working tree and running services were not replaced."
+  ]
+}

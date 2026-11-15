@@ -1,0 +1,210 @@
+import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../models/mochi_models.dart';
+
+class CloudSyncService {
+  static const String embeddedUrl = 'https://aiukgaacbncpbosgbwzp.supabase.co';
+  static const String embeddedPublishableKey =
+      'sb_publishable_gPGHiTBvds62XsjFxJZjYg_v03Cu45B';
+
+  bool isInitialized = false;
+  String? currentUserId;
+  String supabaseUrl = embeddedUrl;
+  String supabaseAnonKey = embeddedPublishableKey;
+  bool isConnected = false;
+
+  Future<bool> initialize({String? url, String? anonKey}) async {
+    try {
+      supabaseUrl = (url != null && url.isNotEmpty) ? url.trim() : embeddedUrl;
+      supabaseAnonKey = (anonKey != null && anonKey.isNotEmpty)
+          ? anonKey.trim()
+          : embeddedPublishableKey;
+
+      await Supabase.initialize(
+        url: supabaseUrl,
+        anonKey: supabaseAnonKey,
+        publishableKey: supabaseAnonKey,
+        debug: kDebugMode,
+      );
+
+      isInitialized = true;
+      isConnected = true;
+      currentUserId = Supabase.instance.client.auth.currentUser?.id;
+      return true;
+    } catch (e) {
+      debugPrint('Cloud sync init error: $e');
+      isInitialized = false;
+      isConnected = false;
+      return false;
+    }
+  }
+
+  bool get hasActiveUser =>
+      isInitialized && Supabase.instance.client.auth.currentUser != null;
+
+  String? get userEmail =>
+      isInitialized ? Supabase.instance.client.auth.currentUser?.email : null;
+
+  // Real Supabase Auth Operations
+  Future<String?> signUp({
+    required String email,
+    required String password,
+  }) async {
+    if (!isInitialized) await initialize();
+    try {
+      final res = await Supabase.instance.client.auth.signUp(
+        email: email.trim(),
+        password: password,
+      );
+      currentUserId = res.user?.id;
+      return null; // success
+    } on AuthException catch (e) {
+      return e.message;
+    } catch (e) {
+      return 'Đăng ký không thành công: $e';
+    }
+  }
+
+  Future<String?> signIn({
+    required String email,
+    required String password,
+  }) async {
+    if (!isInitialized) await initialize();
+    try {
+      final res = await Supabase.instance.client.auth.signInWithPassword(
+        email: email.trim(),
+        password: password,
+      );
+      currentUserId = res.user?.id;
+      return null; // success
+    } on AuthException catch (e) {
+      return e.message;
+    } catch (e) {
+      return 'Đăng nhập không thành công: $e';
+    }
+  }
+
+  Future<void> signOut() async {
+    if (isInitialized) {
+      await Supabase.instance.client.auth.signOut();
+      currentUserId = null;
+    }
+  }
+
+  // Push profile and learning state to user_metadata
+  Future<bool> pushFullUserData({
+    required ProfileModel profile,
+    required int stars,
+    required int xp,
+    required int streak,
+    required List<GoalModel> goals,
+    required List<TaskModel> tasks,
+    required DailyRoutine routine,
+    required List<FlashcardDeck> decks,
+    required List<FlashcardItem> flashcards,
+  }) async {
+    try {
+      if (!isInitialized) await initialize();
+      if (!hasActiveUser) return false;
+      
+      final client = Supabase.instance.client;
+      await client.auth.updateUser(
+        UserAttributes(
+          data: {
+            'name': profile.name,
+            'robotName': profile.robotName,
+            'gradeBand': profile.gradeBand,
+            'stars': stars,
+            'xp': xp,
+            'streak': streak,
+            'syncedAt': DateTime.now().toIso8601String(),
+            'dailyRoutine': routine.toJson(),
+            'goals': goals.map((g) => g.toJson()).toList(),
+            'tasks': tasks.map((t) => t.toJson()).toList(),
+            'decks': decks.map((d) => d.toJson()).toList(),
+            'flashcards': flashcards.map((f) => f.toJson()).toList(),
+          },
+        ),
+      );
+      debugPrint('CLOUD_SYNC_PUSH_FULL_DATA_SUCCESS for: ${profile.name}');
+      return true;
+    } catch (e) {
+      debugPrint('pushFullUserData error: $e');
+      return false;
+    }
+  }
+
+  // Push profile and learning state to user_metadata
+  Future<bool> pushProfile(
+    ProfileModel profile,
+    int stars,
+    int xp,
+    int streak,
+  ) async {
+    try {
+      if (!isInitialized) await initialize();
+      if (!hasActiveUser) return false;
+      await Supabase.instance.client.auth.updateUser(
+        UserAttributes(
+          data: {
+            'name': profile.name,
+            'robotName': profile.robotName,
+            'gradeBand': profile.gradeBand,
+            'stars': stars,
+            'xp': xp,
+            'streak': streak,
+            'syncedAt': DateTime.now().toIso8601String(),
+          },
+        ),
+      );
+      return true;
+    } catch (e) {
+      debugPrint('pushProfile error: $e');
+      return false;
+    }
+  }
+
+  // Lấy toàn bộ thông tin profile & học tập từ đám mây khi đăng nhập trên thiết bị mới
+  Future<Map<String, dynamic>?> pullProfile() async {
+    try {
+      if (!isInitialized) await initialize();
+      if (!hasActiveUser) return null;
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null) return null;
+      final meta = user.userMetadata;
+      if (meta != null && meta.isNotEmpty) {
+        debugPrint('CLOUD_SYNC_PULL_PROFILE_SUCCESS: ${meta['name']}, stars: ${meta['stars']}');
+        return Map<String, dynamic>.from(meta);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('pullProfile error: $e');
+      return null;
+    }
+  }
+
+  // Push study session with idempotent op_key
+  Future<bool> pushStudySession(StudySessionRecord session) async {
+    if (!hasActiveUser) return false;
+    try {
+      final client = Supabase.instance.client;
+      final uid = client.auth.currentUser!.id;
+      await client.from('study_sessions').upsert({
+        'id': session.id,
+        'user_id': uid,
+        'task_id': session.taskId,
+        'mode': session.mode,
+        'active_seconds': session.activeSeconds,
+        'started_at': session.startedAt.toIso8601String(),
+        'ended_at': session.endedAt.toIso8601String(),
+        'self_rating': session.selfRating,
+        'op_key': 'session_' + session.id,
+      });
+      return true;
+    } catch (e) {
+      debugPrint('pushStudySession error: ' + e.toString());
+      return false;
+    }
+  }
+}
