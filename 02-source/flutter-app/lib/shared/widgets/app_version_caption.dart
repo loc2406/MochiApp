@@ -11,17 +11,13 @@ class AppVersionCaption extends StatefulWidget {
 }
 
 class _AppVersionCaptionState extends State<AppVersionCaption> {
-  late final Future<AppReleaseInfo> _release = AppReleaseInfo.read();
   @override
-  Widget build(BuildContext context) => FutureBuilder<AppReleaseInfo>(
-    future: _release,
-    builder: (context, snapshot) => Text(
-      '${snapshot.data?.label ?? "Đang đọc phiên bản…"}\nTrợ lý robot thông minh đồng hành cùng học sinh mỗi ngày.',
-      style: TextStyle(
-        fontSize: 12,
-        color: MochiPalette.of(context).muted,
-        height: 1.5,
-      ),
+  Widget build(BuildContext context) => Text(
+    'Trợ lý robot thông minh đồng hành cùng học sinh mỗi ngày.',
+    style: TextStyle(
+      fontSize: 12,
+      color: MochiPalette.of(context).muted,
+      height: 1.5,
     ),
   );
 }

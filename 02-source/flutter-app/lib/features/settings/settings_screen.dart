@@ -6,7 +6,6 @@ import '../../core/database/mochi_store.dart';
 import '../../core/services/notification_service.dart';
 import '../../design/mochi_design.dart';
 import '../../shared/widgets/app_version_caption.dart';
-import '../../shared/widgets/note_button.dart';
 import '../routine/routine_screen.dart';
 import 'notification_settings_card.dart';
 import 'personalization_card.dart';
@@ -126,7 +125,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           NotificationSettingsCard(),
           SizedBox(height: MochiSpacing.md),
           SmartReminderSettings(),
-          SizedBox(height: MochiSpacing.md),
+          !NotificationService.supported
+              ? const SizedBox.shrink()
+              : SizedBox(height: MochiSpacing.md),
 
           // Weekly/monthly routine calendar.
           MochiCard(
@@ -229,68 +230,68 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
 
           // Backup & restore.
-          MochiCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 42,
-                      height: 42,
-                      decoration: BoxDecoration(
-                        color: palette.softAccent,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: Icon(
-                        Icons.folder_zip_outlined,
-                        color: palette.accent,
-                        size: MochiIconSize.md,
-                      ),
-                    ),
-                    SizedBox(width: MochiSpacing.sm),
-                    Expanded(
-                      child: Text(
-                        'Sao lưu & Chuyển dữ liệu',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: palette.ink,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: MochiSpacing.sm),
-                NoteButton(
-                  note: 'Xuất bản sao lưu hoặc khôi phục dữ liệu đã lưu. Tài khoản đã đăng nhập tiếp tục đồng bộ khi có mạng.',
-                ),
-                SizedBox(height: MochiSpacing.md),
-                Row(
-                  children: [
-                    Expanded(
-                      child: MochiButton(
-                        label: 'Sao chép dữ liệu',
-                        icon: Icons.copy_rounded,
-                        variant: MochiButtonVariant.secondary,
-                        size: MochiButtonSize.small,
-                        onPressed: _handleExport,
-                      ),
-                    ),
-                    SizedBox(width: MochiSpacing.xs),
-                    Expanded(
-                      child: MochiButton(
-                        label: 'Khôi phục',
-                        icon: Icons.file_upload_outlined,
-                        size: MochiButtonSize.small,
-                        onPressed: _handleImport,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: MochiSpacing.md),
+          // MochiCard(
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Row(
+          //         children: [
+          //           Container(
+          //             width: 42,
+          //             height: 42,
+          //             decoration: BoxDecoration(
+          //               color: palette.softAccent,
+          //               borderRadius: BorderRadius.circular(14),
+          //             ),
+          //             child: Icon(
+          //               Icons.folder_zip_outlined,
+          //               color: palette.accent,
+          //               size: MochiIconSize.md,
+          //             ),
+          //           ),
+          //           SizedBox(width: MochiSpacing.sm),
+          //           Expanded(
+          //             child: Text(
+          //               'Sao lưu & Chuyển dữ liệu',
+          //               style: theme.textTheme.titleMedium?.copyWith(
+          //                 color: palette.ink,
+          //                 fontWeight: FontWeight.w800,
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //       SizedBox(height: MochiSpacing.sm),
+          //       NoteButton(
+          //         note: 'Xuất bản sao lưu hoặc khôi phục dữ liệu đã lưu. Tài khoản đã đăng nhập tiếp tục đồng bộ khi có mạng.',
+          //       ),
+          //       SizedBox(height: MochiSpacing.md),
+          //       Row(
+          //         children: [
+          //           Expanded(
+          //             child: MochiButton(
+          //               label: 'Sao chép dữ liệu',
+          //               icon: Icons.copy_rounded,
+          //               variant: MochiButtonVariant.secondary,
+          //               size: MochiButtonSize.small,
+          //               onPressed: _handleExport,
+          //             ),
+          //           ),
+          //           SizedBox(width: MochiSpacing.xs),
+          //           Expanded(
+          //             child: MochiButton(
+          //               label: 'Khôi phục',
+          //               icon: Icons.file_upload_outlined,
+          //               size: MochiButtonSize.small,
+          //               onPressed: _handleImport,
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // SizedBox(height: MochiSpacing.md),
 
           // Reset data.
           MochiCard(
@@ -307,7 +308,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SizedBox(height: MochiSpacing.lg),
           Center(
             child: Text(
-              'Mochii-Học cùng nhau',
+              'Mochi-Học cùng nhau',
               style: theme.textTheme.labelMedium?.copyWith(
                 color: palette.muted,
                 fontWeight: FontWeight.w700,
@@ -355,7 +356,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   SizedBox(width: MochiSpacing.sm),
                   Text(
-                    'Mochii-Học cùng nhau',
+                    'Mochi-Học cùng nhau',
                     style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
                       color: palette.ink,
                       fontWeight: FontWeight.w800,

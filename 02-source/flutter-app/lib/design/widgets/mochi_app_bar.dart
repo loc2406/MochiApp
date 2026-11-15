@@ -1,3 +1,4 @@
+
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -7,17 +8,8 @@ import '../foundation/mochi_palette.dart';
 import '../foundation/mochi_tokens.dart';
 import 'mochi_haptics.dart';
 
-/// Page header used by every Mochi screen.
-///
-/// Two layouts share one component:
-/// * **root tabs** (`large: true`) show a big left-aligned title with a
-///   subtitle and circular actions on the right, like the home/plan screens;
-/// * **detail screens** centre the title, keep the iOS chevron on the leading
-///   edge and put the actions on the trailing edge.
-///
-/// The bar is transparent over the page gradient: no fill, no blur, no divider
-/// by default. Text and icons use the palette ink/accent so dark mode works.
-class MochiAppBar extends StatelessWidget implements PreferredSizeWidget {
+class MochiAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
   final String title;
   final String? subtitle;
   final List<Widget> actions;
@@ -41,7 +33,6 @@ class MochiAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.toolbarHeight,
   });
 
-  /// Compact centred header for pushed routes.
   const MochiAppBar.detail({
     super.key,
     required this.title,
@@ -54,180 +45,204 @@ class MochiAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.toolbarHeight,
   }) : large = false;
 
-  double get _toolbar => toolbarHeight ?? (large ? 92 : 64);
-
-  double get _height => _toolbar + (showDivider ? 1 : 0);
+  double get _toolbarHeight =>
+      toolbarHeight ?? (large ? 112 : 64);
 
   @override
-  Size get preferredSize => Size.fromHeight(_height);
+  Size get preferredSize =>
+      Size.fromHeight(_toolbarHeight + (showDivider ? 1 : 0));
 
   @override
   Widget build(BuildContext context) {
     final palette = MochiPalette.of(context);
-    final theme = Theme.of(context);
-    final leadingWidget =
-        leading ??
-        (automaticallyImplyLeading && (ModalRoute.of(context)?.canPop ?? false)
+
+    final canPop = ModalRoute.of(context)?.canPop ?? false;
+
+    final leadingWidget = leading ??
+        (automaticallyImplyLeading && canPop
             ? _MochiBackButton(color: palette.ink)
             : null);
-    final statusBrightness = palette.pageTop.computeLuminance() > .5
-        ? Brightness.dark
-        : Brightness.light;
+
+    final statusBrightness =
+        palette.pageTop.computeLuminance() > 0.5
+            ? Brightness.dark
+            : Brightness.light;
 
     final content = large
-        ? _largeHeader(context, palette, theme, leadingWidget)
-        : _detailHeader(context, palette, theme, leadingWidget);
+        ? _buildLargeHeader(context, palette, leadingWidget)
+        : _buildDetailHeader(context, palette, leadingWidget);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: statusBrightness,
-        statusBarBrightness: statusBrightness == Brightness.dark
-            ? Brightness.light
-            : Brightness.dark,
+        statusBarBrightness:
+            statusBrightness == Brightness.dark
+                ? Brightness.light
+                : Brightness.dark,
       ),
       child: Padding(
-        padding: EdgeInsets.only(top: MediaQuery.paddingOf(context).top),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (elevation > 0)
-              Material(
-                elevation: elevation,
-                color: Colors.transparent,
-                child: content,
-              )
-            else
+        padding: EdgeInsets.only(
+          top: MediaQuery.paddingOf(context).top,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          elevation: elevation,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               content,
-            if (showDivider) Container(height: 1, color: palette.cardBorder),
-          ],
+              if (showDivider)
+                Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: palette.cardBorder,
+                ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _largeHeader(
+  Widget _buildLargeHeader(
     BuildContext context,
     MochiPalette palette,
-    ThemeData theme,
     Widget? leadingWidget,
   ) {
-    final titleBlock = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Semantics(
-          header: true,
-          child: Text(
-            title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.displaySmall?.copyWith(
-              fontSize: 22,
-              color: palette.ink,
-            ),
-          ),
-        ),
-        if (subtitle != null) ...[
-          const SizedBox(height: 3),
-          Text(
-            subtitle!,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: palette.muted,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ],
-    );
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        MochiSpacing.xl,
-        MochiSpacing.sm,
-        MochiSpacing.md,
-        MochiSpacing.sm,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ?leadingWidget,
-          Expanded(child: titleBlock),
-          if (actions.isNotEmpty) ...[
-            const SizedBox(width: MochiSpacing.sm),
-            _ActionRow(actions: actions),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _detailHeader(
-    BuildContext context,
-    MochiPalette palette,
-    ThemeData theme,
-    Widget? leadingWidget,
-  ) {
-    final titleBlock = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Semantics(
-          header: true,
-          child: Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: palette.ink,
-            ),
-          ),
-        ),
-        if (subtitle != null) ...[
-          const SizedBox(height: 2),
-          Text(
-            subtitle!,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(color: palette.muted),
-          ),
-        ],
-      ],
-    );
+    final theme = Theme.of(context);
 
     return SizedBox(
-      height: _toolbar,
+      height: _toolbarHeight,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: MochiSpacing.lg),
+        padding: const EdgeInsets.symmetric(
+          horizontal: MochiSpacing.lg,
+          vertical: MochiSpacing.sm,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (leadingWidget != null) ...[
+              leadingWidget,
+              const SizedBox(width: MochiSpacing.sm),
+            ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        height: 1.15,
+                        letterSpacing: -0.6,
+                        color: palette.ink,
+                      ),
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontSize: 14,
+                        color: palette.muted,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            if (actions.isNotEmpty) ...[
+              const SizedBox(width: MochiSpacing.sm),
+              _ActionRow(actions: actions),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailHeader(
+    BuildContext context,
+    MochiPalette palette,
+    Widget? leadingWidget,
+  ) {
+    final theme = Theme.of(context);
+
+    return SizedBox(
+      height: _toolbarHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: MochiSpacing.sm,
+        ),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final leadingWidth = leadingWidget == null
-                ? 0.0
-                : MochiSpacing.touch;
-            final actionsWidth = actions.isEmpty
-                ? 0.0
-                : actions.length * 44 + (actions.length - 1) * MochiSpacing.xs;
-            final reserve =
-                math.max(leadingWidth, actionsWidth) + MochiSpacing.xs;
+            const buttonWidth = 48.0;
+            final leadingWidth =
+                leadingWidget == null ? 0.0 : buttonWidth;
+
+            final actionsWidth = actions.length * buttonWidth;
+
+            final sideWidth = math.max(
+              leadingWidth,
+              actionsWidth,
+            );
+
             return Stack(
               alignment: Alignment.center,
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: math.min(reserve, constraints.maxWidth / 2),
+                    horizontal: sideWidth + MochiSpacing.sm,
                   ),
-                  child: FittedBox(fit: BoxFit.scaleDown, child: titleBlock),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Semantics(
+                        header: true,
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.3,
+                            color: palette.ink,
+                          ),
+                        ),
+                      ),
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: palette.muted,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
                 Row(
                   children: [
-                    ?leadingWidget,
+                    if (leadingWidget != null) leadingWidget,
                     const Spacer(),
-                    if (actions.isNotEmpty) _ActionRow(actions: actions),
+                    if (actions.isNotEmpty)
+                      _ActionRow(actions: actions),
                   ],
                 ),
               ],
@@ -241,36 +256,36 @@ class MochiAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 class _ActionRow extends StatelessWidget {
   final List<Widget> actions;
+
   const _ActionRow({required this.actions});
 
   @override
   Widget build(BuildContext context) {
-    final palette = MochiPalette.of(context);
-    return IconTheme(
-      data: IconThemeData(color: palette.action, size: MochiIconSize.md),
-      child: DefaultTextStyle.merge(
-        style: TextStyle(color: palette.accent),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (var i = 0; i < actions.length; i++) ...[
-              if (i > 0) const SizedBox(width: MochiSpacing.xs),
-              actions[i],
-            ],
-          ],
-        ),
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var i = 0; i < actions.length; i++) ...[
+          if (i > 0)
+            const SizedBox(width: MochiSpacing.xs),
+          actions[i],
+        ],
+      ],
     );
   }
 }
 
 class _MochiBackButton extends StatelessWidget {
   final Color color;
-  const _MochiBackButton({required this.color});
+
+  const _MochiBackButton({
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final rtl =
+        Directionality.of(context) == TextDirection.rtl;
+
     return IconButton(
       tooltip: 'Quay lại',
       onPressed: () {
@@ -279,9 +294,11 @@ class _MochiBackButton extends StatelessWidget {
       },
       style: IconButton.styleFrom(
         foregroundColor: color,
+        minimumSize: const Size(48, 48),
+        maximumSize: const Size(48, 48),
         padding: EdgeInsets.zero,
-        minimumSize: const Size(MochiSpacing.touch, MochiSpacing.touch),
         tapTargetSize: MaterialTapTargetSize.padded,
+        shape: const CircleBorder(),
       ),
       icon: Icon(
         rtl

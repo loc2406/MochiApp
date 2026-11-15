@@ -9,6 +9,7 @@ abstract final class MochiPresets {
   static const Color cyberAmber = Color(0xFFF59E0B);
   static const Color sunsetCoral = Color(0xFFF43F5E);
   static const Color oceanCyan = Color(0xFF06B6D4);
+  
 
   static const Map<String, Color> colors = {
     'electricViolet': electricViolet,
