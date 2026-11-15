@@ -43,10 +43,6 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
             ),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                // Zone 1: AppBar
-                _buildAppBarArea(context, palette),
-                const SizedBox(height: 16),
-
                 // Zone 2: Profile Card
                 _buildProfileCard(context, store, palette),
                 const SizedBox(height: 16),
@@ -76,36 +72,6 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  // Zone 1: AppBar
-  Widget _buildAppBarArea(BuildContext context, MochiPalette palette) {
-    return MochiAppBar(
-      title: 'Hành trình & Lịch học',
-      large: true,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.storefront_rounded),
-          tooltip: 'Cửa hàng phụ kiện Robot',
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (ctx) => RobotShopScreen()),
-            );
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.settings_outlined),
-          tooltip: 'Cài đặt',
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (ctx) => SettingsScreen()),
-            );
-          },
-        ),
-      ],
     );
   }
 
