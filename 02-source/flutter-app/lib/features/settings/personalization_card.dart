@@ -149,44 +149,44 @@ class PersonalizationCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: MochiSpacing.lg),
-          // Row(
-          //   children: [
-          //     Expanded(
-          //       child: Text(
-          //         'Phong cách trợ lý học tập',
-          //         style: theme.textTheme.labelLarge?.copyWith(
-          //           color: palette.muted,
-          //           fontWeight: FontWeight.w700,
-          //         ),
-          //       ),
-          //     ),
-          //     NoteButton(
-          //       note: 'Thân thiện: gần gũi, kiên nhẫn. Nghiêm túc: tập trung logic. Truyền cảm hứng: gợi mở ứng dụng thực tế.',
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: MochiSpacing.sm),
-          // Wrap(
-          //   spacing: MochiSpacing.xs,
-          //   runSpacing: MochiSpacing.xs,
-          //   children: [
-          //     for (final item in [
-          //       {'id': 'friendly', 'name': 'Thân thiện'},
-          //       {'id': 'strict', 'name': 'Nghiêm túc'},
-          //       {'id': 'inspiring', 'name': 'Truyền cảm hứng'},
-          //     ])
-          //       MochiFilterChip(
-          //         label: item['name']!,
-          //         selected: store.profile.tutorPersona == item['id'],
-          //         onSelected: (selected) {
-          //           if (!selected) return;
-          //           store.profile.tutorPersona = item['id']!;
-          //           store.save();
-          //         },
-          //       ),
-          //   ],
-          // ),
-          // SizedBox(height: MochiSpacing.md),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Phong cách trợ lý học tập',
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: palette.muted,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              NoteButton(
+                note: 'Tuỳ chinh cách mà trợ lý học tập trả lời các câu hỏi và giải thích bài tập, từ thân thiện, nghiêm túc đến truyền cảm hứng.',
+              ),
+            ],
+          ),
+          SizedBox(height: MochiSpacing.sm),
+          Wrap(
+            spacing: MochiSpacing.xs,
+            runSpacing: MochiSpacing.xs,
+            children: [
+              for (final item in [
+                {'id': 'friendly', 'name': 'Thân thiện'},
+                {'id': 'strict', 'name': 'Nghiêm túc'},
+                {'id': 'inspiring', 'name': 'Truyền cảm hứng'},
+              ])
+                MochiFilterChip(
+                  label: item['name']!,
+                  selected: store.profile.tutorPersona == item['id'],
+                  onSelected: (selected) {
+                    if (!selected) return;
+                    store.profile.tutorPersona = item['id']!;
+                    store.save();
+                  },
+                ),
+            ],
+          ),
+          SizedBox(height: MochiSpacing.md),
           Text(
             'Độ sâu giải thích bài tập',
             style: theme.textTheme.labelLarge?.copyWith(

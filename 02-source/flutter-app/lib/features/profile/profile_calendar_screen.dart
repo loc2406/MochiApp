@@ -1,14 +1,13 @@
-import '../../design/mochi_design.dart';
-import '../../shared/widgets/floating_bar_inset.dart';
-import '../learning/learning_hub_screen.dart';
-import '../../core/services/notification_service.dart';
-import '../rewards/robot_shop_screen.dart';
-import '../auth/auth_screen.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/database/mochi_store.dart';
+import '../../core/services/notification_service.dart';
+import '../../design/mochi_design.dart';
+import '../../shared/widgets/floating_bar_inset.dart';
+import '../auth/auth_screen.dart';
+import '../learning/learning_hub_screen.dart';
+import '../rewards/robot_shop_screen.dart';
 import '../settings/settings_screen.dart';
 
 class ProfileCalendarScreen extends StatefulWidget {
@@ -61,7 +60,6 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
                 // Zone 4: Learning Hub Tile
                 // _buildLearningHubTile(context, store, palette),
                 // const SizedBox(height: 16),
-                
 
                 // Zone 5: Monthly Study Calendar
                 _buildCalendarCard(context, store, palette),
@@ -69,7 +67,6 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
 
                 // Zone 6: Recent Study Journal
                 _buildSessionHistory(context, store, palette),
-                
               ]),
             ),
           ),
@@ -151,7 +148,8 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
                                       builder: (ctx) => RobotShopScreen(),
                                     ),
                                   );
-                                }, tooltip: 'Cửa hàng robot',
+                                },
+                                tooltip: 'Cửa hàng robot',
                               ),
                               const SizedBox(width: 8),
                               MochiIconButton(
@@ -221,7 +219,20 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
                           ],
                         )
                       else
-                        OutlinedButton.icon(
+                        MochiPrimaryButton.icon(
+                          label: Text(
+                            'Đăng nhập để đồng bộ',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: palette.ink,
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.cloud_outlined,
+                            size: 16,
+                            color: palette.ink,
+                          ),
                           style: OutlinedButton.styleFrom(
                             padding: EdgeInsets.symmetric(
                               horizontal: 10,
@@ -247,19 +258,6 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
                               ),
                             );
                           },
-                          icon: Icon(
-                            Icons.cloud_sync_rounded,
-                            size: 14,
-                            color: palette.action,
-                          ),
-                          label: Text(
-                            'Đăng nhập đồng bộ',
-                            style: TextStyle(
-                              fontSize: 11.5,
-                              color: palette.action,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
                         ),
                     ],
                   ),
