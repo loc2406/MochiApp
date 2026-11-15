@@ -15,6 +15,7 @@ class MochiCard extends StatelessWidget {
   final bool bordered;
   final double radius;
   final Color? color;
+  final Color? borderColor;
   final Gradient? gradient;
   final String? semanticLabel;
 
@@ -28,6 +29,7 @@ class MochiCard extends StatelessWidget {
     this.bordered = true,
     this.radius = MochiRadius.card,
     this.color,
+    this.borderColor,
     this.gradient,
     this.semanticLabel,
   });
@@ -42,6 +44,7 @@ class MochiCard extends StatelessWidget {
         margin: margin,
         radius: radius,
         color: color,
+        borderColor: borderColor,
         gradient: gradient,
         elevated: elevated,
         bordered: bordered,

@@ -47,7 +47,6 @@ class _AITutorScreenState extends State<AITutorScreen> {
   bool _isLoading = false;
   String _conversationOwner = '__initial__';
 
-  /// Tăng mỗi lần gửi/huỷ để bỏ qua phản hồi về muộn sau khi đã huỷ.
   int _requestSerial = 0;
   XFile? _attachedImage;
   String? _attachedImageBase64;
@@ -319,6 +318,8 @@ class _AITutorScreenState extends State<AITutorScreen> {
   @override
   Widget build(BuildContext context) {
     final store = context.watch<MochiStore>();
+    final palette = MochiPalette.of(context);
+    final theme = Theme.of(context);
     // Scaffold bên trong co giãn body theo bàn phím rồi xoá viewInsets khỏi
     // context con, nên phải đọc inset ở đây để không cộng đôi khoảng chừa.
     final media = MediaQuery.of(context);
@@ -328,48 +329,30 @@ class _AITutorScreenState extends State<AITutorScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
+      appBar: MochiAppBar.detail(
+        title: 'Học cùng ${store.profile.robotName}',
+        subtitle: 'Cùng hiểu bài, từng chút một',
+        toolbarHeight: 72 * MediaQuery.textScalerOf(context).scale(1),
         automaticallyImplyLeading: widget.inSheet,
-        toolbarHeight: 64 * MediaQuery.textScalerOf(context).scale(1),
-        titleSpacing: 16,
-        title: Row(
-          children: [
-            RobotMascotWidget(
-              size: 34,
-              emotion: store.robotEmotion,
-              primaryColor: Color(store.robotColorHex),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Học cùng ${store.profile.robotName}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                      color: MochiPalette.of(context).ink,
-                    ),
-                  ),
-                  Text(
-                    'Cùng hiểu bài, từng chút một',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: MochiPalette.of(context).muted,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
+        leading: widget.inSheet
+            ? null
+            : Padding(
+                padding: const EdgeInsets.all(7),
+                child: RobotMascotWidget(
+                  size: 36,
+                  emotion: store.robotEmotion,
+                  primaryColor: Color(store.robotColorHex),
+                ),
               ),
-            ),
-          ],
-        ),
+        actions: [
+          MochiIconButton(
+            icon: Icons.auto_awesome_outlined,
+            tooltip: 'Gợi ý câu hỏi',
+            onPressed: _isLoading
+                ? null
+                : () => _sendMessage(_quickPrompts.first),
+          ),
+        ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -386,9 +369,6 @@ class _AITutorScreenState extends State<AITutorScreen> {
               : 16.0;
           final composerPaddingBottom =
               (_attachedImage != null ? 108.0 : 68.0) + effectiveBottom;
-          final accent = MochiPresets.accentFor(store.profile.themePreset);
-          final isHighContrast = store.profile.highContrast;
-
           return Stack(
             fit: StackFit.expand,
             children: [
@@ -424,29 +404,20 @@ class _AITutorScreenState extends State<AITutorScreen> {
                           vertical: 12,
                         ),
                         decoration: BoxDecoration(
-                          color: isUser
-                              ? MochiPalette.of(context).accent
-                              : MochiPalette.of(context).card,
+                          color: isUser ? palette.action : palette.card,
                           borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(18),
-                            topRight: Radius.circular(18),
-                            bottomLeft: Radius.circular(isUser ? 18 : 4),
-                            bottomRight: Radius.circular(isUser ? 4 : 18),
+                            topLeft: const Radius.circular(22),
+                            topRight: const Radius.circular(22),
+                            bottomLeft: Radius.circular(isUser ? 22 : 7),
+                            bottomRight: Radius.circular(isUser ? 7 : 22),
                           ),
                           border: Border.all(
                             color: isUser
-                                ? Colors.transparent
-                                : MochiPalette.of(context).cardBorder,
-                            width: 1.0,
+                                ? palette.action.withValues(alpha: 0.45)
+                                : palette.cardBorder,
+                            width: 1,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: MochiPalette.of(context).ink
-                                  .withValues(alpha: 0.04),
-                              blurRadius: 10,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
+                          boxShadow: palette.cardShadow(opacity: 0.42),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -458,10 +429,34 @@ class _AITutorScreenState extends State<AITutorScreen> {
                                 style: TextStyle(
                                   fontSize: 14,
                                   height: 1.5,
-                                  color: MochiPalette.of(context).onAccent,
+                                  color: palette.onAccent,
                                 ),
                               )
                             else ...[
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: MochiSpacing.xs,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.auto_awesome_rounded,
+                                      size: 15,
+                                      color: palette.action,
+                                    ),
+                                    const SizedBox(width: MochiSpacing.xs),
+                                    Text(
+                                      store.profile.robotName,
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(
+                                            color: palette.action,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               AIMessageBody(text: msg.content),
                               if (msg.quizData != null)
                                 TutorQuizCard(
@@ -623,33 +618,21 @@ class _AITutorScreenState extends State<AITutorScreen> {
                           horizontal: horizontal,
                           vertical: 8,
                         ),
-                        color: MochiPalette.of(context).pageTop
-                            .withValues(alpha: 0.85),
+                        color: palette.pageTop.withValues(alpha: 0.94),
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: _quickPrompts.map((p) {
                               return Padding(
-                                padding: EdgeInsets.only(right: 8),
-                                child: ActionChip(
-                                  label: Text(
-                                    p,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: MochiPalette.of(context).ink,
-                                    ),
-                                  ),
-                                  backgroundColor: accent.withValues(
-                                    alpha: 0.08,
-                                  ),
-                                  side: BorderSide(
-                                    color: accent.withValues(alpha: 0.2),
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  onPressed: () => _sendMessage(p),
+                                padding: const EdgeInsets.only(
+                                  right: MochiSpacing.xs,
+                                ),
+                                child: MochiFilterChip(
+                                  label: p,
+                                  selected: false,
+                                  onSelected: (selected) {
+                                    if (selected) _sendMessage(p);
+                                  },
                                 ),
                               );
                             }).toList(),
@@ -694,7 +677,7 @@ class _AITutorScreenState extends State<AITutorScreen> {
                               height: 14,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: accent,
+                                color: palette.action,
                               ),
                             ),
                             SizedBox(width: 8),
@@ -729,217 +712,191 @@ class _AITutorScreenState extends State<AITutorScreen> {
                         horizontal,
                         effectiveBottom,
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(28),
-                        child: RepaintBoundary(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: isHighContrast
-                                  ? null
-                                  : PastelPalette.of(context).cardGradient,
-                              color: isHighContrast
-                                  ? MochiPalette.of(context).card
-                                  : null,
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(
-                                color: MochiPalette.of(context).cardBorder
-                                    .withValues(alpha: 0.85),
-                                width: 1.1,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: MochiPalette.of(context).ink
-                                      .withValues(alpha: 0.10),
-                                  blurRadius: 24,
-                                  offset: Offset(0, 8),
-                                ),
-                                BoxShadow(
-                                  color: accent.withValues(alpha: 0.10),
-                                  blurRadius: 16,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (_attachedImage != null)
-                                  Container(
-                                    margin: EdgeInsets.only(bottom: 6),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 4,
+                      child: RepaintBoundary(
+                        child: MochiCard(
+                          bordered: true,
+                          borderColor: palette.accent,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: MochiSpacing.xs,
+                            vertical: MochiSpacing.xxs,
+                          ),
+                          radius: 28,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (_attachedImage != null)
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 6),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: palette.cardSoft.withValues(
+                                      alpha: 0.9,
                                     ),
-                                    decoration: BoxDecoration(
-                                      color: MochiPalette.of(context).cardSoft
-                                          .withValues(alpha: 0.9),
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: MochiPalette.of(context)
-                                            .cardBorder,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.image_outlined,
-                                          size: 18,
-                                          color: accent,
-                                        ),
-                                        SizedBox(width: 6),
-                                        Expanded(
-                                          child: Text(
-                                            _attachedImage!.name,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(Icons.close, size: 16),
-                                          padding: EdgeInsets.zero,
-                                          constraints: BoxConstraints(
-                                            minWidth: 20,
-                                            minHeight: 20,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              _attachedImage = null;
-                                              _attachedImageBase64 = null;
-                                            });
-                                          },
-                                        ),
-                                      ],
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: MochiPalette.of(context)
+                                          .cardBorder,
                                     ),
                                   ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      tooltip: 'Gửi ảnh đề bài',
-                                      icon: Icon(
-                                        Icons.camera_alt_outlined,
-                                        color: MochiPalette.of(context).muted,
-                                        size: 22,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.image_outlined,
+                                        size: 18,
+                                        color: palette.action,
                                       ),
-                                      onPressed: _isLoading
-                                          ? null
-                                          : () async {
-                                              final source =
-                                                  await showModalBottomSheet<
-                                                    ImageSource
-                                                  >(
-                                                    context: context,
-                                                    builder: (ctx) => SafeArea(
-                                                      child: Wrap(
-                                                        children: [
-                                                          ListTile(
-                                                            leading: Icon(
-                                                              Icons
-                                                                  .camera_alt_outlined,
-                                                            ),
-                                                            title: Text(
-                                                              'Chụp ảnh đề bài',
-                                                            ),
-                                                            onTap: () =>
-                                                                Navigator.pop(
-                                                                  ctx,
-                                                                  ImageSource
-                                                                      .camera,
-                                                                ),
-                                                          ),
-                                                          ListTile(
-                                                            leading: Icon(
-                                                              Icons
-                                                                  .photo_library_outlined,
-                                                            ),
-                                                            title: Text(
-                                                              'Chọn ảnh từ thư viện',
-                                                            ),
-                                                            onTap: () =>
-                                                                Navigator.pop(
-                                                                  ctx,
-                                                                  ImageSource
-                                                                      .gallery,
-                                                                ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                              if (source != null) {
-                                                final picker = ImagePicker();
-                                                final file = await picker
-                                                    .pickImage(
-                                                      source: source,
-                                                      maxWidth: 1600,
-                                                      maxHeight: 1600,
-                                                      imageQuality: 85,
-                                                    );
-                                                if (file != null) {
-                                                  final bytes = await file
-                                                      .readAsBytes();
-                                                  setState(() {
-                                                    _attachedImage = file;
-                                                    _attachedImageBase64 =
-                                                        'data:image/jpeg;base64,' +
-                                                        base64Encode(bytes);
-                                                  });
-                                                }
-                                              }
-                                            },
-                                    ),
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _msgController,
-                                        onTapOutside: (_) => FocusManager
-                                            .instance
-                                            .primaryFocus
-                                            ?.unfocus(),
-                                        textInputAction: TextInputAction.send,
-                                        maxLines: 3,
-                                        minLines: 1,
-                                        decoration: InputDecoration(
-                                          hintText: 'Hỏi Mochi…',
-                                          isDense: true,
-                                          filled: false,
-                                          enabledBorder: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          disabledBorder: InputBorder.none,
-                                          contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 14,
-                                            vertical: 10,
+                                      SizedBox(width: 6),
+                                      Expanded(
+                                        child: Text(
+                                          _attachedImage!.name,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700,
+                                            color: palette.ink,
                                           ),
-                                          border: InputBorder.none,
                                         ),
-                                        onSubmitted: (_) => _sendMessage(),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.arrow_upward_rounded,
-                                        color: MochiPalette.of(context)
-                                            .onAccent,
+                                      IconButton(
+                                        icon: Icon(Icons.close, size: 16),
+                                        padding: EdgeInsets.zero,
+                                        constraints: BoxConstraints(
+                                          minWidth: 20,
+                                          minHeight: 20,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _attachedImage = null;
+                                            _attachedImageBase64 = null;
+                                          });
+                                        },
                                       ),
-                                      style: IconButton.styleFrom(
-                                        backgroundColor: accent,
-                                        shape: CircleBorder(),
-                                      ),
-                                      tooltip: 'Gửi câu hỏi',
-                                      onPressed: _isLoading
-                                          ? null
-                                          : () => _sendMessage(),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    tooltip: 'Gửi ảnh đề bài',
+                                    icon: Icon(
+                                      Icons.camera_alt_outlined,
+                                      color: palette.muted,
+                                      size: 22,
+                                    ),
+                                    onPressed: _isLoading
+                                        ? null
+                                        : () async {
+                                            final source =
+                                                await showModalBottomSheet<
+                                                  ImageSource
+                                                >(
+                                                  context: context,
+                                                  builder: (ctx) => SafeArea(
+                                                    child: Wrap(
+                                                      children: [
+                                                        ListTile(
+                                                          leading: Icon(
+                                                            Icons
+                                                                .camera_alt_outlined,
+                                                          ),
+                                                          title: Text(
+                                                            'Chụp ảnh đề bài',
+                                                          ),
+                                                          onTap: () =>
+                                                              Navigator.pop(
+                                                                ctx,
+                                                                ImageSource
+                                                                    .camera,
+                                                              ),
+                                                        ),
+                                                        ListTile(
+                                                          leading: Icon(
+                                                            Icons
+                                                                .photo_library_outlined,
+                                                          ),
+                                                          title: Text(
+                                                            'Chọn ảnh từ thư viện',
+                                                          ),
+                                                          onTap: () =>
+                                                              Navigator.pop(
+                                                                ctx,
+                                                                ImageSource
+                                                                    .gallery,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                            if (source != null) {
+                                              final picker = ImagePicker();
+                                              final file = await picker
+                                                  .pickImage(
+                                                    source: source,
+                                                    maxWidth: 1600,
+                                                    maxHeight: 1600,
+                                                    imageQuality: 85,
+                                                  );
+                                              if (file != null) {
+                                                final bytes = await file
+                                                    .readAsBytes();
+                                                setState(() {
+                                                  _attachedImage = file;
+                                                  _attachedImageBase64 =
+                                                      'data:image/jpeg;base64,' +
+                                                      base64Encode(bytes);
+                                                });
+                                              }
+                                            }
+                                          },
+                                  ),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _msgController,
+                                      onTapOutside: (_) => FocusManager
+                                          .instance
+                                          .primaryFocus
+                                          ?.unfocus(),
+                                      textInputAction: TextInputAction.send,
+                                      maxLines: 3,
+                                      minLines: 1,
+                                      decoration: InputDecoration(
+                                        hintText: 'Hỏi Mochi…',
+                                        isDense: true,
+                                        filled: false,
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 14,
+                                          vertical: 10,
+                                        ),
+                                        border: InputBorder.none,
+                                      ),
+                                      onSubmitted: (_) => _sendMessage(),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_upward_rounded,
+                                      color: palette.onAccent,
+                                    ),
+                                    style: IconButton.styleFrom(
+                                      backgroundColor: palette.action,
+                                      shape: CircleBorder(),
+                                    ),
+                                    tooltip: 'Gửi câu hỏi',
+                                    onPressed: _isLoading
+                                        ? null
+                                        : () => _sendMessage(),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),

@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/database/mochi_store.dart';
@@ -25,10 +24,11 @@ class LearningHubScreen extends StatefulWidget {
 
 class _LearningHubScreenState extends State<LearningHubScreen> {
   void _error(Object e) {
-    if (mounted)
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString().replaceFirst('Bad state: ', ''))),
       );
+    }
   }
 
   Future<void> _setup(MochiStore store) async {
@@ -39,8 +39,8 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     await showDialog<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setDialog) => AlertDialog(
-          title: Text('Lớp và môn đang học'),
+        builder: (ctx, setDialog) => MochiFormDialog(
+          title: 'Lớp và môn đang học',
           content: SizedBox(
             width: 560,
             child: SingleChildScrollView(
@@ -48,21 +48,19 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DropdownButtonFormField<int>(
-                    initialValue: grade,
-                    decoration: InputDecoration(labelText: 'Lớp'),
+                  MochiDropdownField<int>(
+                    value: grade,
+                    label: 'Lớp',
                     items: [
                       for (var i = 1; i <= 12; i++)
                         DropdownMenuItem(value: i, child: Text('Lớp $i')),
                     ],
                     onChanged: (v) => setDialog(() => grade = v!),
                   ),
-                  TextField(
+                  MochiTextField(
                     controller: year,
-                    decoration: InputDecoration(
-                      labelText: 'Năm học',
-                      hintText: 'Ví dụ: 2026–2027',
-                    ),
+                    label: 'Năm học',
+                    hint: 'Ví dụ: 2026–2027',
                   ),
                   SizedBox(height: 16),
                   Text('Chỉ chọn môn bạn thực sự học. Có thể đổi sau.'),
@@ -72,8 +70,8 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                     runSpacing: 6,
                     children: learningSubjectChoices
                         .map(
-                          (subject) => FilterChip(
-                            label: Text(subject),
+                          (subject) => MochiFilterChip(
+                            label: subject,
                             selected: selected.contains(subject),
                             onSelected: (on) => setDialog(() {
                               on
@@ -89,8 +87,13 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Hủy')),
-            MochiPrimaryButton(
+            MochiButton(
+              label: 'Hủy',
+              variant: MochiButtonVariant.secondary,
+              onPressed: () => Navigator.pop(ctx),
+            ),
+            MochiButton(
+              label: 'Lưu hồ sơ',
               onPressed: () async {
                 if (year.text.trim().isEmpty || selected.isEmpty) {
                   _error('Chọn môn và nhập năm học.');
@@ -115,7 +118,6 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                   _error(e);
                 }
               },
-              child: Text('Lưu hồ sơ'),
             ),
           ],
         ),
@@ -130,36 +132,37 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
         topics = TextEditingController();
     await showDialog<void>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(course.subject),
+      builder: (ctx) => MochiFormDialog(
+        title: course.subject,
         content: SizedBox(
           width: 540,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextField(
+                MochiTextField(
                   controller: book,
-                  decoration: InputDecoration(
-                    labelText: 'Bộ sách / tài liệu đang theo học (tùy chọn)',
-                  ),
+                  label: 'Bộ sách / tài liệu đang theo học (tùy chọn)',
                 ),
-                TextField(
+                const SizedBox(height: MochiSpacing.sm),
+                MochiTextField(
                   controller: topics,
                   maxLines: 5,
-                  decoration: InputDecoration(
-                    labelText: 'Thêm chủ đề theo lớp, mỗi dòng một chủ đề',
-                    helperText:
-                        'Nội dung bạn nhập; không gắn nhãn nguồn đã xác minh.',
-                  ),
+                  label: 'Thêm chủ đề theo lớp, mỗi dòng một chủ đề',
+                  hint: 'Nội dung bạn nhập; không gắn nhãn nguồn đã xác minh.',
                 ),
               ],
             ),
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Hủy')),
-          MochiPrimaryButton(
+          MochiButton(
+            label: 'Hủy',
+            variant: MochiButtonVariant.secondary,
+            onPressed: () => Navigator.pop(ctx),
+          ),
+          MochiButton(
+            label: 'Lưu',
             onPressed: () async {
               final added = topics.text
                   .split('\n')
@@ -188,7 +191,6 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
               await store.save();
               if (ctx.mounted) Navigator.pop(ctx);
             },
-            child: Text('Lưu'),
           ),
         ],
       ),
@@ -209,8 +211,8 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     await showDialog<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setDialog) => AlertDialog(
-          title: Text('Bài tập và việc cần học'),
+        builder: (ctx, setDialog) => MochiFormDialog(
+          title: 'Bài tập và việc cần học',
           content: SizedBox(
             width: 560,
             child: SingleChildScrollView(
@@ -218,18 +220,16 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextField(
+                  MochiTextField(
                     controller: title,
-                    decoration: InputDecoration(
-                      labelText: 'Việc cụ thể',
-                      hintText: 'Làm bài 1–5 thầy giao',
-                    ),
+                    label: 'Việc cụ thể',
+                    hint: 'Làm bài 1–5 thầy giao',
                   ),
                   SizedBox(height: 12),
-                  DropdownButtonFormField<String>(
-                    initialValue: subject,
+                  MochiDropdownField<String>(
+                    value: subject,
                     isExpanded: true,
-                    decoration: InputDecoration(labelText: 'Môn'),
+                    label: 'Môn',
                     items:
                         {
                               ...learningSubjectChoices,
@@ -244,10 +244,10 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                       topicIds.clear();
                     }),
                   ),
-                  DropdownButtonFormField<String>(
-                    initialValue: kind,
+                  MochiDropdownField<String>(
+                    value: kind,
                     isExpanded: true,
-                    decoration: InputDecoration(labelText: 'Loại việc'),
+                    label: 'Loại việc',
                     items: [
                       DropdownMenuItem(
                         value: 'homework',
@@ -273,21 +273,28 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                     ],
                     onChanged: (v) => setDialog(() => kind = v!),
                   ),
-                  TextField(
+                  MochiTextField(
                     controller: minutes,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Tổng thời lượng dự kiến (phút)',
-                      helperText: 'Việc dài được chia thành các phiên; không tự đánh dấu cả bài xong sau một phiên.',
+                    label: 'Tổng thời lượng dự kiến (phút)',
+                    hint: '25',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: MochiSpacing.xs),
+                    child: Text(
+                      'Việc dài được chia thành nhiều phiên; một phiên không tự đánh dấu cả bài hoàn thành.',
+                      style: Theme.of(context).textTheme.bodySmall
+                          ?.copyWith(color: MochiPalette.of(context).muted),
                     ),
                   ),
-                  TextButton.icon(
-                    icon: Icon(Icons.event_outlined),
-                    label: Text(
-                      due == null
-                          ? 'Chọn hạn nộp / cần xong (nếu có)'
-                          : 'Hạn: ${due!.day}/${due!.month} ${learningClock(due!.hour * 60 + due!.minute)}',
-                    ),
+                  const SizedBox(height: MochiSpacing.sm),
+                  MochiButton(
+                    icon: Icons.event_outlined,
+                    label: due == null
+                        ? 'Chọn hạn hoàn thành (nếu có)'
+                        : 'Hạn: ${due!.day}/${due!.month} ${learningClock(due!.hour * 60 + due!.minute)}',
+                    variant: MochiButtonVariant.secondary,
+                    size: MochiButtonSize.small,
                     onPressed: () async {
                       final date = await showDatePicker(
                         context: ctx,
@@ -300,7 +307,7 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                         context: ctx,
                         initialTime: TimeOfDay.now(),
                       );
-                      if (time != null)
+                      if (time != null) {
                         setDialog(
                           () => due = DateTime(
                             date.year,
@@ -310,6 +317,7 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                             time.minute,
                           ),
                         );
+                      }
                     },
                   ),
                   if (store.goals.isNotEmpty) ...[
@@ -361,15 +369,21 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                   if (error != null)
                     Text(
                       error!,
-                      style: TextStyle(color: MochiPalette.of(context).danger),
+                      style: Theme.of(context).textTheme.bodySmall
+                          ?.copyWith(color: MochiPalette.of(context).danger),
                     ),
                 ],
               ),
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Hủy')),
-            MochiPrimaryButton(
+            MochiButton(
+              label: 'Hủy',
+              variant: MochiButtonVariant.secondary,
+              onPressed: () => Navigator.pop(ctx),
+            ),
+            MochiButton(
+              label: 'Thêm việc',
               onPressed: () {
                 final n = int.tryParse(minutes.text.trim());
                 if (title.text.trim().isEmpty ||
@@ -393,7 +407,6 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                 );
                 Navigator.pop(ctx);
               },
-              child: Text('Thêm việc'),
             ),
           ],
         ),
@@ -412,18 +425,18 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     await showDialog<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setDialog) => AlertDialog(
-          title: Text('Thêm giờ lên lớp / học thêm'),
+        builder: (ctx, setDialog) => MochiFormDialog(
+          title: 'Thêm giờ lên lớp / học thêm',
           content: SizedBox(
             width: 500,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  DropdownButtonFormField<String>(
-                    initialValue: subject,
+                  MochiDropdownField<String>(
+                    value: subject,
                     isExpanded: true,
-                    decoration: InputDecoration(labelText: 'Môn'),
+                    label: 'Môn',
                     items:
                         {
                               ...learningSubjectChoices,
@@ -435,9 +448,9 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                             .toList(),
                     onChanged: (v) => setDialog(() => subject = v!),
                   ),
-                  DropdownButtonFormField<int>(
-                    initialValue: weekday,
-                    decoration: InputDecoration(labelText: 'Lặp lại hàng tuần'),
+                  MochiDropdownField<int>(
+                    value: weekday,
+                    label: 'Lặp lại hàng tuần',
                     items: [
                       for (var d = 1; d <= 7; d++)
                         DropdownMenuItem(
@@ -497,8 +510,13 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Hủy')),
-            MochiPrimaryButton(
+            MochiButton(
+              label: 'Hủy',
+              variant: MochiButtonVariant.secondary,
+              onPressed: () => Navigator.pop(ctx),
+            ),
+            MochiButton(
+              label: 'Lưu giờ học',
               onPressed: () async {
                 if (start == null || end == null) {
                   setDialog(() => error = 'Chọn đủ giờ bắt đầu và kết thúc.');
@@ -521,7 +539,6 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                   setDialog(() => error = e.toString());
                 }
               },
-              child: Text('Lưu giờ học'),
             ),
           ],
         ),
@@ -534,8 +551,9 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
       final plan = store.previewUnifiedPlan();
       await showDialog<void>(
         context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Xem trước lịch chung 7 ngày'),
+        builder: (ctx) => MochiFormDialog(
+          title: 'Xem trước lịch chung 7 ngày',
+          maxWidth: 700,
           content: SizedBox(
             width: 700,
             height: math.min(560, MediaQuery.sizeOf(ctx).height * .58),
@@ -583,11 +601,13 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
             ),
           ),
           actions: [
-            TextButton(
+            MochiButton(
+              label: 'Để sau',
+              variant: MochiButtonVariant.secondary,
               onPressed: () => Navigator.pop(ctx),
-              child: Text('Để sau'),
             ),
-            MochiPrimaryButton(
+            MochiButton(
+              label: 'Áp dụng lịch',
               onPressed: plan.blocks.isEmpty
                   ? null
                   : () async {
@@ -598,7 +618,6 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                         _error(e);
                       }
                     },
-              child: Text('Áp dụng lịch'),
             ),
           ],
         ),
@@ -619,8 +638,8 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     await showDialog<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setDialog) => AlertDialog(
-          title: Text('Nhập thời khóa biểu bằng AI'),
+        builder: (ctx, setDialog) => MochiFormDialog(
+          title: 'Nhập thời khóa biểu bằng AI',
           content: SizedBox(
             width: 560,
             child: SingleChildScrollView(
@@ -666,8 +685,10 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                                 ),
                               ),
                             ),
-                            IconButton(
-                              icon: Icon(Icons.close, size: 18),
+                            MochiIconButton(
+                              icon: Icons.close_rounded,
+                              tooltip: 'Bỏ ảnh đã chọn',
+                              size: 36,
                               onPressed: () {
                                 setDialog(() {
                                   pickedImage = null;
@@ -679,79 +700,71 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                         ),
                       )
                     else ...[
-                      Row(
+                      Wrap(
+                        spacing: MochiSpacing.sm,
+                        runSpacing: MochiSpacing.sm,
                         children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: isExtracting
-                                  ? null
-                                  : () async {
-                                      final picker = ImagePicker();
-                                      final file = await picker.pickImage(
-                                        source: ImageSource.gallery,
-                                        maxWidth: 1600,
-                                        maxHeight: 1600,
-                                        imageQuality: 85,
-                                      );
-                                      if (file != null) {
-                                        final bytes = await file.readAsBytes();
-                                        setDialog(() {
-                                          pickedImage = file;
-                                          imageBase64 =
-                                              'data:image/jpeg;base64,' +
-                                              base64Encode(bytes);
-                                          error = null;
-                                        });
-                                      }
-                                    },
-                              icon: Icon(
-                                Icons.photo_library_outlined,
-                                size: 18,
-                              ),
-                              label: Text('Chọn ảnh TKB'),
-                            ),
+                          MochiButton(
+                            variant: MochiButtonVariant.secondary,
+                            size: MochiButtonSize.small,
+                            onPressed: isExtracting
+                                ? null
+                                : () async {
+                                    final picker = ImagePicker();
+                                    final file = await picker.pickImage(
+                                      source: ImageSource.camera,
+                                      maxWidth: 1600,
+                                      maxHeight: 1600,
+                                      imageQuality: 85,
+                                    );
+                                    if (file != null) {
+                                      final bytes = await file.readAsBytes();
+                                      setDialog(() {
+                                        pickedImage = file;
+                                        imageBase64 =
+                                            'data:image/jpeg;base64,${base64Encode(bytes)}';
+                                        error = null;
+                                      });
+                                    }
+                                  },
+                            icon: Icons.photo_library_outlined,
+                            label: 'Chọn ảnh TKB',
                           ),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: isExtracting
-                                  ? null
-                                  : () async {
-                                      final picker = ImagePicker();
-                                      final file = await picker.pickImage(
-                                        source: ImageSource.camera,
-                                        maxWidth: 1600,
-                                        maxHeight: 1600,
-                                        imageQuality: 85,
-                                      );
-                                      if (file != null) {
-                                        final bytes = await file.readAsBytes();
-                                        setDialog(() {
-                                          pickedImage = file;
-                                          imageBase64 =
-                                              'data:image/jpeg;base64,' +
-                                              base64Encode(bytes);
-                                          error = null;
-                                        });
-                                      }
-                                    },
-                              icon: Icon(Icons.camera_alt_outlined, size: 18),
-                              label: Text('Chụp ảnh TKB'),
-                            ),
+                          MochiButton(
+                            variant: MochiButtonVariant.secondary,
+                            size: MochiButtonSize.small,
+                            onPressed: isExtracting
+                                ? null
+                                : () async {
+                                    final picker = ImagePicker();
+                                    final file = await picker.pickImage(
+                                      source: ImageSource.gallery,
+                                      maxWidth: 1600,
+                                      maxHeight: 1600,
+                                      imageQuality: 85,
+                                    );
+                                    if (file != null) {
+                                      final bytes = await file.readAsBytes();
+                                      setDialog(() {
+                                        pickedImage = file;
+                                        imageBase64 =
+                                            'data:image/jpeg;base64,${base64Encode(bytes)}';
+                                        error = null;
+                                      });
+                                    }
+                                  },
+                            icon: Icons.camera_alt_outlined,
+                            label: 'Chụp ảnh TKB',
                           ),
                         ],
                       ),
                       SizedBox(height: 12),
                     ],
-                    TextField(
+                    MochiTextField(
                       controller: textController,
                       maxLines: 4,
-                      decoration: InputDecoration(
-                        labelText: 'Nội dung thời khóa biểu hoặc ghi chú',
-                        hintText:
-                            'Dán nội dung bảng lớp, hoặc chọn ảnh bên trên...',
-                        border: OutlineInputBorder(),
-                      ),
+                      label: 'Nội dung thời khóa biểu hoặc ghi chú',
+                      hint: 'Dán nội dung bảng lớp, hoặc chọn ảnh bên trên...',
                     ),
                     if (isExtracting) ...[
                       SizedBox(height: 16),
@@ -795,11 +808,12 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                               subtitle: Text(
                                 '$dayName · ${item['startTime']} - ${item['endTime']}',
                               ),
-                              trailing: IconButton(
-                                icon: Icon(
-                                  Icons.remove_circle_outline,
-                                  size: 20,
-                                ),
+                              trailing: MochiIconButton(
+                                icon: Icons.remove_circle_outline_rounded,
+                                tooltip: 'Bỏ tiết học này',
+                                color: MochiPalette.of(context).danger,
+                                filled: false,
+                                size: 38,
                                 onPressed: () {
                                   setDialog(() {
                                     previewLessons!.removeAt(idx);
@@ -827,9 +841,16 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Hủy')),
+            MochiButton(
+              label: 'Hủy',
+              variant: MochiButtonVariant.secondary,
+              onPressed: () => Navigator.pop(ctx),
+            ),
             if (previewLessons == null)
-              MochiPrimaryButton(
+              MochiButton(
+                label: isExtracting ? 'Đang bóc tách…' : 'Bóc tách với AI',
+                icon: Icons.auto_awesome_rounded,
+                loading: isExtracting,
                 onPressed: isExtracting
                     ? null
                     : () async {
@@ -864,10 +885,10 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                           });
                         }
                       },
-                child: Text('Bóc tách với AI'),
               )
             else
-              MochiPrimaryButton(
+              MochiButton(
+                label: 'Lưu vào thời khóa biểu',
                 onPressed: previewLessons!.isEmpty
                     ? null
                     : () async {
@@ -887,7 +908,6 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                           setDialog(() => error = e.toString());
                         }
                       },
-                child: Text('Lưu vào thời khóa biểu'),
               ),
           ],
         ),
@@ -899,7 +919,11 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     return ListView(
       padding: EdgeInsets.all(16),
       children: [
-        _sectionHeader(context, 'Tổng quan', 'Xem lại tiến độ từng môn đang theo học'),
+        _sectionHeader(
+          context,
+          'Tổng quan',
+          'Xem lại tiến độ từng môn đang theo học',
+        ),
         const SizedBox(height: 12),
         MochiCard(
           child: MochiStatRow(
@@ -912,13 +936,15 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
               ),
               MochiStatTile(
                 label: 'Chủ đề đã vững',
-                value: '${store.learning.courses.expand((c) => c.topics).where((t) => store.learning.readinessFor(t.id) == TopicReadiness.confident).length}',
+                value:
+                    '${store.learning.courses.expand((c) => c.topics).where((t) => store.learning.readinessFor(t.id) == TopicReadiness.confident).length}',
                 icon: Icons.check_circle_rounded,
                 iconTone: MochiChipTone.success,
               ),
               MochiStatTile(
                 label: 'Cần ôn lại',
-                value: '${store.learning.courses.expand((c) => c.topics).where((t) => store.learning.readinessFor(t.id) == TopicReadiness.needsReview).length}',
+                value:
+                    '${store.learning.courses.expand((c) => c.topics).where((t) => store.learning.readinessFor(t.id) == TopicReadiness.needsReview).length}',
                 icon: Icons.refresh_rounded,
                 iconTone: MochiChipTone.warning,
               ),
@@ -926,16 +952,35 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        ...store.learning.courses.map((course) => _courseCard(context, store, course)),
+        ...store.learning.courses.map(
+          (course) => _courseCard(context, store, course),
+        ),
       ],
     );
   }
 
-  Widget _courseCard(BuildContext context, MochiStore store, LearningCourse course) {
+  Widget _courseCard(
+    BuildContext context,
+    MochiStore store,
+    LearningCourse course,
+  ) {
     final palette = MochiPalette.of(context);
-    final confident = course.topics.where((t) => store.learning.readinessFor(t.id) == TopicReadiness.confident).length;
-    final needsReview = course.topics.where((t) => store.learning.readinessFor(t.id) == TopicReadiness.needsReview).length;
-    final notStudied = course.topics.where((t) => store.learning.readinessFor(t.id) == TopicReadiness.notStudied).length;
+    final confident = course.topics
+        .where(
+          (t) => store.learning.readinessFor(t.id) == TopicReadiness.confident,
+        )
+        .length;
+    final needsReview = course.topics
+        .where(
+          (t) =>
+              store.learning.readinessFor(t.id) == TopicReadiness.needsReview,
+        )
+        .length;
+    final notStudied = course.topics
+        .where(
+          (t) => store.learning.readinessFor(t.id) == TopicReadiness.notStudied,
+        )
+        .length;
     final total = course.topics.length;
     final pct = total > 0 ? confident / total : 0.0;
 
@@ -963,21 +1008,37 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                     color: palette.accent.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: Icon(Icons.school_rounded, color: palette.accent, size: 22),
+                  child: Icon(
+                    Icons.school_rounded,
+                    color: palette.accent,
+                    size: 22,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(course.subject, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: palette.ink)),
+                      Text(
+                        course.subject,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 16,
+                          color: palette.ink,
+                        ),
+                      ),
                       if (course.textbook.isNotEmpty)
-                        Text(course.textbook, style: TextStyle(fontSize: 12, color: palette.muted)),
+                        Text(
+                          course.textbook,
+                          style: TextStyle(fontSize: 12, color: palette.muted),
+                        ),
                     ],
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.edit_outlined, color: palette.action),
+                MochiIconButton(
+                  icon: Icons.edit_outlined,
+                  tooltip: 'Chỉnh sửa môn ${course.subject}',
+                  filled: false,
                   onPressed: () => _editCourse(store, course),
                 ),
               ],
@@ -988,7 +1049,14 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Tiến độ ${course.subject}', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: palette.muted)),
+                Text(
+                  'Tiến độ ${course.subject}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: palette.muted,
+                  ),
+                ),
                 const SizedBox(height: 4),
                 MochiProgressBar(value: pct, showValue: true),
               ],
@@ -1006,9 +1074,24 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
             ),
             child: MochiStatRow(
               children: [
-                MochiStatTile(label: 'Vừa', value: '$confident', icon: Icons.check_circle_rounded, iconTone: MochiChipTone.success),
-                MochiStatTile(label: 'Cần ôn', value: '$needsReview', icon: Icons.refresh_rounded, iconTone: MochiChipTone.warning),
-                MochiStatTile(label: 'Chưa học', value: '$notStudied', icon: Icons.radio_button_unchecked_rounded, iconTone: MochiChipTone.neutral),
+                MochiStatTile(
+                  label: 'Vừa',
+                  value: '$confident',
+                  icon: Icons.check_circle_rounded,
+                  iconTone: MochiChipTone.success,
+                ),
+                MochiStatTile(
+                  label: 'Cần ôn',
+                  value: '$needsReview',
+                  icon: Icons.refresh_rounded,
+                  iconTone: MochiChipTone.warning,
+                ),
+                MochiStatTile(
+                  label: 'Chưa học',
+                  value: '$notStudied',
+                  icon: Icons.radio_button_unchecked_rounded,
+                  iconTone: MochiChipTone.neutral,
+                ),
               ],
             ),
           ),
@@ -1020,16 +1103,17 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                 runSpacing: 8,
                 children: [
                   for (final topic in course.topics)
-                    GestureDetector(
-                      onTap: () {
-                        final current = store.learning.readinessFor(topic.id);
-                        final next = current == TopicReadiness.confident ? TopicReadiness.unknown : TopicReadiness.confident;
-                        store.setTopicReadiness(course.id, topic.id, next);
-                      },
-                      child: MochiChip(
-                        label: topic.title.length > 18 ? '${topic.title.substring(0, 18)}...' : topic.title,
-                        tone: store.learning.readinessFor(topic.id) == TopicReadiness.confident ? MochiChipTone.accent : MochiChipTone.neutral,
-                        compact: true,
+                    MochiFilterChip(
+                      label: topic.title,
+                      selected:
+                          store.learning.readinessFor(topic.id) ==
+                          TopicReadiness.confident,
+                      onSelected: (selected) => store.setTopicReadiness(
+                        course.id,
+                        topic.id,
+                        selected
+                            ? TopicReadiness.confident
+                            : TopicReadiness.unknown,
                       ),
                     ),
                 ],
@@ -1038,15 +1122,18 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
           else
             Padding(
               padding: const EdgeInsets.all(16),
-              child: MochiPrimaryButton(
+              child: MochiButton(
+                label: 'Thêm chủ đề đang theo học',
+                icon: Icons.add_rounded,
+                variant: MochiButtonVariant.secondary,
                 onPressed: () => _editCourse(store, course),
-                child: const Text('Thêm chủ đề đang theo học'),
               ),
             ),
         ],
       ),
     );
   }
+
   Widget _agenda(MochiStore store) {
     final palette = MochiPalette.of(context);
     final plan = store.learning.activePlan;
@@ -1056,22 +1143,23 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     return ListView(
       padding: EdgeInsets.all(16),
       children: [
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            MochiPrimaryButton.icon(
-              key: const ValueKey('learning-add-assignment'),
-              onPressed: () => _assignment(store),
-              icon: const Icon(Icons.add),
-              label: const Text('Thêm bài / việc cần học'),
-            ),
             MochiButton(
               key: const ValueKey('learning-plan-all'),
               label: 'Xếp lịch chung',
+              icon: Icons.calendar_today_rounded,
               variant: MochiButtonVariant.secondary,
               size: MochiButtonSize.small,
               onPressed: () => _plan(store),
+            ),
+            MochiButton(
+              key: const ValueKey('learning-add-assignment'),
+              onPressed: () => _assignment(store),
+              icon: Icons.add_rounded,
+              label: 'Thêm bài / việc cần học',
+              size: MochiButtonSize.small,
             ),
           ],
         ),
@@ -1094,9 +1182,9 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                   subtitle: Text(
                     '${block.date} · ${block.startTime} · ${block.minutes} phút · ${block.subject}\nĐã ghi nhận ${store.learning.completedMinutesForBlock(block.id)} phút',
                   ),
-                  trailing: IconButton(
+                  trailing: MochiIconButton(
                     tooltip: 'Học phần này',
-                    icon: Icon(Icons.play_arrow_rounded, color: palette.action),
+                    icon: Icons.play_arrow_rounded,
                     onPressed: () {
                       final task = store.tasks.firstWhere(
                         (t) => t.id == block.taskId,
@@ -1127,9 +1215,15 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
         ],
 
         if (completedTasks.isNotEmpty) ...[
-          _sectionHeader(context, 'Đã hoàn thành (${completedTasks.length})', null),
+          _sectionHeader(
+            context,
+            'Đã hoàn thành (${completedTasks.length})',
+            null,
+          ),
           const SizedBox(height: 12),
-          ...completedTasks.map((task) => _completedTaskCard(context, store, task)),
+          ...completedTasks.map(
+            (task) => _completedTaskCard(context, store, task),
+          ),
           const SizedBox(height: 16),
         ],
 
@@ -1145,7 +1239,11 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
       children: [
         Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: palette.ink),
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 16,
+            color: palette.ink,
+          ),
         ),
         if (subtitle != null) ...[
           const SizedBox(height: 4),
@@ -1157,228 +1255,141 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
 
   Widget _taskCard(BuildContext context, MochiStore store, TaskModel task) {
     final palette = MochiPalette.of(context);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      child: Material(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(18),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(18),
-          onTap: () {
-            HapticFeedback.lightImpact();
-            store.toggleTask(task.id, !task.isDone);
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: task.isDone ? Colors.transparent : palette.cardBorder,
-                width: 1.0,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: palette.ink.withValues(alpha: 0.03),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
-                ),
-              ],
+    return MochiCard(
+      margin: const EdgeInsets.only(bottom: MochiSpacing.sm),
+      padding: const EdgeInsets.symmetric(
+        horizontal: MochiSpacing.sm,
+        vertical: MochiSpacing.xs,
+      ),
+      onTap: () => store.toggleTask(task.id, !task.isDone),
+      child: Row(
+        children: [
+          Checkbox(
+            value: task.isDone,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
             ),
-            child: Row(
+            activeColor: palette.action,
+            onChanged: (val) => store.toggleTask(task.id, val ?? false),
+          ),
+          const SizedBox(width: MochiSpacing.xs),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Checkbox(
-                  value: task.isDone,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  activeColor: palette.accent,
-                  onChanged: (val) {
-                    HapticFeedback.lightImpact();
-                    store.toggleTask(task.id, val ?? false);
-                  },
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        task.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 14.5,
-                          fontWeight: FontWeight.w700,
-                          color: task.isDone ? palette.muted : palette.ink,
-                          decoration: task.isDone ? TextDecoration.lineThrough : null,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        runSpacing: 4,
-                        children: [
-                          if (task.scheduledTime != null && task.scheduledTime!.isNotEmpty) ...[
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              margin: const EdgeInsets.only(right: 6),
-                              decoration: BoxDecoration(
-                                color: palette.action.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                task.scheduledTime!,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w800,
-                                  color: palette.action,
-                                ),
-                              ),
-                            ),
-                          ],
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: palette.action.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              task.subject,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: palette.action,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${task.durationMinutes} phút',
-                            style: TextStyle(fontSize: 12, color: palette.muted),
-                          ),
-                        ],
-                      ),
-                    ],
+                Text(
+                  task.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: task.isDone ? palette.muted : palette.ink,
+                    decoration: task.isDone ? TextDecoration.lineThrough : null,
                   ),
                 ),
-                if (!task.isDone)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: MochiPrimaryButton(
-                      onPressed: () {
-                        HapticFeedback.selectionClick();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (ctx) => FocusTimerScreen(targetTask: task),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: palette.accent,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 0,
+                const SizedBox(height: MochiSpacing.xs),
+                Wrap(
+                  spacing: MochiSpacing.xs,
+                  runSpacing: MochiSpacing.xs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    if (task.scheduledTime?.isNotEmpty == true)
+                      MochiChip(
+                        label: task.scheduledTime!,
+                        icon: Icons.schedule_rounded,
+                        tone: MochiChipTone.accent,
+                        compact: true,
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.play_arrow_rounded, size: 16, color: palette.onAccent),
-                          const SizedBox(width: 3),
-                          Text('Học ngay', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
-                        ],
-                      ),
+                    MochiChip(
+                      label: task.subject,
+                      tone: MochiChipTone.accent,
+                      compact: true,
                     ),
-                  ),
+                    MochiChip(
+                      label: '${task.durationMinutes} phút',
+                      tone: MochiChipTone.neutral,
+                      compact: true,
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-        ),
+          if (!task.isDone) ...[
+            const SizedBox(width: MochiSpacing.xs),
+            MochiButton(
+              label: 'Học ngay',
+              icon: Icons.play_arrow_rounded,
+              size: MochiButtonSize.small,
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => FocusTimerScreen(targetTask: task),
+                ),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
 
-  Widget _completedTaskCard(BuildContext context, MochiStore store, TaskModel task) {
+  Widget _completedTaskCard(
+    BuildContext context,
+    MochiStore store,
+    TaskModel task,
+  ) {
     final palette = MochiPalette.of(context);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Material(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            HapticFeedback.lightImpact();
-            store.toggleTask(task.id, !task.isDone);
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.transparent, width: 1.0),
-            ),
-            child: Row(
+    return MochiCard(
+      margin: const EdgeInsets.only(bottom: MochiSpacing.xs),
+      padding: const EdgeInsets.symmetric(
+        horizontal: MochiSpacing.sm,
+        vertical: MochiSpacing.xs,
+      ),
+      onTap: () => store.toggleTask(task.id, !task.isDone),
+      child: Row(
+        children: [
+          Checkbox(
+            value: true,
+            activeColor: palette.action,
+            onChanged: (val) => store.toggleTask(task.id, val ?? false),
+          ),
+          const SizedBox(width: MochiSpacing.xs),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Checkbox(
-                  value: true,
-                  activeColor: palette.accent,
-                  onChanged: (val) {
-                    HapticFeedback.lightImpact();
-                    store.toggleTask(task.id, val ?? false);
-                  },
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        task.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: palette.accent,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        runSpacing: 4,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: palette.accent.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              task.subject,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: palette.accent,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${task.durationMinutes} phút',
-                            style: TextStyle(fontSize: 12, color: palette.muted),
-                          ),
-                        ],
-                      ),
-                    ],
+                Text(
+                  task.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: palette.muted,
+                    decoration: TextDecoration.lineThrough,
                   ),
+                ),
+                const SizedBox(height: MochiSpacing.xs),
+                Wrap(
+                  spacing: MochiSpacing.xs,
+                  runSpacing: MochiSpacing.xs,
+                  children: [
+                    MochiChip(
+                      label: task.subject,
+                      tone: MochiChipTone.neutral,
+                      compact: true,
+                    ),
+                    MochiChip(
+                      label: '${task.durationMinutes} phút',
+                      tone: MochiChipTone.neutral,
+                      compact: true,
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -1393,7 +1404,11 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
           const SizedBox(height: 12),
           Text(
             'Chưa có bài tập nào',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: palette.ink),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: palette.ink,
+            ),
           ),
           const SizedBox(height: 6),
           Text(
@@ -1402,13 +1417,10 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
             style: TextStyle(fontSize: 13, color: palette.muted),
           ),
           const SizedBox(height: 16),
-          MochiPrimaryButton.icon(
+          MochiButton(
             onPressed: () => _assignment(store),
-            icon: const Icon(Icons.add, size: 18),
-            label: const Text('Thêm việc mới'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: palette.accent,
-            ),
+            icon: Icons.add_rounded,
+            label: 'Thêm việc mới',
           ),
         ],
       ),
@@ -1426,29 +1438,34 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     return ListView(
       padding: EdgeInsets.all(16),
       children: [
-        _sectionHeader(context, 'Giờ học thực tế', 'Các khoảng này được loại khỏi giờ có thể tự học.'),
+        _sectionHeader(
+          context,
+          'Giờ học thực tế',
+          'Các khoảng này được loại khỏi giờ có thể tự học.',
+        ),
         const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            MochiPrimaryButton.icon(
-              onPressed: () => _lesson(store),
-              icon: const Icon(Icons.add),
-              label: const Text('Thêm giờ lên lớp'),
-            ),
             MochiButton(
               label: 'Nhập TKB bằng AI',
               variant: MochiButtonVariant.secondary,
               size: MochiButtonSize.small,
               onPressed: () => _importTimetableWithAI(store),
             ),
+            MochiButton(
+              onPressed: () => _lesson(store),
+              icon: Icons.add_rounded,
+              size: MochiButtonSize.small,
+              label: 'Thêm giờ lên lớp',
+            ),
           ],
         ),
         const SizedBox(height: 16),
         if (sortedDays.isEmpty)
           _emptyState(context, store)
-        else ..._buildDayCards(store, palette, sortedDays, days),
+        else
+          ..._buildDayCards(store, palette, sortedDays, days),
       ],
     );
   }
@@ -1460,10 +1477,12 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     Map<int, List<SchoolLesson>> days,
   ) {
     return sortedDays.map((wd) {
-      final dayLessons = days[wd]!..sort(
-        (a, b) => int.parse(a.startTime.replaceAll(':', ''))
-            .compareTo(int.parse(b.startTime.replaceAll(':', ''))),
-      );
+      final dayLessons = days[wd]!
+        ..sort(
+          (a, b) =>
+              int.parse(a.startTime.replaceAll(':', ''))
+                  .compareTo(int.parse(b.startTime.replaceAll(':', ''))),
+        );
       final dayName = wd == 7 ? 'Chủ nhật' : 'Thứ ${wd + 1}';
       return MochiCard(
         margin: const EdgeInsets.only(bottom: 12),
@@ -1483,7 +1502,9 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                     ),
                     child: Center(
                       child: Text(
-                        dayName == 'Chủ nhật' ? 'CN' : dayName.replaceAll('Thứ ', ''),
+                        dayName == 'Chủ nhật'
+                            ? 'CN'
+                            : dayName.replaceAll('Thứ ', ''),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
@@ -1495,117 +1516,151 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                   const SizedBox(width: 10),
                   Text(
                     dayName,
-                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: palette.ink),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 16,
+                      color: palette.ink,
+                    ),
                   ),
                 ],
               ),
             ),
-            ...dayLessons.map((lesson) => ListTile(
-              dense: true,
-              title: Text(lesson.subject),
-              subtitle: Text('${lesson.startTime}–${lesson.endTime}'),
-              leading: Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: palette.accent,
-                  shape: BoxShape.circle,
+            ...dayLessons.map(
+              (lesson) => ListTile(
+                dense: true,
+                title: Text(lesson.subject),
+                subtitle: Text('${lesson.startTime}–${lesson.endTime}'),
+                leading: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: palette.accent,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                trailing: MochiIconButton(
+                  tooltip: 'Xóa giờ học',
+                  icon: Icons.delete_outline_rounded,
+                  color: palette.muted,
+                  onPressed: () async {
+                    final yes = await MochiDialog.show(
+                      context,
+                      title: 'Xóa giờ học này?',
+                      message:
+                          '${lesson.subject} · ${lesson.startTime}–${lesson.endTime}',
+                      confirmLabel: 'Xóa',
+                      destructive: true,
+                      icon: Icons.delete_outline_rounded,
+                    );
+                    if (yes == true) await store.removeSchoolLesson(lesson.id);
+                  },
                 ),
               ),
-              trailing: IconButton(
-                tooltip: 'Xóa giờ học',
-                icon: Icon(Icons.delete_outline, color: palette.muted, size: 20),
-                onPressed: () async {
-                  final yes = await showDialog<bool>(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: Text('Xóa giờ học này?'),
-                      content: Text('${lesson.subject} · ${lesson.startTime}–${lesson.endTime}'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(ctx, false),
-                          child: const Text('Giữ lại'),
-                        ),
-                        MochiPrimaryButton(
-                          onPressed: () => Navigator.pop(ctx, true),
-                          child: const Text('Xóa'),
-                        ),
-                      ],
-                    ),
-                  );
-                  if (yes == true) await store.removeSchoolLesson(lesson.id);
-                },
-              ),
-            )),
+            ),
           ],
         ),
       );
     }).toList();
   }
+
   @override
   Widget build(BuildContext context) {
     final store = context.watch<MochiStore>();
-    final palette = MochiPalette.of(context);
     return DefaultTabController(
       length: 3,
       initialIndex: widget.initialTab,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Học tập cá nhân'),
-          actions: [
-            IconButton(
-              tooltip: 'Thiết lập lớp và môn học',
-              icon: Icon(Icons.tune_rounded),
-              onPressed: () => _setup(store),
-            ),
-          ],
-          bottom: TabBar(
-            isScrollable: true,
-            indicatorColor: palette.action,
-            indicatorWeight: 3,
-            labelColor: palette.action,
-            unselectedLabelColor: palette.muted,
-            labelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
-            tabs: [
-              Tab(text: 'Tiến độ môn'),
-              Tab(text: 'Bài & lịch chung'),
-              Tab(text: 'Thời khóa biểu'),
-            ],
-          ),
-        ),
-        body: Column(
-          children: [
-            if (store.learning.gradeLevel == null)
-              Material(
-                color: MochiPalette.of(context).softAccent,
-                child: ListTile(
-                  title: Text('Chọn lớp và các môn bạn đang học'),
-                  subtitle: Text(
-                    'Đánh dấu tiến độ một lần, cập nhật dần theo bài trên lớp.',
-                  ),
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () => _setup(store),
+      child: Builder(
+        builder: (context) {
+          final tabs = DefaultTabController.of(context);
+          return Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: MochiAppBar.detail(
+              title: 'Học tập cá nhân',
+              subtitle: 'Môn học, nhiệm vụ và thời khóa biểu',
+              toolbarHeight: 76,
+              actions: [
+                MochiIconButton(
+                  tooltip: 'Thiết lập học tập cá nhân',
+                  icon: Icons.tune_rounded,
+                  onPressed: () => _setup(store),
                 ),
-              ),
-            if (store.cloudService.hasActiveUser && !store.isCloudSynced)
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                child: Text(
-                  'Thay đổi đang chờ đồng bộ hoặc cần kết nối lại.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: MochiPalette.of(context).muted,
+              ],
+            ),
+            body: Column(
+              children: [
+                if (store.cloudService.hasActiveUser && !store.isCloudSynced)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      MochiSpacing.md,
+                      MochiSpacing.xs,
+                      MochiSpacing.md,
+                      0,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: MochiChip(
+                        label:
+                            'Thay đổi đang chờ đồng bộ hoặc cần kết nối lại.',
+                        icon: Icons.cloud_sync_outlined,
+                        tone: MochiChipTone.warning,
+                      ),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    MochiSpacing.md,
+                    MochiSpacing.sm,
+                    MochiSpacing.md,
+                    MochiSpacing.xs,
+                  ),
+                  child: AnimatedBuilder(
+                    animation: tabs,
+                    builder: (context, _) => MochiSegmentedControl<int>(
+                      value: tabs.index,
+                      segments: const [
+                        MochiSegment(
+                          value: 0,
+                          label: 'Tiến độ môn',
+                          icon: Icons.insights_outlined,
+                        ),
+                        MochiSegment(
+                          value: 1,
+                          label: 'Bài & lịch',
+                          icon: Icons.event_note_outlined,
+                        ),
+                        MochiSegment(
+                          value: 2,
+                          label: 'Thời khóa biểu',
+                          icon: Icons.calendar_view_week_outlined,
+                        ),
+                      ],
+                      onChanged: tabs.animateTo,
+                    ),
                   ),
                 ),
-              ),
-            Expanded(
-              child: TabBarView(
-                children: [_progress(store), _agenda(store), _timetable(store)],
-              ),
+                Expanded(
+                  child: TabBarView(
+                    controller: tabs,
+                    children: [
+                      _responsiveTab(_progress(store)),
+                      _responsiveTab(_agenda(store)),
+                      _responsiveTab(_timetable(store)),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
+
+  Widget _responsiveTab(Widget child) => Align(
+    alignment: Alignment.topCenter,
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 1080),
+      child: child,
+    ),
+  );
 }

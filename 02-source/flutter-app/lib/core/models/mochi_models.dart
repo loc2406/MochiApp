@@ -40,7 +40,7 @@ class ProfileModel {
     this.mainGoal = '',
     this.robotName = 'Mochi',
     ColorThemeModel? colorTheme,
-    this.themePreset = 'ocenCyan',
+    this.themePreset = 'oceanCyan',
     this.themeMode = 'system',
     this.backgroundPreset = 'lavender',
     this.glassOpacity = 0.85,
@@ -64,7 +64,7 @@ class ProfileModel {
       colorTheme: json['colorTheme'] != null
           ? ColorThemeModel.fromJson(json['colorTheme'])
           : ColorThemeModel(),
-      themePreset: json['themePreset']?.toString() ?? 'electricViolet',
+      themePreset: json['themePreset']?.toString() ?? 'oceanCyan',
       themeMode: json['themeMode']?.toString() ?? 'system',
       backgroundPreset: json['backgroundPreset']?.toString() ?? 'lavender',
       glassOpacity: (json['glassOpacity'] as num?)?.toDouble() ?? 0.85,

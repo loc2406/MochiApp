@@ -4,6 +4,73 @@ import '../foundation/mochi_palette.dart';
 import '../foundation/mochi_tokens.dart';
 import 'mochi_button.dart';
 
+/// Responsive dialog surface for forms and previews with caller supplied
+/// Mochi actions.
+class MochiFormDialog extends StatelessWidget {
+  final String title;
+  final Widget content;
+  final List<Widget> actions;
+  final double maxWidth;
+
+  const MochiFormDialog({
+    super.key,
+    required this.title,
+    required this.content,
+    required this.actions,
+    this.maxWidth = 560,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = MochiPalette.of(context);
+    final theme = Theme.of(context);
+
+    return Dialog(
+      backgroundColor: palette.card,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      shape: const RoundedRectangleBorder(
+        borderRadius: MochiRadius.sheetBorder,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: maxWidth,
+          maxHeight: MediaQuery.sizeOf(context).height * .88,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(MochiSpacing.xl),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontSize: 18,
+                  color: palette.accent,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: MochiSpacing.md),
+              Flexible(child: content),
+              if (actions.isNotEmpty) ...[
+                const SizedBox(height: MochiSpacing.lg),
+                Wrap(
+                  alignment: WrapAlignment.end,
+                  spacing: MochiSpacing.sm,
+                  runSpacing: MochiSpacing.sm,
+                  children: actions,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Confirmation dialog in the Mochi style: rounded card, icon badge, clear
 /// primary/destructive action. Keeps the app free of raw AlertDialogs.
 class MochiDialog extends StatelessWidget {
@@ -89,9 +156,11 @@ class MochiDialog extends StatelessWidget {
               if (icon != null) const SizedBox(height: MochiSpacing.md),
               Text(
                 title,
+                textAlign: TextAlign.center,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontSize: 18,
-                  color: palette.ink,
+                  color: palette.accent,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
               if (message != null) ...[

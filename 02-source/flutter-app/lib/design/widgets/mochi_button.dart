@@ -28,7 +28,7 @@ class MochiButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.variant = MochiButtonVariant.primary,
-    this.size = MochiButtonSize.medium,
+    this.size = MochiButtonSize.small,
     this.expand = false,
     this.loading = false,
     this.semanticLabel,

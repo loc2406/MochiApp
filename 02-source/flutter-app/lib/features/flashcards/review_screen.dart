@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/database/mochi_store.dart';
+import '../../design/foundation/mochi_palette.dart';
 import '../../design/pastel/pastel_components.dart';
 import '../../core/learning/review_policy.dart';
 import '../../core/learning/learning_models.dart';
 import '../../shared/widgets/ai_message_body.dart';
 import '../../shared/navigation/custom_page_transition.dart';
+import '../robot/robot_mascot_widget.dart';
 import 'review_quiz_card.dart';
 import '../learning/learning_hub_screen.dart';
 import 'flashcards_screen.dart';
@@ -919,10 +921,26 @@ class _ReviewScreenState extends State<_ReviewContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        PastelIllustration(
-          asset: 'assets/images/robot_idle.png',
-          size: 132,
-          semanticLabel: 'Mochi đang chờ bạn ôn tập',
+        Semantics(
+          label: 'Mochi đang chờ bạn ôn tập',
+          image: true,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(32),
+              gradient: RadialGradient(
+                colors: [
+                  PastelPalette.of(context).soft,
+                  PastelPalette.of(context).soft.withValues(alpha: 0),
+                ],
+              ),
+            ),
+            child: RobotMascotWidget(
+              size: 132,
+              primaryColor: MochiPalette.of(context).accent,
+            ),
+          ),
         ),
         const SizedBox(height: PastelSpacing.sm),
         Text(

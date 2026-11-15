@@ -71,15 +71,111 @@ class MochiTextField extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(
             left: MochiSpacing.xxs,
-            bottom: MochiSpacing.xs,
+            bottom: MochiSpacing.xxs,
           ),
           child: Text(
             label!,
             style: Theme.of(context).textTheme.labelLarge
-                ?.copyWith(color: palette.muted, fontWeight: FontWeight.w600),
+                ?.copyWith(color: palette.ink, fontWeight: FontWeight.w700),
           ),
         ),
         field,
+      ],
+    );
+  }
+}
+
+/// Dropdown input sharing the filled surface and rounded focus border of
+/// [MochiTextField].
+class MochiDropdownField<T> extends StatelessWidget {
+  final String label;
+  final T value;
+  final List<DropdownMenuItem<T>> items;
+  final ValueChanged<T?>? onChanged;
+  final bool isExpanded;
+
+  const MochiDropdownField({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.items,
+    required this.onChanged,
+    this.isExpanded = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = MochiPalette.of(context);
+    final theme = Theme.of(context);
+    final borderRadius = BorderRadius.circular(18);
+    final mochiItems = items
+        .map(
+          (item) => DropdownMenuItem<T>(
+            key: item.key,
+            value: item.value,
+            enabled: item.enabled,
+            alignment: item.alignment,
+            child: DefaultTextStyle.merge(
+              style: theme.textTheme.bodyMedium!.copyWith(
+                color: palette.ink,
+                fontWeight: FontWeight.w500,
+              ),
+              child: IconTheme.merge(
+                data: IconThemeData(color: palette.accent),
+                child: item.child,
+              ),
+            ),
+          ),
+        )
+        .toList(growable: false);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: MochiSpacing.xxs,
+            bottom: MochiSpacing.xxs,
+          ),
+          child: Text(
+            label,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: palette.ink,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        DropdownButtonFormField<T>(
+          initialValue: value,
+          items: mochiItems,
+          onChanged: onChanged,
+          isExpanded: isExpanded,
+          icon: Icon(Icons.keyboard_arrow_down_rounded, color: palette.muted),
+          dropdownColor: palette.card,
+          borderRadius: BorderRadius.circular(16),
+          style: theme.textTheme.bodyMedium?.copyWith(color: palette.ink),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: palette.cardSoft,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: MochiSpacing.md,
+              vertical: MochiSpacing.sm,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: borderRadius,
+              borderSide: BorderSide(color: palette.cardBorder),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: borderRadius,
+              borderSide: BorderSide(color: palette.cardBorder),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: borderRadius,
+              borderSide: BorderSide(color: palette.accent, width: 1.5),
+            ),
+          ),
+        ),
+        const SizedBox(height: MochiSpacing.sm),
       ],
     );
   }
