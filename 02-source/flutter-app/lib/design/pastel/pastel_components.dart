@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../foundation/mochi_backdrop.dart';
 import 'pastel_theme.dart';
 export 'pastel_theme.dart';
 
@@ -245,53 +246,60 @@ class PastelScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = PastelPalette.of(context);
     final colors = PastelBackgrounds.colors(background, p.dark);
+    final backdrop = MochiVisuals.of(context).backdrop;
+    final useImageBackground = backdrop.kind == MochiBackdropKind.image;
     return Scaffold(
-      backgroundColor: colors.first,
-      body: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: colors,
+      backgroundColor: Colors.transparent,
+      body: MochiBackground(
+        backdrop: useImageBackground ? backdrop : const MochiBackdrop.solid(),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: useImageBackground
+                ? null
+                : LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: colors,
+                  ),
           ),
-        ),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            if (!p.highContrast)
-              Positioned(
-                top: -100,
-                right: -90,
-                child: IgnorePointer(
-                  child: Container(
-                    width: 420,
-                    height: 420,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          colors.last.withValues(alpha: .7),
-                          colors.last.withValues(alpha: 0),
-                        ],
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              if (!p.highContrast && !useImageBackground)
+                Positioned(
+                  top: -100,
+                  right: -90,
+                  child: IgnorePointer(
+                    child: Container(
+                      width: 420,
+                      height: 420,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            colors.last.withValues(alpha: .7),
+                            colors.last.withValues(alpha: 0),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 680),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    appBar,
-                    Expanded(child: body),
-                  ],
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 680),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      appBar,
+                      Expanded(child: body),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

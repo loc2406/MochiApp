@@ -30,7 +30,7 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
     final palette = MochiPalette.of(context);
 
     return Scaffold(
-      backgroundColor: palette.pageTop,
+      backgroundColor: Colors.transparent,
       body: CustomScrollView(
         slivers: [
           SliverPadding(

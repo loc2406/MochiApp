@@ -61,6 +61,7 @@ class _AITutorScreenState extends State<AITutorScreen> {
       _msgController.clear();
       _messages.removeWhere((m) => m.id != 'welcome');
       _messages.addAll(store.tutorMessages);
+      _scrollToBottom();
     }
   }
 
@@ -367,21 +368,30 @@ class _AITutorScreenState extends State<AITutorScreen> {
           final horizontal = constraints.maxWidth >= 760
               ? (constraints.maxWidth - 720) / 2
               : 16.0;
-          final composerPaddingBottom =
-              (_attachedImage != null ? 108.0 : 68.0) + effectiveBottom;
+          // Reserve the full composer footprint so the scroll viewport ends
+          // above it instead of allowing the floating composer to cover rows.
+          final composerSpace =
+              (_attachedImage != null ? 108.0 : 68.0) +
+              (_isLoading ? 48.0 : 0.0) +
+              effectiveBottom;
           return Stack(
             fit: StackFit.expand,
             children: [
-              // Layer 0: Full height scrollable messages list with no dead background blocks
-              Positioned.fill(
+              // Keep the viewport above the floating composer. Its bottom
+              // inset includes the composer, loading label, and safe area.
+              Positioned(
+                top: constraints.maxHeight > 300 ? 52 : 12,
+                left: 0,
+                right: 0,
+                bottom: composerSpace,
                 child: ListView.builder(
                   key: ValueKey('tutor_messages_list'),
                   controller: _scrollController,
                   padding: EdgeInsets.fromLTRB(
                     horizontal,
-                    constraints.maxHeight > 300 ? 56 : 16,
+                    4,
                     horizontal,
-                    composerPaddingBottom,
+                    12,
                   ),
                   itemCount: _messages.length,
                   itemBuilder: (context, index) {

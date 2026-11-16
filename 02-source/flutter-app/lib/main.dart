@@ -73,12 +73,20 @@ class MochiApp extends StatelessWidget {
       child: Consumer<MochiStore>(
         builder: (context, store, _) {
           final accent = MochiPresets.accentFor(store.profile.themePreset);
+          final usePhotoBackground =
+              store.profile.backgroundPreset == 'image-1';
           final active = visuals.copyWith(
             highContrast: store.profile.highContrast,
             reduceMotion: store.profile.reducedMotion,
             haptics: store.profile.hapticEnabled,
             backdrop: visuals.backdrop.copyWith(
               preset: store.profile.backgroundPreset,
+              kind: usePhotoBackground
+                  ? MochiBackdropKind.image
+                  : MochiBackdropKind.gradient,
+              image: usePhotoBackground
+                  ? const AssetImage('assets/bg/bg-01.jpg')
+                  : null,
             ),
           );
           return MaterialApp(
