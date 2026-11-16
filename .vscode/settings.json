@@ -1,3 +1,7 @@
 {
-    "cmake.ignoreCMakeListsMissing": true
+    "cmake.ignoreCMakeListsMissing": true,
+    "code-runner.runInTerminal": true,
+    "code-runner.executorMapByFileExtension": {
+        ".bat": "cmd.exe /d /c call \"$fullFileName\""
+    }
 }

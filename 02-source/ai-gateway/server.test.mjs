@@ -10,13 +10,13 @@ async function fixture(fn,options={}) {
   if(url.includes('/auth/v1/user'))return Response.json({id:'test-user'});
   return Response.json({id:'real-shape-test',choices:[{message:{content:'Hai vế cùng được thực hiện một phép biến đổi.'}}]});
  };
- const server=createGateway({env:{SUPABASE_URL:'https://example.supabase.co',SUPABASE_PUBLISHABLE_KEY:'public-key',GROQ_API_KEY:'server-only-secret'},upstream,...options});
+ const server=createGateway({env:{SUPABASE_URL:'https://example.supabase.co',SUPABASE_PUBLISHABLE_KEY:'public-key',GEMINI_API_KEY:'server-only-gemini-key'},upstream,...options});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const url=`http://127.0.0.1:${server.address().port}`;
  try{await fn({url,calls,post:(body=payload,headers={})=>fetch(url+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token,...headers},body:JSON.stringify(body)})});}
  finally{server.closeAllConnections();await new Promise(r=>server.close(r));}
 }
 test('unauthenticated calls never reach provider',()=>fixture(async({post,calls})=>{const r=await post(payload,{Authorization:''});assert.equal(r.status,401);assert.equal(calls.length,0);}));
-test('server validates session, preserves Vietnamese, clamps token budget and never exposes secret',()=>fixture(async({post,calls})=>{const r=await post({...payload,max_completion_tokens:100000});assert.equal(r.status,200);const data=await r.text();assert(!data.includes('server-only-secret'));assert.equal(calls.length,2);assert.equal(calls[1].init.headers.Authorization,'Bearer server-only-secret');const sent=JSON.parse(calls[1].init.body);assert.equal(sent.messages[0].content,payload.messages[0].content);assert.equal(sent.max_completion_tokens,4096);}));
+test('server validates session and adapts the app contract to Gemini without leaking its key',()=>fixture(async({post,calls})=>{const r=await post({...payload,max_completion_tokens:100000,reasoning_effort:'low',reasoning_format:'parsed'});assert.equal(r.status,200);const data=await r.text();assert(!data.includes('server-only-gemini-key'));assert.equal(calls.length,2);assert.equal(calls[1].url,'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions');assert.equal(calls[1].init.headers.Authorization,'Bearer server-only-gemini-key');const sent=JSON.parse(calls[1].init.body);assert.equal(sent.model,'gemini-3.8-flash');assert.equal(sent.messages[0].content,payload.messages[0].content);assert.equal(sent.max_tokens,4096);assert.equal('max_completion_tokens' in sent,false);assert.equal('reasoning_format' in sent,false);assert.equal(sent.reasoning_effort,'low');}));
 test('untrusted browser origins and models are rejected',()=>fixture(async({post,calls})=>{assert.equal((await post(payload,{Origin:'https://evil.invalid'})).status,403);assert.equal((await post({...payload,model:'unknown'})).status,400);assert.equal(calls.length,0);}));
 test('user capacity is enforced before the twenty-first provider request',()=>fixture(async({post,calls})=>{for(let i=0;i<20;i++)assert.equal((await post()).status,200);assert.equal((await post()).status,429);assert.equal(calls.filter(x=>!x.url.includes('/auth/')).length,20);}));
 test('upstream errors do not leak provider diagnostics',()=>fixture(async({post})=>{const r=await post();assert.equal(r.status,502);assert(!((await r.text()).includes('private-credential')));},{upstream:async(url)=>url.includes('/auth/')?Response.json({id:'test-user'}):new Response('private-credential',{status:500})}));
@@ -29,4 +29,4 @@ test('ALLOWED_ORIGINS enables an extra origin and echoes it, others stay blocked
  assert.equal(ok.status,200);
  assert.equal(ok.headers.get('access-control-allow-origin'),'http://127.0.0.1:8600');
  assert.equal((await post(payload,{Origin:'https://evil.invalid'})).status,403);
-},{env:{SUPABASE_URL:'https://example.supabase.co',SUPABASE_PUBLISHABLE_KEY:'public-key',GROQ_API_KEY:'server-only-secret',ALLOWED_ORIGINS:'https://bendocs.tailc1f51b.ts.net,http://127.0.0.1:8600'}}));
+},{env:{SUPABASE_URL:'https://example.supabase.co',SUPABASE_PUBLISHABLE_KEY:'public-key',GEMINI_API_KEY:'server-only-gemini-key',ALLOWED_ORIGINS:'https://bendocs.tailc1f51b.ts.net,http://127.0.0.1:8600'}}));

@@ -4,12 +4,20 @@ import {pathToFileURL} from 'node:url';
 
 export function createGateway({env=process.env, upstream=fetch, now=()=>Date.now()}={}) {
   const verified=new Map(), usage=new Map(), attempts=new Map();
+  // Keep the model names sent by Flutter as gateway aliases. This lets the
+  // provider change without changing prompts, app workflows, or response parsing.
   const models=new Set(['openai/gpt-oss-120b','openai/gpt-oss-20b','qwen/qwen3.8-27b']);
+  const geminiModels=new Map([
+    ['openai/gpt-oss-120b',env.GEMINI_PRIMARY_MODEL||'gemini-3.8-flash'],
+    ['openai/gpt-oss-20b',env.GEMINI_FALLBACK_MODEL||'gemini-3.5-flash-lite'],
+    ['qwen/qwen3.8-27b',env.GEMINI_FALLBACK_MODEL||'gemini-3.5-flash-lite'],
+  ]);
   let concurrent=0, globalDay='', globalCount=0;
-  // Comma-separated allow-list. Default stays the production origin; add other
-  // origins (for example a local preview) explicitly via ALLOWED_ORIGINS.
-  const allowedOrigins=String(env.ALLOWED_ORIGINS||'https://bendocs.tailc1f51b.ts.net').split(',').map(v=>v.trim()).filter(Boolean);
-  if(!allowedOrigins.length)allowedOrigins.push('https://bendocs.tailc1f51b.ts.net');
+  // Exact browser allow-list. Include the stable local Flutter Chrome dev
+  // origins so the Gemini gateway can be tested from Chrome without CORS.
+  const defaultOrigins=['https://bendocs.tailc1f51b.ts.net','http://127.0.0.1:8600','http://localhost:8600'];
+  const allowedOrigins=String(env.ALLOWED_ORIGINS||defaultOrigins.join(',')).split(',').map(v=>v.trim()).filter(Boolean);
+  if(!allowedOrigins.length)allowedOrigins.push(...defaultOrigins);
   return http.createServer(async(req,res)=>{
     const respond=(status,value)=>{if(!res.headersSent)res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(value));};
     const requestOrigin=req.headers.origin;
@@ -61,11 +69,16 @@ export function createGateway({env=process.env, upstream=fetch, now=()=>Date.now
       if(used.dayCount>=200||used.count>=20||globalCount>=1000||concurrent>=6)return respond(429,{error:{code:'ai_capacity_reached',message:'AI đang đạt hạn mức. Hãy thử lại sau.'}});
       used.dayCount++;used.count++;usage.set(user.id,used);globalCount++;concurrent++;
       try {
-        if(!env.GROQ_API_KEY)return respond(503,{error:{code:'ai_unconfigured'}});
-        const key=body.max_completion_tokens!==undefined?'max_completion_tokens':'max_tokens';
-        body[key]=Math.min(4096,Math.max(1,Number(body[key])||2200));
-        const response=await upstream('https://api.groq.com/openai/v1/chat/completions',{
-          method:'POST',headers:{Authorization:'Bearer '+env.GROQ_API_KEY,'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(45000),
+        if(!env.GEMINI_API_KEY)return respond(503,{error:{code:'ai_unconfigured'}});
+        const maxTokens=body.max_completion_tokens??body.max_tokens;
+        body.max_tokens=Math.min(4096,Math.max(1,Number(maxTokens)||2200));
+        delete body.max_completion_tokens;
+        // `reasoning_format` is a Groq-specific option. Gemini's compatible
+        // endpoint supports `reasoning_effort` but not this response format.
+        delete body.reasoning_format;
+        body.model=geminiModels.get(body.model);
+        const response=await upstream('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',{
+          method:'POST',headers:{Authorization:'Bearer '+env.GEMINI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(45000),
         });
         if(!response.ok){
           // Do not forward provider diagnostics/credentials into product UI.

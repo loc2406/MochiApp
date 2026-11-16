@@ -65,7 +65,7 @@ Thông tin bản phát hành:
 | `05-operations/` | `preview.py`, `build-release.sh`, mẫu Nginx/systemd, script kiểm checksum |
 | `06-verification/` | Log build, log test, log analyze, báo cáo kiểm định, ảnh smoke test |
 
-**Không có trong gói:** keystore ký release, private key, Groq API key, service-role key, database người dùng, backup cloud, lịch sử Git đầy đủ, SDK/cache, IPA/desktop build.
+**Không có trong gói:** keystore ký release, private key, Gemini API key, service-role key, database người dùng, backup cloud, lịch sử Git đầy đủ, SDK/cache, IPA/desktop build.
 
 ---
 
@@ -75,12 +75,12 @@ Thông tin bản phát hành:
 Flutter (Android + Web)
  ├── Dữ liệu học tập: SharedPreferences (JSON, offline-first)
  ├── Supabase Auth + bảng mochi_account_state (đồng bộ JSONB, CAS revision)
- ├── AI Gateway (Node.js) ── kiểm JWT Supabase ── Groq
+ ├── AI Gateway (Node.js) ── kiểm JWT Supabase ── Gemini API
  └── Android: local notifications + Firebase Cloud Messaging (chỉ nhận)
 ```
 
 - **State management:** Provider + `ChangeNotifier` (`MochiStore`, ~1.400 dòng, chứa phần lớn nghiệp vụ).
-- **AI:** model chính `openai/gpt-oss-120b`, fallback `qwen/qwen3.8-27b`, đi qua gateway; app **không** giữ Groq key.
+- **AI:** app gửi tên model nội bộ theo định dạng OpenAI-compatible; gateway ánh xạ sang `gemini-3.8-flash` / `gemini-3.5-flash-lite`; app **không** giữ Gemini API key.
 - **Đồng bộ:** outbox bền, ghi tuần tự, retry CAS, merge 3 chiều; xung đột được giữ lại và báo, không ghi đè âm thầm.
 - **Thông báo:** local notification Android + FCM client; **không** có backend cron gửi push.
 - **Không có trong mã:** STT/TTS, server Gemini Live chính thức, dashboard phụ huynh/giáo viên, thanh toán, đa ngôn ngữ.
@@ -458,7 +458,7 @@ Các lỗi dưới đây ảnh hưởng nhiều tính năng, không thuộc riê
 12. AI có thể trả lời sai, đặc biệt công thức/bài giải; quiz/đáp án chưa xác minh độc lập (UI đã có ghi chú kiểm chứng).
 13. Kế hoạch AI không phải lúc nào cũng khớp mọi xung đột lịch; người dùng phải xem trước.
 14. Hạn mức AI trong RAM, reset khi restart, không phù hợp nhiều instance.
-15. `/health` chỉ báo process sống, không báo Groq hoạt động.
+15. `/health` chỉ báo gateway đang sống, không xác nhận Gemini API key hoặc quota còn dùng được.
 16. Chat AI Tutor chỉ gửi 12 tin gần nhất và cắt tin > 6.000 ký tự để kiểm soát chi phí.
 17. SharedPreferences JSON có thể phình to khi dữ liệu học nhiều.
 18. Migration Supabase không chạy lặp an toàn.
@@ -524,14 +524,15 @@ adb install -r 01-release/android/Mochii-1.4.10-2047.apk
 
 ```sh
 cd 02-source/ai-gateway
-cp .env.example /etc/mochii/gateway.env   # điền SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, GROQ_API_KEY
+cp .env.example /etc/mochii/gateway.env   # điền Supabase và GEMINI_API_KEY
 node --env-file=/etc/mochii/gateway.env server.mjs
 ```
 
-Sau đó:
-1. Sửa `const origin` trong `server.mjs` thành domain thật.
-2. Deploy sau Nginx/TLS (mẫu trong `05-operations`).
-3. Build lại **cả Web và APK** với:
+Để test APK nội bộ trên Windows mà không cần domain riêng, làm theo [`05-operations/HUONG-DAN-TEST-AI-APK.md`](05-operations/HUONG-DAN-TEST-AI-APK.md): chạy gateway local, mở HTTPS tạm bằng Cloudflare Quick Tunnel và truyền URL tunnel vào `MOCHI_AI_GATEWAY` khi chạy/build Flutter.
+
+Để chạy lâu dài hoặc chia sẻ ra ngoài mạng nội bộ:
+1. Deploy gateway sau Nginx/TLS (mẫu trong `05-operations`).
+2. Build lại **cả Web và APK** với:
    ```sh
    --dart-define=MOCHI_AI_GATEWAY=https://domain-cua-ban/mochi-ai
    ```
@@ -546,7 +547,7 @@ Sau đó:
 - Vòng lặp học khép kín: mục tiêu → lịch → phiên học → ôn tập.
 - Nghiệp vụ lịch/ôn tập được test khá kỹ: ngân sách, không chồng lấn, chia nhiều ngày, SM-2, nhắc học 2/ngày.
 - Offline-first; dữ liệu học vẫn dùng được khi mất mạng.
-- AI đặt sau gateway có kiểm JWT; app không giữ Groq key.
+- AI đặt sau gateway có kiểm JWT; app không giữ Gemini API key.
 - Giao diện responsive, có tùy chọn tương phản cao/giảm chuyển động.
 
 **Điểm yếu chặn phát hành**
