@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/models/tutor_quiz.dart';
-import '../../design/pastel/pastel_components.dart';
+import '../../design/mochi_design.dart';
 import '../../shared/widgets/ai_message_body.dart';
 
 /// Review-specific presentation. Saving and validation use the existing quiz API.
@@ -22,19 +22,19 @@ class _ReviewQuizCardState extends State<ReviewQuizCard> {
     try {
       validateTutorQuiz(widget.data);
     } on FormatException {
-      return const PastelNoticeBanner(
+      return const MochiNoticeBanner(
         message: 'Bộ câu hỏi chưa hợp lệ. Hãy yêu cầu Mochi tạo lại.',
-        severity: PastelNoticeSeverity.warning,
+        severity: MochiNoticeSeverity.warning,
       );
     }
-    final p = PastelPalette.of(context);
+    final p = MochiPalette.of(context);
     final questions = widget.data['questions'] as List;
     final q = questions[_index] as Map;
     final selected =
         ((widget.data['answers'] as Map?)?['$_index'] as Map?)?['optionIndex']
             as int?;
     final correct = ['A', 'B', 'C', 'D'].indexOf(q['correctAnswer']);
-    return PastelCard(
+    return MochiCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -45,7 +45,7 @@ class _ReviewQuizCardState extends State<ReviewQuizCard> {
           const SizedBox(height: 12),
           Align(
             alignment: Alignment.centerLeft,
-            child: PastelChip(
+            child: MochiChip(
               label: 'Câu ${_index + 1}/${questions.length}',
               icon: Icons.quiz_outlined,
             ),
@@ -59,11 +59,11 @@ class _ReviewQuizCardState extends State<ReviewQuizCard> {
                 final right = selected != null && option == correct;
                 final wrong = selected == option && option != correct;
                 final tone = right
-                    ? (p.dark
+                    ? (p.isDark
                           ? const Color(0xFF8CE5C9)
                           : const Color(0xFF15715A))
                     : wrong
-                    ? (p.dark
+                    ? (p.isDark
                           ? const Color(0xFFFFA6BB)
                           : const Color(0xFFAF2449))
                     : p.action;
@@ -76,11 +76,11 @@ class _ReviewQuizCardState extends State<ReviewQuizCard> {
                   selected: selected == option,
                   child: Material(
                     color: right || wrong
-                        ? Color.lerp(p.surface, tone, .12)!
-                        : p.soft,
+                        ? Color.lerp(p.card, tone, .12)!
+                        : p.cardSoft,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color: right || wrong ? tone : p.border),
+                      side: BorderSide(color: right || wrong ? tone : p.cardBorder),
                     ),
                     child: InkWell(
                       key: ValueKey('quiz-option-$_index-$option'),
@@ -115,7 +115,7 @@ class _ReviewQuizCardState extends State<ReviewQuizCard> {
                               height: 28,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: p.surface,
+                                color: p.card,
                                 borderRadius: BorderRadius.circular(9),
                               ),
                               child: Text(
@@ -154,19 +154,19 @@ class _ReviewQuizCardState extends State<ReviewQuizCard> {
           ],
           if (_saving) const LinearProgressIndicator(),
           if (_error != null)
-            PastelNoticeBanner(
+            MochiNoticeBanner(
               message: _error!,
-              severity: PastelNoticeSeverity.error,
+              severity: MochiNoticeSeverity.error,
             ),
           if (selected != null) ...[
             const SizedBox(height: 8),
-            PastelNoticeBanner(
+            MochiNoticeBanner(
               message: selected == correct
                   ? 'Đúng rồi.'
                   : 'Chưa đúng. Đáp án: ${q['correctAnswer']}.',
               severity: selected == correct
-                  ? PastelNoticeSeverity.success
-                  : PastelNoticeSeverity.warning,
+                  ? MochiNoticeSeverity.success
+                  : MochiNoticeSeverity.warning,
               compact: true,
             ),
             const SizedBox(height: 12),
@@ -183,13 +183,13 @@ class _ReviewQuizCardState extends State<ReviewQuizCard> {
             runSpacing: 8,
             children: [
               if (_index > 0)
-                PastelButton(
+                MochiButton(
                   label: 'Câu trước',
-                  variant: PastelButtonVariant.secondary,
+                  variant: MochiButtonVariant.secondary,
                   onPressed: _saving ? null : () => setState(() => _index--),
                 ),
               if (_index + 1 < questions.length)
-                PastelButton(
+                MochiButton(
                   label: 'Câu tiếp',
                   onPressed: selected == null || _saving
                       ? null

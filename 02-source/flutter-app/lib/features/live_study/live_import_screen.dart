@@ -109,57 +109,88 @@ class _LiveImportScreenState extends State<LiveImportScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text('Nhập phiên học')),
+  Widget build(BuildContext context) => MochiScaffold(
+    appBar: MochiAppBar.detail(
+      title: 'Nhập phiên học',
+      subtitle: 'Tạo thẻ ôn tập từ nội dung đã ghi nhận',
+    ),
     body: ListView(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(MochiSpacing.md),
       children: [
-        Text('Phiên học trực tiếp'),
-        SizedBox(height: 8),
-        Text(
-          widget.session.complete ? 'Đã nhận lời thoại phiên vừa kết thúc.' : 'Chỉ gồm phần lời thoại đã lấy được. Không bao gồm video hay toàn bộ nội dung đề trong ảnh.',
+        MochiCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Phiên học trực tiếp',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                widget.session.complete
+                    ? 'Đã nhận lời thoại phiên vừa kết thúc.'
+                    : 'Chỉ gồm phần lời thoại đã lấy được. Không bao gồm video hay toàn bộ nội dung đề trong ảnh.',
+              ),
+              const SizedBox(height: 8),
+              const MochiNoticeBanner(
+                message:
+                    'Lịch sử đang lưu cục bộ trên thiết bị; chưa xác nhận đồng bộ đám mây.',
+                severity: MochiNoticeSeverity.info,
+                compact: true,
+              ),
+            ],
+          ),
         ),
-        Text(
-          'Lịch sử đang lưu cục bộ trên thiết bị; chưa xác nhận đồng bộ đám mây.',
-        ),
-        ExpansionTile(
-          title: Text('Xem lời thoại gốc'),
-          children: [
-            Padding(
-              padding: EdgeInsets.all(12),
-              child: SelectableText(widget.session.text),
-            ),
-          ],
+        const SizedBox(height: MochiSpacing.sm),
+        MochiCard(
+          padding: EdgeInsets.zero,
+          child: ExpansionTile(
+            title: const Text('Xem lời thoại gốc'),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(MochiSpacing.md),
+                child: SelectableText(widget.session.text),
+              ),
+            ],
+          ),
         ),
         if (_loading)
-          Padding(
-            padding: EdgeInsets.all(24),
-            child: Column(
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 12),
-                Text('Đang tạo bản ôn tập từ nội dung phiên…'),
-              ],
+          const MochiCard(
+            child: MochiLoadingState(
+              label: 'Đang tạo bản ôn tập từ nội dung phiên…',
             ),
           ),
         if (_error != null) ...[
-          Text(_error!),
-          TextButton(
+          MochiNoticeBanner(
+            message: _error!,
+            severity: MochiNoticeSeverity.error,
+          ),
+          MochiButton(
+            label: 'Thử lại',
+            icon: Icons.refresh_rounded,
+            variant: MochiButtonVariant.secondary,
             onPressed: _loading ? null : _generate,
-            child: Text('Thử lại'),
           ),
         ],
         if (_pack != null) ...[
-          SizedBox(height: 16),
-          Text(_pack!['title'], style: Theme.of(context).textTheme.titleLarge),
-          AIMessageBody(text: _pack!['summary']),
-          SizedBox(height: 16),
-          Text('Thẻ đề xuất — kiểm tra trước khi lưu'),
+          const SizedBox(height: MochiSpacing.md),
+          Text(
+            _pack!['title'],
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: MochiSpacing.xs),
+          MochiCard(child: AIMessageBody(text: _pack!['summary'])),
+          const SizedBox(height: MochiSpacing.md),
+          Text(
+            'Thẻ đề xuất — kiểm tra trước khi lưu',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: MochiSpacing.xs),
           for (final card in _pack!['cards'])
             MochiCard(
               padding: EdgeInsets.zero,
               child: Padding(
-                padding: EdgeInsets.all(14),
+                padding: const EdgeInsets.all(MochiSpacing.md),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -170,25 +201,37 @@ class _LiveImportScreenState extends State<LiveImportScreen> {
                 ),
               ),
             ),
-          MochiPrimaryButton(
+          MochiButton(
+            label: _saved
+                ? 'Đã lưu vào Flashcard'
+                : _saving
+                ? 'Đang lưu…'
+                : 'Lưu bộ thẻ',
+            icon: Icons.style_outlined,
+            loading: _saving,
             onPressed: _saved || _saving || (_pack!['cards'] as List).isEmpty
                 ? null
                 : _saveCards,
-            child: Text(
-              _saved
-                  ? 'Đã lưu vào Flashcard'
-                  : _saving
-                  ? 'Đang lưu…'
-                  : 'Lưu bộ thẻ',
-            ),
+            expand: true,
           ),
-          SizedBox(height: 12),
-          AIMessageBody(text: _pack!['reminder']),
-          OutlinedButton(
+          const SizedBox(height: MochiSpacing.sm),
+          MochiNoticeBanner(
+            message: _pack!['reminder'],
+            severity: MochiNoticeSeverity.info,
+            compact: true,
+          ),
+          MochiButton(
+            label: 'Nhắc ôn lại sau 24 giờ',
+            icon: Icons.notifications_active_outlined,
+            variant: MochiButtonVariant.secondary,
             onPressed: _reminderStatus == null ? _remind : null,
-            child: Text('Nhắc ôn lại sau 24 giờ'),
           ),
-          if (_reminderStatus != null) Text(_reminderStatus!),
+          if (_reminderStatus != null)
+            MochiNoticeBanner(
+              message: _reminderStatus!,
+              severity: MochiNoticeSeverity.info,
+              compact: true,
+            ),
         ],
       ],
     ),

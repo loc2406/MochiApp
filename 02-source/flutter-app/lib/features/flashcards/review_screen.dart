@@ -1,3 +1,15 @@
+import 'package:mochi_app/design/foundation/mochi_tokens.dart';
+import 'package:mochi_app/design/widgets/mochi_app_bar.dart';
+import 'package:mochi_app/design/widgets/mochi_button.dart';
+import 'package:mochi_app/design/widgets/mochi_card.dart';
+import 'package:mochi_app/design/widgets/mochi_chip.dart';
+import 'package:mochi_app/design/widgets/mochi_feedback.dart';
+import 'package:mochi_app/design/widgets/mochi_list_tile.dart';
+import 'package:mochi_app/design/widgets/mochi_notice_banner.dart';
+import 'package:mochi_app/design/widgets/mochi_progress.dart';
+import 'package:mochi_app/design/widgets/mochi_scaffold.dart';
+import 'package:mochi_app/design/widgets/mochi_stat_tile.dart';
+
 import '../../shared/widgets/floating_bar_inset.dart';
 
 import 'package:flutter/material.dart';
@@ -277,19 +289,19 @@ class _ReviewScreenState extends State<_ReviewContent> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (suggestions.isNotEmpty) ...[
-          PastelSection(
+          MochiSection(
             title: 'Đề xuất từ tiến độ của bạn',
             children: [
               for (final (course, topic) in suggestions)
-                PastelListTile(
+                MochiListTile(
                   title: topic.title,
                   subtitle: '${course.subject} · Bạn đã đánh dấu cần ôn',
                   leading: Icon(
                     Icons.auto_awesome_outlined,
-                    size: PastelIconSize.md,
+                    size: MochiIconSize.md,
                     color: theme.colorScheme.primary,
                   ),
-                  trailing: PastelIconButton(
+                  trailing: MochiIconButton(
                     icon: Icons.add,
                     tooltip: 'Tạo nội dung ôn ${topic.title}',
                     onPressed: _loading
@@ -299,15 +311,15 @@ class _ReviewScreenState extends State<_ReviewContent> {
                 ),
             ],
           ),
-          const SizedBox(height: PastelSpacing.sm),
+          const SizedBox(height: MochiSpacing.sm),
         ],
-        PastelSection(
+        MochiSection(
           children: [
-            PastelListTile(
+            MochiListTile(
               title: 'Cập nhật bài đang học và mức ghi nhớ',
               leading: Icon(
                 Icons.school_outlined,
-                size: PastelIconSize.md,
+                size: MochiIconSize.md,
                 color: theme.colorScheme.primary,
               ),
               onTap: () => Navigator.push(
@@ -322,9 +334,9 @@ class _ReviewScreenState extends State<_ReviewContent> {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(
-            PastelSpacing.sm,
-            PastelSpacing.xs,
-            PastelSpacing.sm,
+            MochiSpacing.sm,
+            MochiSpacing.xs,
+            MochiSpacing.sm,
             0,
           ),
           child: Text(
@@ -348,9 +360,9 @@ class _ReviewScreenState extends State<_ReviewContent> {
         .firstOrNull;
     final Widget content;
     if (_loading) {
-      content = const PastelCard(
+      content = const MochiCard(
         padding: EdgeInsets.zero,
-        child: PastelLoadingState(
+        child: MochiLoadingState(
           label: 'Đang chọn kiến thức đến hạn và sắp lượt ôn vừa sức…',
         ),
       );
@@ -362,14 +374,13 @@ class _ReviewScreenState extends State<_ReviewContent> {
       content = _idleSession(store);
     }
 
-    return PastelScaffold(
-      background: store.profile.backgroundPreset,
-      appBar: PastelAppBar(
+    return MochiScaffold(
+      appBar: MochiAppBar(
         title: 'Ôn tập',
         subtitle: 'Ôn vừa sức, nhớ lâu hơn.',
         large: true,
         actions: [
-          PastelIconButton(
+          MochiIconButton(
             icon: Icons.library_books_outlined,
             tooltip: 'Mở thư viện kiến thức',
             onPressed: _manage,
@@ -378,10 +389,10 @@ class _ReviewScreenState extends State<_ReviewContent> {
       ),
       body: ListView(
         padding: EdgeInsets.fromLTRB(
-          PastelSpacing.xl,
-          PastelSpacing.xs,
-          PastelSpacing.xl,
-          FloatingBarInset.of(context) + PastelSpacing.huge,
+          MochiSpacing.xl,
+          MochiSpacing.xs,
+          MochiSpacing.xl,
+          FloatingBarInset.of(context) + MochiSpacing.huge,
         ),
         children: [content],
       ),
@@ -406,18 +417,18 @@ class _ReviewScreenState extends State<_ReviewContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        PastelCard(
+        MochiCard(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const PastelProgressRing(
+              const MochiProgressRing(
                 value: 1,
                 size: 56,
                 strokeWidth: 6,
                 icon: Icons.task_alt,
                 semanticsLabel: 'Đã hoàn thành lượt ôn',
               ),
-              const SizedBox(width: PastelSpacing.md),
+              const SizedBox(width: MochiSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -426,7 +437,7 @@ class _ReviewScreenState extends State<_ReviewContent> {
                       'Đã hoàn thành lượt ôn',
                       style: theme.textTheme.headlineSmall,
                     ),
-                    const SizedBox(height: PastelSpacing.xxs),
+                    const SizedBox(height: MochiSpacing.xxs),
                     Text(
                       message,
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -439,10 +450,10 @@ class _ReviewScreenState extends State<_ReviewContent> {
             ],
           ),
         ),
-        const SizedBox(height: PastelSpacing.sm),
-        PastelStatRow(
+        const SizedBox(height: MochiSpacing.sm),
+        MochiStatRow(
           children: [
-            PastelStatTile(
+            MochiStatTile(
               dense: true,
               label: 'Thẻ đã xếp lịch',
               value: '${grades.length}',
@@ -450,7 +461,7 @@ class _ReviewScreenState extends State<_ReviewContent> {
               icon: Icons.style_outlined,
             ),
             if (questions.isEmpty)
-              const PastelStatTile(
+              const MochiStatTile(
                 dense: true,
                 label: 'Hình thức',
                 value: 'Offline',
@@ -458,7 +469,7 @@ class _ReviewScreenState extends State<_ReviewContent> {
                 icon: Icons.offline_bolt_outlined,
               )
             else
-              PastelStatTile(
+              MochiStatTile(
                 dense: true,
                 label: 'Câu quiz đã trả lời',
                 value: '${answers.length}',
@@ -468,8 +479,8 @@ class _ReviewScreenState extends State<_ReviewContent> {
           ],
         ),
         if (questions.isNotEmpty) ...[
-          const SizedBox(height: PastelSpacing.sm),
-          PastelCard(
+          const SizedBox(height: MochiSpacing.sm),
+          MochiCard(
             padding: EdgeInsets.zero,
             child: Theme(
               data: theme.copyWith(dividerColor: Colors.transparent),
@@ -477,13 +488,13 @@ class _ReviewScreenState extends State<_ReviewContent> {
                 shape: const Border(),
                 collapsedShape: const Border(),
                 tilePadding: const EdgeInsets.symmetric(
-                  horizontal: PastelSpacing.md,
+                  horizontal: MochiSpacing.md,
                 ),
                 childrenPadding: const EdgeInsets.fromLTRB(
-                  PastelSpacing.md,
+                  MochiSpacing.md,
                   0,
-                  PastelSpacing.md,
-                  PastelSpacing.md,
+                  MochiSpacing.md,
+                  MochiSpacing.md,
                 ),
                 title: Text(
                   'Xem kết quả và giải thích quiz',
@@ -492,15 +503,15 @@ class _ReviewScreenState extends State<_ReviewContent> {
                 children: [
                   for (final (index, q) in questions.indexed)
                     Padding(
-                      padding: const EdgeInsets.only(top: PastelSpacing.md),
+                      padding: const EdgeInsets.only(top: MochiSpacing.md),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          PastelChip(
+                          MochiChip(
                             label: 'Câu ${index + 1}',
                             icon: Icons.help_outline,
                           ),
-                          const SizedBox(height: PastelSpacing.xs),
+                          const SizedBox(height: MochiSpacing.xs),
                           AIMessageBody(
                             color: Theme.of(context).colorScheme.onSurface,
                             text: q['question'],
@@ -520,14 +531,14 @@ class _ReviewScreenState extends State<_ReviewContent> {
             ),
           ),
         ],
-        const SizedBox(height: PastelSpacing.md),
-        PastelButton(
+        const SizedBox(height: MochiSpacing.md),
+        MochiButton(
           label: 'Đến Quản lý kiến thức',
           icon: Icons.library_books_outlined,
           expand: true,
           onPressed: _manage,
         ),
-        const SizedBox(height: PastelSpacing.lg),
+        const SizedBox(height: MochiSpacing.lg),
         _suggestions(store),
       ],
     );
@@ -560,27 +571,27 @@ class _ReviewScreenState extends State<_ReviewContent> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (offline) ...[
-          const PastelNoticeBanner(
+          const MochiNoticeBanner(
             message: 'Ôn offline · Dùng nội dung đã lưu, không có quiz AI.',
-            severity: PastelNoticeSeverity.info,
+            severity: MochiNoticeSeverity.info,
             icon: Icons.offline_bolt_outlined,
             compact: true,
           ),
-          const SizedBox(height: PastelSpacing.sm),
+          const SizedBox(height: MochiSpacing.sm),
         ],
         if (store.syncError != null) ...[
-          PastelNoticeBanner(
+          MochiNoticeBanner(
             message: store.syncError!,
             title: 'Chưa đồng bộ được',
-            severity: PastelNoticeSeverity.warning,
+            severity: MochiNoticeSeverity.warning,
             compact: true,
           ),
-          const SizedBox(height: PastelSpacing.sm),
+          const SizedBox(height: MochiSpacing.sm),
         ],
-        PastelCard(
+        MochiCard(
           child: Row(
             children: [
-              PastelProgressRing(
+              MochiProgressRing(
                 value: progress,
                 size: 84,
                 strokeWidth: 9,
@@ -594,7 +605,7 @@ class _ReviewScreenState extends State<_ReviewContent> {
                   ),
                 ),
               ),
-              const SizedBox(width: PastelSpacing.md),
+              const SizedBox(width: MochiSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -603,24 +614,24 @@ class _ReviewScreenState extends State<_ReviewContent> {
                       'Lượt ôn hôm nay · khoảng ${session['durationMinutes']} phút',
                       style: theme.textTheme.titleMedium,
                     ),
-                    const SizedBox(height: PastelSpacing.xs),
+                    const SizedBox(height: MochiSpacing.xs),
                     Wrap(
-                      spacing: PastelSpacing.xs,
-                      runSpacing: PastelSpacing.xs,
+                      spacing: MochiSpacing.xs,
+                      runSpacing: MochiSpacing.xs,
                       children: [
-                        PastelChip(
+                        MochiChip(
                           label: 'Thẻ ${grades.length}/${ids.length}',
                           icon: Icons.style_outlined,
                         ),
                         if (!offline)
-                          PastelChip(
+                          MochiChip(
                             label: 'Quiz ${answers.length}/${questions.length}',
                             icon: Icons.quiz_outlined,
-                            tone: PastelChipTone.medium,
+                            tone: MochiChipTone.medium,
                           ),
                       ],
                     ),
-                    const SizedBox(height: PastelSpacing.xs),
+                    const SizedBox(height: MochiSpacing.xs),
                     Text(
                       'Giờ ôn đã xếp: ${session['scheduledTime'] ?? 'Chưa có'} · ${session['scheduledDate'] ?? ''}. Bạn có thể chủ động ôn sớm.',
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -633,8 +644,8 @@ class _ReviewScreenState extends State<_ReviewContent> {
             ],
           ),
         ),
-        const SizedBox(height: PastelSpacing.sm),
-        PastelCard(
+        const SizedBox(height: MochiSpacing.sm),
+        MochiCard(
           padding: EdgeInsets.zero,
           child: Theme(
             data: theme.copyWith(dividerColor: Colors.transparent),
@@ -642,13 +653,13 @@ class _ReviewScreenState extends State<_ReviewContent> {
               shape: const Border(),
               collapsedShape: const Border(),
               tilePadding: const EdgeInsets.symmetric(
-                horizontal: PastelSpacing.md,
+                horizontal: MochiSpacing.md,
               ),
               childrenPadding: const EdgeInsets.fromLTRB(
-                PastelSpacing.md,
+                MochiSpacing.md,
                 0,
-                PastelSpacing.md,
-                PastelSpacing.md,
+                MochiSpacing.md,
+                MochiSpacing.md,
               ),
               title: Text(
                 'Vì sao có lượt ôn này?',
@@ -668,28 +679,28 @@ class _ReviewScreenState extends State<_ReviewContent> {
             ),
           ),
         ),
-        const SizedBox(height: PastelSpacing.md),
+        const SizedBox(height: MochiSpacing.md),
         if (card != null) ...[
-          PastelCard(
+          MochiCard(
             child: ConstrainedBox(
               constraints: const BoxConstraints(minHeight: 160),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Wrap(
-                    spacing: PastelSpacing.md,
-                    runSpacing: PastelSpacing.xs,
+                    spacing: MochiSpacing.md,
+                    runSpacing: MochiSpacing.xs,
                     alignment: WrapAlignment.spaceBetween,
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      PastelChip(
+                      MochiChip(
                         label: _revealed ? 'Giải thích' : 'Mặt trước',
                         icon: _revealed
                             ? Icons.lightbulb_outline
                             : Icons.visibility_outlined,
                         tone: _revealed
-                            ? PastelChipTone.medium
-                            : PastelChipTone.accent,
+                            ? MochiChipTone.medium
+                            : MochiChipTone.accent,
                       ),
                       Text(
                         'Thẻ ${grades.length + 1}/${ids.length}',
@@ -699,7 +710,7 @@ class _ReviewScreenState extends State<_ReviewContent> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: PastelSpacing.md),
+                  const SizedBox(height: MochiSpacing.md),
                   if (_revealed)
                     KnowledgeExplanation(
                       color: Theme.of(context).colorScheme.onSurface,
@@ -714,9 +725,9 @@ class _ReviewScreenState extends State<_ReviewContent> {
               ),
             ),
           ),
-          const SizedBox(height: PastelSpacing.sm),
+          const SizedBox(height: MochiSpacing.sm),
           if (!_revealed)
-            PastelButton(
+            MochiButton(
               label: _saving
                   ? 'Đang bổ sung giải thích dễ hiểu…'
                   : 'Xem giải thích',
@@ -755,8 +766,8 @@ class _ReviewScreenState extends State<_ReviewContent> {
           else ...[
             Padding(
               padding: const EdgeInsetsDirectional.only(
-                start: PastelSpacing.xxs,
-                bottom: PastelSpacing.xs,
+                start: MochiSpacing.xxs,
+                bottom: MochiSpacing.xs,
               ),
               child: Text(
                 'Bạn nhớ mức nào?',
@@ -766,8 +777,8 @@ class _ReviewScreenState extends State<_ReviewContent> {
               ),
             ),
             Wrap(
-              spacing: PastelSpacing.xs,
-              runSpacing: PastelSpacing.xs,
+              spacing: MochiSpacing.xs,
+              runSpacing: MochiSpacing.xs,
               children: [
                 for (final entry in const {
                   0: 'Quên',
@@ -775,10 +786,10 @@ class _ReviewScreenState extends State<_ReviewContent> {
                   2: 'Nhớ',
                   3: 'Rất chắc',
                 }.entries)
-                  PastelButton(
+                  MochiButton(
                     label: entry.value,
-                    variant: PastelButtonVariant.secondary,
-                    size: PastelButtonSize.small,
+                    variant: MochiButtonVariant.secondary,
+                    size: MochiButtonSize.small,
                     onPressed: _saving
                         ? null
                         : () async {
@@ -804,21 +815,21 @@ class _ReviewScreenState extends State<_ReviewContent> {
             ),
           ],
         ] else if (pending.isNotEmpty) ...[
-          PastelNoticeBanner(
+          MochiNoticeBanner(
             message: 'Thẻ đã thay đổi hoặc bị xóa. Mở quản lý kiến thức để kiểm tra.',
-            severity: PastelNoticeSeverity.warning,
+            severity: MochiNoticeSeverity.warning,
             actionLabel: 'Quản lý kiến thức',
             onAction: _manage,
           ),
         ] else ...[
-          PastelNoticeBanner(
+          MochiNoticeBanner(
             message: 'Quiz do AI tạo · Đáp án chưa được xác minh. Hãy đối chiếu thẻ nguồn; kết quả không tự đánh dấu đã vững.',
-            severity: PastelNoticeSeverity.info,
+            severity: MochiNoticeSeverity.info,
             icon: Icons.auto_awesome_outlined,
             compact: true,
           ),
-          const SizedBox(height: PastelSpacing.sm),
-          PastelCard(
+          const SizedBox(height: MochiSpacing.sm),
+          MochiCard(
             padding: EdgeInsets.zero,
             child: Theme(
               data: theme.copyWith(dividerColor: Colors.transparent),
@@ -826,13 +837,13 @@ class _ReviewScreenState extends State<_ReviewContent> {
                 shape: const Border(),
                 collapsedShape: const Border(),
                 tilePadding: const EdgeInsets.symmetric(
-                  horizontal: PastelSpacing.md,
+                  horizontal: MochiSpacing.md,
                 ),
                 childrenPadding: const EdgeInsets.fromLTRB(
-                  PastelSpacing.md,
+                  MochiSpacing.md,
                   0,
-                  PastelSpacing.md,
-                  PastelSpacing.sm,
+                  MochiSpacing.md,
+                  MochiSpacing.sm,
                 ),
                 title: Text(
                   'Đối chiếu thẻ nguồn',
@@ -843,7 +854,7 @@ class _ReviewScreenState extends State<_ReviewContent> {
                     (c) => ids.contains(c.id),
                   ))
                     Padding(
-                      padding: const EdgeInsets.only(top: PastelSpacing.sm),
+                      padding: const EdgeInsets.only(top: MochiSpacing.sm),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -851,7 +862,7 @@ class _ReviewScreenState extends State<_ReviewContent> {
                             color: Theme.of(context).colorScheme.onSurface,
                             text: c.front,
                           ),
-                          const SizedBox(height: PastelSpacing.xs),
+                          const SizedBox(height: MochiSpacing.xs),
                           KnowledgeExplanation(
                             color: Theme.of(context).colorScheme.onSurface,
                             text: c.originalBack ?? c.back,
@@ -863,11 +874,11 @@ class _ReviewScreenState extends State<_ReviewContent> {
               ),
             ),
           ),
-          const SizedBox(height: PastelSpacing.sm),
-          PastelButton(
+          const SizedBox(height: MochiSpacing.sm),
+          MochiButton(
             label: 'Bỏ qua quiz chưa xác minh',
             icon: Icons.skip_next_outlined,
-            variant: PastelButtonVariant.secondary,
+            variant: MochiButtonVariant.secondary,
             expand: true,
             onPressed: _saving
                 ? null
@@ -885,9 +896,9 @@ class _ReviewScreenState extends State<_ReviewContent> {
                     }
                   },
           ),
-          const SizedBox(height: PastelSpacing.lg),
+          const SizedBox(height: MochiSpacing.lg),
           Text('Kiểm tra khả năng vận dụng', style: theme.textTheme.titleLarge),
-          const SizedBox(height: PastelSpacing.sm),
+          const SizedBox(height: MochiSpacing.sm),
           ReviewQuizCard(
             key: ValueKey(session['id']),
             data: Map<String, dynamic>.from(session['quiz']),
@@ -895,10 +906,10 @@ class _ReviewScreenState extends State<_ReviewContent> {
           ),
         ],
         if (_error != null) ...[
-          const SizedBox(height: PastelSpacing.sm),
-          PastelNoticeBanner(
+          const SizedBox(height: MochiSpacing.sm),
+          MochiNoticeBanner(
             message: _error!,
-            severity: PastelNoticeSeverity.error,
+            severity: MochiNoticeSeverity.error,
             compact: true,
           ),
         ],
@@ -931,8 +942,8 @@ class _ReviewScreenState extends State<_ReviewContent> {
               borderRadius: BorderRadius.circular(32),
               gradient: RadialGradient(
                 colors: [
-                  PastelPalette.of(context).soft,
-                  PastelPalette.of(context).soft.withValues(alpha: 0),
+                  MochiPalette.of(context).softAccent,
+                  MochiPalette.of(context).softAccent.withValues(alpha: 0),
                 ],
               ),
             ),
@@ -942,44 +953,44 @@ class _ReviewScreenState extends State<_ReviewContent> {
             ),
           ),
         ),
-        const SizedBox(height: PastelSpacing.sm),
+        const SizedBox(height: MochiSpacing.sm),
         Text(
           'Một chút ôn tập, nhớ thêm mỗi ngày',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        const SizedBox(height: PastelSpacing.md),
-        const SizedBox(height: PastelSpacing.xs),
-        PastelNoticeBanner(
+        const SizedBox(height: MochiSpacing.md),
+        const SizedBox(height: MochiSpacing.xs),
+        MochiNoticeBanner(
           message: message,
           title: title,
           severity: _error != null
-              ? PastelNoticeSeverity.error
-              : PastelNoticeSeverity.info,
+              ? MochiNoticeSeverity.error
+              : MochiNoticeSeverity.info,
           icon: _error != null
               ? Icons.cloud_off_outlined
               : Icons.event_available_outlined,
           actionLabel: _error != null ? 'Thử sắp lượt ôn lại' : null,
           onAction: _error != null ? _prepare : null,
         ),
-        const SizedBox(height: PastelSpacing.sm),
+        const SizedBox(height: MochiSpacing.sm),
         if (!_loading) ...[
-          PastelButton(
+          MochiButton(
             label: 'Ôn thẻ đã lưu (offline)',
             icon: Icons.offline_bolt_outlined,
             expand: true,
             onPressed: () => _prepare(offline: true),
           ),
-          const SizedBox(height: PastelSpacing.sm),
+          const SizedBox(height: MochiSpacing.sm),
         ],
-        PastelButton(
+        MochiButton(
           label: 'Quản lý kiến thức',
           icon: Icons.library_books_outlined,
-          variant: PastelButtonVariant.secondary,
+          variant: MochiButtonVariant.secondary,
           expand: true,
           onPressed: _manage,
         ),
-        const SizedBox(height: PastelSpacing.lg),
+        const SizedBox(height: MochiSpacing.lg),
         _suggestions(store),
       ],
     );

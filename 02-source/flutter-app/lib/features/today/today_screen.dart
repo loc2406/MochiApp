@@ -181,88 +181,112 @@ class TodayScreen extends StatelessWidget {
   // 2.2 Hero Card – Robot đồng hành
   Widget _buildHeroCard(BuildContext context, MochiStore store) {
     final palette = MochiPalette.of(context);
-    return MochiCard(
-      padding: EdgeInsets.zero,
-      child: Column(
-        children: [
-          // Phần trên: Robot Mascot
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: palette.primaryGradient,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(26),
-                topRight: Radius.circular(26),
-              ),
-            ),
-            child: Center(
-              child: RobotMascotWidget(
-                size: 120,
-                emotion: store.robotEmotion,
-                primaryColor: Color(store.robotColorHex),
-                equippedAccessory: store.equippedAccessory,
-                equippedClothes: store.equippedClothes,
-                equippedSpecial: store.equippedSpecial,
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  store.setRobotEmotion(RobotEmotion.celebrate);
-                },
-              ),
-            ),
-          ),
-          // Phần dưới: Thống kê nhanh trong lớp kính mờ
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: palette.cardSoft.withValues(alpha: 0.5),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(26),
-                bottomRight: Radius.circular(26),
-              ),
-              border: Border(
-                top: BorderSide(
-                  color: palette.cardBorder.withValues(alpha: 0.3),
-                  width: 0.5,
-                ),
-              ),
-            ),
-            child: MochiStatRow(
-              children: [
-                MochiStatTile(
-                  label: 'XP',
-                  value: '${store.xp}',
-                  icon: Icons.bolt_rounded,
-                  iconTone: MochiChipTone.warning,
-                ),
-                MochiStatTile(
-                  label: 'Phút học',
-                  value: '${store.totalStudyMinutes}',
-                  unit: 'p',
-                  icon: Icons.schedule_rounded,
-                  iconTone: MochiChipTone.accent,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    HapticFeedback.selectionClick();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (ctx) => RobotShopScreen()),
-                    );
-                  },
-                  child: MochiStatTile(
-                    label: 'Cửa hàng',
-                    value: 'Robot',
-                    icon: Icons.shopping_bag_outlined,
-                    iconTone: MochiChipTone.accent,
+    List<Widget> buildStats({required bool dense}) => [
+      MochiStatTile(
+        label: 'XP',
+        value: '${store.xp}',
+        icon: Icons.bolt_rounded,
+        iconTone: MochiChipTone.accent,
+        dense: dense,
+      ),
+      MochiStatTile(
+        label: 'Phút học',
+        value: '${store.totalStudyMinutes}',
+        unit: 'p',
+        icon: Icons.schedule_rounded,
+        iconTone: MochiChipTone.accent,
+        dense: dense,
+      ),
+      GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          HapticFeedback.selectionClick();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (ctx) => RobotShopScreen()),
+          );
+        },
+        child: MochiStatTile(
+          label: 'Cửa hàng',
+          value: 'Robot',
+          icon: Icons.shopping_bag_outlined,
+          iconTone: MochiChipTone.accent,
+          dense: dense,
+        ),
+      ),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 520;
+        final robotSize = constraints.maxWidth < 360 ? 96.0 : 120.0;
+        final stats = buildStats(dense: compact);
+        return MochiCard(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              // Phần trên: Robot Mascot
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(compact ? 14 : 20),
+                decoration: BoxDecoration(
+                  gradient: palette.primaryGradient,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(26),
+                    topRight: Radius.circular(26),
                   ),
                 ),
-              ],
-            ),
+                child: Center(
+                  child: RobotMascotWidget(
+                    size: robotSize,
+                    emotion: store.robotEmotion,
+                    primaryColor: Color(store.robotColorHex),
+                    equippedAccessory: store.equippedAccessory,
+                    equippedClothes: store.equippedClothes,
+                    equippedSpecial: store.equippedSpecial,
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      store.setRobotEmotion(RobotEmotion.celebrate);
+                    },
+                  ),
+                ),
+              ),
+              // Phần dưới: xếp dọc trên màn hẹp để nhãn và giá trị đủ chỗ.
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(compact ? 10 : 16),
+                decoration: BoxDecoration(
+                  color: palette.cardSoft.withValues(alpha: 0.5),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(26),
+                    bottomRight: Radius.circular(26),
+                  ),
+                  border: Border(
+                    top: BorderSide(
+                      color: palette.cardBorder.withValues(alpha: 0.3),
+                      width: 0.5,
+                    ),
+                  ),
+                ),
+                child: compact
+                    ? Column(
+                        children: [
+                          for (var i = 0; i < stats.length; i++) ...[
+                            if (i > 0)
+                              Divider(
+                                height: 1,
+                                color: palette.cardBorder.withValues(alpha: 0.5),
+                              ),
+                            stats[i],
+                          ],
+                        ],
+                      )
+                    : MochiStatRow(children: stats),
           ),
-        ],
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 

@@ -105,8 +105,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
+    return MochiScaffold(
       body: SafeArea(
         child: Column(
           children: [
@@ -158,50 +157,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Row(
                 children: [
                   if (_currentStep > 0)
-                    OutlinedButton(
+                    MochiButton(
+                      label: 'Quay lại',
+                      icon: Icons.arrow_back_rounded,
+                      variant: MochiButtonVariant.secondary,
                       onPressed: _prevPage,
-                      style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 14,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        side: BorderSide(
-                          color: MochiPalette.of(context).cardBorder,
-                        ),
-                      ),
-                      child: Text(
-                        'Quay lại',
-                        style: TextStyle(
-                          color: MochiPalette.of(context).ink,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
                     ),
                   if (_currentStep > 0) SizedBox(width: 12),
                   Expanded(
-                    child: MochiPrimaryButton(
+                    child: MochiButton(
+                      label: _currentStep == 2
+                          ? 'Bắt đầu hành trình cùng Mochi'
+                          : 'Tiếp tục',
+                      icon: _currentStep == 2
+                          ? Icons.rocket_launch_rounded
+                          : Icons.arrow_forward_rounded,
                       onPressed: _nextPage,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: MochiPalette.of(context).accent,
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        _currentStep == 2
-                            ? 'Bắt đầu hành trình cùng Mochi'
-                            : 'Tiếp tục',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                          color: MochiPalette.of(context).onAccent,
-                        ),
-                      ),
+                      expand: true,
                     ),
                   ),
                 ],
@@ -286,20 +258,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 runSpacing: 8,
                 children: _gradeBands.map((grade) {
                   final isSelected = _gradeBand == grade;
-                  return ChoiceChip(
-                    label: Text(grade),
+                  return MochiFilterChip(
+                    label: grade,
                     selected: isSelected,
-                    selectedColor: MochiPalette.of(context).action,
-                    labelStyle: TextStyle(
-                      color: isSelected
-                          ? MochiPalette.of(context).ink
-                          : MochiPalette.of(context).ink,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12.5,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
                     onSelected: (val) {
                       if (val) {
                         HapticFeedback.selectionClick();
@@ -355,20 +316,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             runSpacing: 8,
             children: _subjects.map((subj) {
               final isSelected = _selectedSubject == subj;
-              return ChoiceChip(
-                label: Text(subj),
+                return MochiFilterChip(
+                  label: subj,
                 selected: isSelected,
-                selectedColor: MochiPalette.of(context).action,
-                labelStyle: TextStyle(
-                  color: isSelected
-                      ? MochiPalette.of(context).ink
-                      : MochiPalette.of(context).ink,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12.5,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
                 onSelected: (val) {
                   if (val) {
                     HapticFeedback.selectionClick();

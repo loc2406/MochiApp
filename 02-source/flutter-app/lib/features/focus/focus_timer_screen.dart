@@ -525,17 +525,14 @@ class _FocusTimerScreenState extends State<FocusTimerScreen>
         ? (1.0 - (_remainingSeconds / totalSecs)).clamp(0.0, 1.0)
         : 1.0;
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: MochiPalette.of(context).action,
-            size: 20,
-          ),
+    return MochiScaffold(
+      appBar: MochiAppBar.detail(
+        title: subject,
+        automaticallyImplyLeading: false,
+        leading: MochiIconButton(
+          icon: Icons.arrow_back_ios_new_rounded,
+          tooltip: 'Quay lại',
+          filled: false,
           onPressed: () {
             if (_isRunning) {
               _finishSessionEarly();
@@ -544,21 +541,11 @@ class _FocusTimerScreenState extends State<FocusTimerScreen>
             }
           },
         ),
-        title: Text(
-          subject,
-          style: TextStyle(
-            color: MochiPalette.of(context).ink,
-            fontWeight: FontWeight.w800,
-            fontSize: 16,
-          ),
-        ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.chat_bubble_outline_rounded,
-              color: MochiPalette.of(context).action,
-            ),
+          MochiIconButton(
+            icon: Icons.chat_bubble_outline_rounded,
             tooltip: 'Hỏi Mochi AI',
+            filled: false,
             onPressed: () {
               HapticFeedback.selectionClick();
               showModalBottomSheet(
@@ -591,38 +578,30 @@ class _FocusTimerScreenState extends State<FocusTimerScreen>
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
-                        // Mode switch pills (Apple OS27 Segmented Glass)
+                        // Mode switch pills
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Container(
-                            padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: MochiPalette.of(context).card
-                                  .withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(22),
-                              border: Border.all(
-                                color: MochiPalette.of(context).cardBorder
-                                    .withValues(alpha: 0.15),
-                              ),
-                            ),
-                            child: Wrap(
-                              alignment: WrapAlignment.center,
-                              runSpacing: 4,
-                              children: [
-                                _buildModePill('Pomodoro', _isPomodoro, () {
-                                  if (!_isRunning)
-                                    setState(() => _isPomodoro = true);
-                                }),
-                                SizedBox(width: 4),
-                                _buildModePill(
-                                  'Bấm giờ tự do',
-                                  !_isPomodoro,
-                                  () {
-                                    if (!_isRunning)
-                                      setState(() => _isPomodoro = false);
-                                  },
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: MochiSegmentedControl<String>(
+                              value: _isPomodoro ? 'pomodoro' : 'free',
+                              segments: const [
+                                MochiSegment(
+                                  value: 'pomodoro',
+                                  label: 'Pomodoro',
+                                  icon: Icons.timer_outlined,
+                                ),
+                                MochiSegment(
+                                  value: 'free',
+                                  label: 'Bấm giờ tự do',
+                                  icon: Icons.av_timer_rounded,
                                 ),
                               ],
+                              onChanged: _isRunning
+                                  ? null
+                                  : (value) => setState(
+                                      () => _isPomodoro = value == 'pomodoro',
+                                    ),
                             ),
                           ),
                         ),
@@ -635,37 +614,25 @@ class _FocusTimerScreenState extends State<FocusTimerScreen>
                               alignment: WrapAlignment.center,
                               runSpacing: 8,
                               children: [
-                                _buildFreestylePresetPill('Đếm tiến', 0),
-                                SizedBox(width: 8),
-                                _buildFreestylePresetPill('15p', 15),
-                                SizedBox(width: 8),
-                                _buildFreestylePresetPill('30p', 30),
-                                SizedBox(width: 8),
-                                _buildFreestylePresetPill('45p', 45),
-                                SizedBox(width: 8),
-                                _buildFreestylePresetPill('60p', 60),
+                                _buildFreestylePresetChip('Đếm tiến', 0),
+                                _buildFreestylePresetChip('15p', 15),
+                                _buildFreestylePresetChip('30p', 30),
+                                _buildFreestylePresetChip('45p', 45),
+                                _buildFreestylePresetChip('60p', 60),
                               ],
                             ),
                           ),
 
                         Padding(
                           padding: EdgeInsets.only(bottom: 8),
-                          child: OutlinedButton.icon(
+                          child: MochiButton(
                             key: ValueKey('timer-duration'),
+                            label: _countdown
+                                ? 'Đặt thời lượng · $_focusMinutes phút'
+                                : 'Đặt thời lượng · Đếm tiến',
+                            icon: Icons.timer_outlined,
+                            variant: MochiButtonVariant.secondary,
                             onPressed: _editDuration,
-                            icon: Icon(Icons.timer_outlined, size: 20),
-                            label: Text(
-                              _countdown
-                                  ? 'Đặt thời lượng · $_focusMinutes phút'
-                                  : 'Đặt thời lượng · Đếm tiến',
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: MochiPalette.of(context).action,
-                              side: BorderSide(
-                                color: MochiPalette.of(context).cardBorder,
-                              ),
-                              minimumSize: Size(0, 48),
-                            ),
                           ),
                         ),
 
@@ -752,43 +719,37 @@ class _FocusTimerScreenState extends State<FocusTimerScreen>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              IconButton(
+                              MochiIconButton(
+                                icon: Icons.refresh_rounded,
                                 iconSize: 28,
-                                icon: Icon(
-                                  Icons.refresh_rounded,
-                                  color: MochiPalette.of(context).muted,
-                                ),
+                                tooltip: 'Đặt lại đồng hồ',
+                                filled: false,
                                 onPressed: _resetTimer,
                               ),
                               SizedBox(width: 24),
-                              MochiPrimaryButton(
+                              MochiIconButton(
+                                icon: _isRunning
+                                    ? Icons.pause_rounded
+                                    : Icons.play_arrow_rounded,
+                                iconSize: 36,
+                                size: 76,
+                                color: MochiPalette.of(context).onAccent,
+                                background: _isRunning
+                                    ? MochiPalette.of(context).danger
+                                    : MochiPalette.of(context).success,
+                                tooltip: _isRunning
+                                    ? 'Tạm dừng'
+                                    : 'Bắt đầu',
                                 onPressed: _isRunning
                                     ? _pauseTimer
                                     : _startTimer,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: _isRunning
-                                      ? MochiPalette.of(context).danger
-                                      : MochiPalette.of(context).success,
-                                  foregroundColor: MochiPalette.of(context)
-                                      .onAccent,
-                                  shape: CircleBorder(),
-                                  padding: EdgeInsets.all(20),
-                                  elevation: 8,
-                                ),
-                                child: Icon(
-                                  _isRunning
-                                      ? Icons.pause_rounded
-                                      : Icons.play_arrow_rounded,
-                                  size: 36,
-                                ),
                               ),
                               SizedBox(width: 24),
-                              IconButton(
+                              MochiIconButton(
+                                icon: Icons.stop_circle_outlined,
                                 iconSize: 28,
-                                icon: Icon(
-                                  Icons.stop_circle_outlined,
-                                  color: MochiPalette.of(context).muted,
-                                ),
+                                tooltip: 'Kết thúc phiên',
+                                filled: false,
                                 onPressed: _finishSessionEarly,
                               ),
                             ],
@@ -806,73 +767,25 @@ class _FocusTimerScreenState extends State<FocusTimerScreen>
     );
   }
 
-  Widget _buildModePill(String title, bool isSelected, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.selectionClick();
-        onTap();
-      },
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 7),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? MochiPalette.of(context).accent
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: isSelected
-                ? MochiPalette.of(context).onAccent
-                : MochiPalette.of(context).muted,
-            fontWeight: FontWeight.w800,
-            fontSize: 12.5,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFreestylePresetPill(String label, int mins) {
+  Widget _buildFreestylePresetChip(String label, int mins) {
     final isSelected = _customFreestyleMinutes == mins;
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.selectionClick();
-        setState(() {
-          _customFreestyleMinutes = mins;
-          if (mins > 0) {
-            _focusMinutes = mins;
-            _remainingSeconds = mins * 60;
-          } else {
-            _stopwatchSeconds = 0;
-          }
-        });
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? MochiPalette.of(context).accent
-              : MochiPalette.of(context).card.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected
-                ? MochiPalette.of(context).cardBorder
-                : MochiPalette.of(context).cardBorder.withValues(alpha: 0.15),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-            color: isSelected
-                ? MochiPalette.of(context).onAccent
-                : MochiPalette.of(context).ink,
-          ),
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: MochiFilterChip(
+        label: label,
+        selected: isSelected,
+        onSelected: (selected) {
+          if (!selected) return;
+          setState(() {
+            _customFreestyleMinutes = mins;
+            if (mins > 0) {
+              _focusMinutes = mins;
+              _remainingSeconds = mins * 60;
+            } else {
+              _stopwatchSeconds = 0;
+            }
+          });
+        },
       ),
     );
   }

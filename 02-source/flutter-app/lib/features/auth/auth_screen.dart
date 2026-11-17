@@ -90,18 +90,18 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(
-          _isSignUp ? 'Tạo tài khoản học tập' : 'Đăng nhập tài khoản',
-          style: TextStyle(fontWeight: FontWeight.w800),
-        ),
+    return MochiScaffold(
+      appBar: MochiAppBar.detail(
+        title: _isSignUp ? 'Tạo tài khoản học tập' : 'Đăng nhập tài khoản',
+        subtitle: 'Đồng bộ tiến độ học tập của bạn',
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(24),
-          child: Column(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
@@ -136,39 +136,14 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               SizedBox(height: 24),
 
-              if (_errorMessage != null)
-                Container(
-                  padding: EdgeInsets.all(12),
-                  margin: EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: MochiPalette.of(context).dangerSoft,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: MochiPalette.of(context).danger
-                          .withValues(alpha: .25),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        color: MochiPalette.of(context).danger,
-                        size: 20,
-                      ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          _errorMessage!,
-                          style: TextStyle(
-                            color: MochiPalette.of(context).danger,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+              if (_errorMessage != null) ...[
+                MochiNoticeBanner(
+                  message: _errorMessage!,
+                  severity: MochiNoticeSeverity.error,
+                  compact: true,
                 ),
+                const SizedBox(height: MochiSpacing.md),
+              ],
 
               Text(
                 'Địa chỉ Email:',
@@ -205,80 +180,50 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               SizedBox(height: 24),
 
-              SizedBox(
-                width: double.infinity,
-                child: MochiPrimaryButton(
-                  onPressed: _isLoading ? null : _handleSubmit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: MochiPalette.of(context).accent,
-                    padding: EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  child: _isLoading
-                      ? SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                            color: MochiPalette.of(context).onAccent,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : Text(
-                          _isSignUp
-                              ? 'Tạo tài khoản & Đồng bộ'
-                              : 'Đăng nhập ngay',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                ),
+              MochiButton(
+                label: _isSignUp ? 'Tạo tài khoản & Đồng bộ' : 'Đăng nhập ngay',
+                onPressed: _isLoading ? null : _handleSubmit,
+                loading: _isLoading,
+                expand: true,
               ),
               SizedBox(height: 12),
 
-              Wrap(
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Text(
-                    _isSignUp ? 'Đã có tài khoản?' : 'Chưa có tài khoản?',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: MochiPalette.of(context).muted,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => setState(() {
-                      _isSignUp = !_isSignUp;
-                      _errorMessage = null;
-                    }),
-                    child: Text(
-                      _isSignUp ? 'Đăng nhập' : 'Đăng ký ngay',
+              Center(
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      _isSignUp ? 'Đã có tài khoản?' : 'Chưa có tài khoản?',
                       style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: MochiPalette.of(context).action,
+                        fontSize: 13,
+                        color: MochiPalette.of(context).muted,
                       ),
                     ),
-                  ),
-                ],
+                    MochiTextAction(
+                      label: _isSignUp ? 'Đăng nhập' : 'Đăng ký ngay',
+                      onPressed: () => setState(() {
+                        _isSignUp = !_isSignUp;
+                        _errorMessage = null;
+                      }),
+                    ),
+                  ],
+                ),
               ),
 
               if (widget.isSkippable) ...[
                 SizedBox(height: 16),
                 Center(
-                  child: TextButton.icon(
+                  child: MochiTextAction(
+                    label: 'Bỏ qua & Dùng thử trực tiếp',
+                    icon: Icons.arrow_forward_rounded,
                     onPressed: widget.onAuthenticated,
-                    icon: Icon(Icons.arrow_forward, size: 16),
-                    label: Text(
-                      'Bỏ qua & Dùng thử trực tiếp',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
                   ),
                 ),
               ],
             ],
+              ),
+            ),
           ),
         ),
       ),

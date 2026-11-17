@@ -1134,6 +1134,83 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     );
   }
 
+  Widget _buildAgendaActions(MochiStore store) {
+    const planLabel = 'Xếp lịch chung';
+    const assignmentLabel = 'Thêm bài / việc cần học';
+    const buttonGap = 12.0;
+    const buttonChromeWidth = 67.0;
+    final scaler = MediaQuery.textScalerOf(context);
+    final textDirection = Directionality.of(context);
+
+    double naturalButtonWidth(String label) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: label,
+          style: const TextStyle(
+            fontSize: 14,
+            height: 1.4,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        textDirection: textDirection,
+        textScaler: scaler,
+        maxLines: 1,
+      )..layout();
+      final width = painter.width + buttonChromeWidth;
+      painter.dispose();
+      return width;
+    }
+
+    final planWidth = naturalButtonWidth(planLabel);
+    final assignmentWidth = naturalButtonWidth(assignmentLabel);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final fitsInRow =
+            planWidth + assignmentWidth + buttonGap <= constraints.maxWidth;
+        final planButton = MochiButton(
+          key: const ValueKey('learning-plan-all'),
+          label: planLabel,
+          icon: Icons.calendar_today_rounded,
+          variant: MochiButtonVariant.secondary,
+          size: MochiButtonSize.small,
+          expand: true,
+          onPressed: () => _plan(store),
+        );
+        final assignmentButton = MochiButton(
+          key: const ValueKey('learning-add-assignment'),
+          label: assignmentLabel,
+          icon: Icons.add_rounded,
+          size: MochiButtonSize.small,
+          expand: true,
+          onPressed: () => _assignment(store),
+        );
+
+        if (!fitsInRow) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              planButton,
+              const SizedBox(height: 8),
+              assignmentButton,
+            ],
+          );
+        }
+
+        return Row(
+          children: [
+            Expanded(flex: (planWidth * 100).round(), child: planButton),
+            const SizedBox(width: buttonGap),
+            Expanded(
+              flex: (assignmentWidth * 100).round(),
+              child: assignmentButton,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _agenda(MochiStore store) {
     final palette = MochiPalette.of(context);
     final plan = store.learning.activePlan;
@@ -1143,26 +1220,7 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     return ListView(
       padding: EdgeInsets.all(16),
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            MochiButton(
-              key: const ValueKey('learning-plan-all'),
-              label: 'Xếp lịch chung',
-              icon: Icons.calendar_today_rounded,
-              variant: MochiButtonVariant.secondary,
-              size: MochiButtonSize.small,
-              onPressed: () => _plan(store),
-            ),
-            MochiButton(
-              key: const ValueKey('learning-add-assignment'),
-              onPressed: () => _assignment(store),
-              icon: Icons.add_rounded,
-              label: 'Thêm bài / việc cần học',
-              size: MochiButtonSize.small,
-            ),
-          ],
-        ),
+        _buildAgendaActions(store),
         const SizedBox(height: 16),
         Text(
           'Ngân sách toàn bộ môn: ${store.dailyRoutine.preferredDailyMinutes} phút/ngày. Đổi trong lịch sinh hoạt.',

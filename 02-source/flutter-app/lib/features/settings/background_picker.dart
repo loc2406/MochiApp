@@ -10,7 +10,7 @@ class BackgroundPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = context.watch<MochiStore>();
-    final p = PastelPalette.of(context);
+    final p = MochiPalette.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -41,13 +41,13 @@ class BackgroundPicker extends StatelessWidget {
                     child: Ink(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: PastelBackgrounds.colors(entry.key, p.dark),
+                          colors: PastelBackgrounds.colors(entry.key, p.isDark),
                         ),
                         borderRadius: BorderRadius.circular(18),
                         border: Border.all(
                           color: store.profile.backgroundPreset == entry.key
                               ? p.action
-                              : p.border,
+                              : p.accent,
                           width: 2,
                         ),
                       ),
@@ -129,7 +129,7 @@ class _BackgroundImageOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = PastelPalette.of(context);
+    final p = MochiPalette.of(context);
     return Semantics(
       selected: selected,
       button: true,
@@ -151,7 +151,7 @@ class _BackgroundImageOption extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(
-                  color: selected ? p.action : p.border,
+                  color: selected ? p.action : p.accent,
                   width: 2,
                 ),
               ),
