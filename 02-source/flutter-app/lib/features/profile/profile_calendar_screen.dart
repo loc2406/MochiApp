@@ -614,27 +614,13 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Nhật ký các phiên học gần đây',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                    color: palette.ink,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    foregroundColor: palette.action,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    minimumSize: const Size(0, 32),
-                  ),
-                  child: const Text('Xem tất cả'),
-                ),
-              ],
+            Text(
+              'Nhật ký các phiên học gần đây',
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 16,
+                color: palette.ink,
+              ),
             ),
             const SizedBox(height: 12),
             ...store.sessions.take(5).map((s) {

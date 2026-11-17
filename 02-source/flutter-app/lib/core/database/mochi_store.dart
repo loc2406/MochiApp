@@ -1521,19 +1521,4 @@ class MochiStore extends ChangeNotifier {
     }
   }
 
-  void resetAllData() {
-    _initSampleDefaults();
-    activityDays.clear();
-    dayCustomColors.clear();
-    stars = 0;
-    xp = 0;
-    currentStreak = 0;
-    longestStreak = 0;
-    totalStudyMinutes = 0;
-    ownedItems = ['default'];
-    equippedAccessory = '';
-    equippedClothes = '';
-    equippedSpecial = '';
-    save();
-  }
 }

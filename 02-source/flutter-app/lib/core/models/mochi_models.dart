@@ -41,7 +41,7 @@ class ProfileModel {
     this.robotName = 'Mochi',
     ColorThemeModel? colorTheme,
     this.themePreset = 'oceanCyan',
-    this.themeMode = 'system',
+    this.themeMode = 'light',
     this.backgroundPreset = 'lavender',
     this.glassOpacity = 0.85,
     this.hapticEnabled = true,
@@ -65,7 +65,7 @@ class ProfileModel {
           ? ColorThemeModel.fromJson(json['colorTheme'])
           : ColorThemeModel(),
       themePreset: json['themePreset']?.toString() ?? 'oceanCyan',
-      themeMode: json['themeMode']?.toString() ?? 'system',
+      themeMode: json['themeMode']?.toString() ?? 'light',
       backgroundPreset: json['backgroundPreset']?.toString() ?? 'lavender',
       glassOpacity: (json['glassOpacity'] as num?)?.toDouble() ?? 0.85,
       hapticEnabled: json['hapticEnabled'] != false,

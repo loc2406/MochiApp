@@ -1,9 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../models/mochi_models.dart';
 
+class StudentInviteExpired implements Exception {
+  const StudentInviteExpired();
+}
+
 class CloudSyncService {
+  static const _viewerTokenKey = 'mochi_student_viewer_token';
+  static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
   static const String embeddedUrl = 'https://aiukgaacbncpbosgbwzp.supabase.co';
   static const String embeddedPublishableKey =
       'sb_publishable_gPGHiTBvds62XsjFxJZjYg_v03Cu45B';
@@ -112,5 +119,50 @@ class CloudSyncService {
         )
         .timeout(const Duration(seconds: 12));
     return (result as num).toInt();
+  }
+
+  Future<String> createStudentInvite({required String email, required String role, required String code}) async {
+    if (!hasActiveUser) throw StateError('authentication_required');
+    final result = await Supabase.instance.client.rpc('mochi_create_student_invite', params: {
+      'recipient_email': email.trim().toLowerCase(), 'viewer_role': role, 'invite_code': code,
+    }).timeout(const Duration(seconds: 12));
+    return result.toString();
+  }
+
+  Future<List<Map<String, dynamic>>> listStudentViewers() async {
+    if (!hasActiveUser) throw StateError('authentication_required');
+    final result = await Supabase.instance.client.rpc('mochi_list_student_viewers');
+    return (result as List).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+  }
+
+  Future<void> revokeStudentViewer(String viewerId) async {
+    if (!hasActiveUser) throw StateError('authentication_required');
+    await Supabase.instance.client.rpc('mochi_revoke_student_viewer', params: {'viewer_id': viewerId});
+  }
+
+  Future<Map<String, dynamic>> redeemStudentInvite({required String email, required String code}) async {
+    dynamic result;
+    try {
+      result = await Supabase.instance.client.rpc('mochi_redeem_student_invite', params: {
+        'viewer_email': email.trim().toLowerCase(), 'invite_code': code.trim(),
+      }).timeout(const Duration(seconds: 12));
+    } on PostgrestException catch (error) {
+      if (error.message.contains('invite_expired')) {
+        throw const StudentInviteExpired();
+      }
+      rethrow;
+    }
+    final data = Map<String, dynamic>.from(result as Map);
+    await _secureStorage.write(key: _viewerTokenKey, value: data['session_token'] as String);
+    return data;
+  }
+
+  Future<void> clearStudentViewerSession() => _secureStorage.delete(key: _viewerTokenKey);
+
+  Future<Map<String, dynamic>?> fetchStudentOverview() async {
+    final token = await _secureStorage.read(key: _viewerTokenKey);
+    if (token == null) return null;
+    final result = await Supabase.instance.client.rpc('mochi_fetch_student_overview', params: {'viewer_token': token}).timeout(const Duration(seconds: 12));
+    return result == null ? null : Map<String, dynamic>.from(result as Map);
   }
 }

@@ -10,6 +10,7 @@ import '../routine/routine_screen.dart';
 import 'notification_settings_card.dart';
 import 'personalization_card.dart';
 import 'smart_reminder_settings.dart';
+import 'student_sharing_card.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -25,72 +26,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void dispose() {
     _importExportCtrl.dispose();
     super.dispose();
-  }
-
-  void _handleExport() {
-    final store = context.read<MochiStore>();
-    final jsonStr = store.exportBackupJson();
-    Clipboard.setData(ClipboardData(text: jsonStr));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Đã sao chép toàn bộ dữ liệu học tập vào bộ nhớ đệm!'),
-      ),
-    );
-  }
-
-  void _handleImport() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Nhập bản sao lưu dữ liệu'),
-        content: MochiTextField(
-          controller: _importExportCtrl,
-          hint: 'Dán chuỗi JSON đã xuất từ website hoặc app vào đây...',
-          maxLines: 6,
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Hủy')),
-          MochiPrimaryButton(
-            onPressed: () {
-              final text = _importExportCtrl.text.trim();
-              if (text.isNotEmpty) {
-                final success = context.read<MochiStore>().importBackupJson(
-                  text,
-                );
-                Navigator.pop(ctx);
-                if (success) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Khôi phục dữ liệu thành công!')),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Lỗi: Định dạng dữ liệu không hợp lệ!'),
-                    ),
-                  );
-                }
-              }
-            },
-            child: Text('Khôi phục'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _confirmReset(MochiStore store) {
-    MochiDialog.show(
-      context,
-      title: 'Xác nhận đặt lại?',
-      message: 'Hành động này sẽ xóa toàn bộ mục tiêu, nhiệm vụ và tiến độ hiện tại trên thiết bị.',
-      confirmLabel: 'Xác nhận xóa',
-      icon: Icons.delete_forever_outlined,
-      destructive: true,
-    ).then((confirmed) {
-      if (!confirmed || !mounted) return;
-      store.resetAllData();
-      Navigator.pop(context);
-    });
   }
 
   @override
@@ -121,6 +56,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         children: [
           PersonalizationCard(),
+          SizedBox(height: MochiSpacing.md),
+          StudentSharingCard(),
           SizedBox(height: MochiSpacing.md),
           NotificationSettingsCard(),
           SizedBox(height: MochiSpacing.md),
@@ -229,19 +166,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(height: MochiSpacing.md),
           ],
 
-          // Reset data.
-          MochiCard(
-            padding: EdgeInsets.zero,
-            onTap: () => _confirmReset(store),
-            child: MochiListTile(
-              icon: Icons.delete_forever_outlined,
-              iconTone: MochiChipTone.danger,
-              title: 'Đặt lại dữ liệu',
-              subtitle: 'Xóa dữ liệu trên máy và quay về trạng thái ban đầu',
-              showChevron: true,
-            ),
-          ),
-          SizedBox(height: MochiSpacing.lg),
           Center(
             child: Text(
               'Mochi-Học cùng nhau',

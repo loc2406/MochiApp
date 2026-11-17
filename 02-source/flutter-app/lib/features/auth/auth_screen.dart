@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/database/mochi_store.dart';
+import '../../core/services/cloud_sync_service.dart';
 import '../robot/robot_mascot_widget.dart';
+import 'student_overview_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   final VoidCallback onAuthenticated;
@@ -24,15 +26,43 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   bool _isSignUp = false;
   bool _isLoading = false;
+  bool _isViewer = false;
   final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _passCtrl = TextEditingController();
+  final TextEditingController _inviteCodeCtrl = TextEditingController();
   String? _errorMessage;
 
   @override
   void dispose() {
     _emailCtrl.dispose();
     _passCtrl.dispose();
+    _inviteCodeCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleViewerSubmit() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    final email = _emailCtrl.text.trim();
+    final code = _inviteCodeCtrl.text.trim();
+    if (!email.contains('@') || code.isEmpty) {
+      setState(() => _errorMessage = 'Vui lòng nhập email và mã mời hợp lệ.');
+      return;
+    }
+    setState(() { _isLoading = true; _errorMessage = null; });
+    try {
+      await context.read<MochiStore>().cloudService.redeemStudentInvite(email: email, code: code);
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const StudentOverviewScreen()));
+    } on StudentInviteExpired {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Mã mời đã hết hạn sau 5 phút. Hãy nhờ học sinh tạo và gửi mã mới.';
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() { _isLoading = false; _errorMessage = 'Email hoặc mã mời không đúng, mã đã được sử dụng, hoặc quyền truy cập đã bị thu hồi.'; });
+    }
   }
 
   void _handleSubmit() async {
@@ -92,8 +122,8 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return MochiScaffold(
       appBar: MochiAppBar.detail(
-        title: _isSignUp ? 'Tạo tài khoản học tập' : 'Đăng nhập tài khoản',
-        subtitle: 'Đồng bộ tiến độ học tập của bạn',
+        title: _isViewer ? 'Xem tiến độ học tập' : (_isSignUp ? 'Tạo tài khoản học tập' : 'Đăng nhập tài khoản'),
+        subtitle: _isViewer ? 'Dành cho phụ huynh và giáo viên' : 'Đồng bộ tiến độ học tập của bạn',
       ),
       body: SafeArea(
         child: Center(
@@ -113,7 +143,7 @@ class _AuthScreenState extends State<AuthScreen> {
               SizedBox(height: 20),
               Center(
                 child: Text(
-                  _isSignUp
+                  _isViewer ? 'Kết nối bằng mã mời' : _isSignUp
                       ? 'Đăng ký lưu trữ đám mây'
                       : 'Chào mừng bạn quay lại!',
                   style: TextStyle(
@@ -126,7 +156,7 @@ class _AuthScreenState extends State<AuthScreen> {
               SizedBox(height: 6),
               Center(
                 child: Text(
-                  'Dữ liệu mục tiêu, bài tập và sao sẽ được đồng bộ tự động an toàn qua máy chủ đám mây.',
+                  _isViewer ? 'Nhập email đã được học sinh cấp quyền và mã mời dùng một lần.' : 'Dữ liệu mục tiêu, bài tập và sao sẽ được đồng bộ tự động an toàn qua máy chủ đám mây.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
@@ -161,7 +191,8 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              if (!_isViewer) SizedBox(height: 16),
+              if (!_isViewer) ...[
               Text(
                 'Mật khẩu:',
                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
@@ -178,17 +209,24 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                 ),
               ),
+              ],
+              if (_isViewer) ...[
+                SizedBox(height: 16),
+                Text('Mã mời một lần:', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                SizedBox(height: 6),
+                TextField(controller: _inviteCodeCtrl, autocorrect: false, textCapitalization: TextCapitalization.none, decoration: InputDecoration(hintText: 'Dán mã do học sinh gửi', prefixIcon: Icon(Icons.key_rounded, color: MochiPalette.of(context).muted))),
+              ],
               SizedBox(height: 24),
 
               MochiButton(
-                label: _isSignUp ? 'Tạo tài khoản & Đồng bộ' : 'Đăng nhập ngay',
-                onPressed: _isLoading ? null : _handleSubmit,
+                label: _isViewer ? 'Xem thông tin học sinh' : (_isSignUp ? 'Tạo tài khoản & Đồng bộ' : 'Đăng nhập ngay'),
+                onPressed: _isLoading ? null : (_isViewer ? _handleViewerSubmit : _handleSubmit),
                 loading: _isLoading,
                 expand: true,
               ),
               SizedBox(height: 12),
 
-              Center(
+              if (!_isViewer) Center(
                 child: Wrap(
                   alignment: WrapAlignment.center,
                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -211,7 +249,14 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
 
-              if (widget.isSkippable) ...[
+              SizedBox(height: 8),
+              Center(child: MochiTextAction(
+                label: _isViewer ? 'Quay lại đăng nhập học sinh' : 'Bạn là giáo viên/phụ huynh?',
+                icon: _isViewer ? Icons.arrow_back_rounded : Icons.family_restroom_rounded,
+                onPressed: _isLoading ? null : () => setState(() { _isViewer = !_isViewer; _errorMessage = null; }),
+              )),
+
+              if (widget.isSkippable && !_isViewer) ...[
                 SizedBox(height: 16),
                 Center(
                   child: MochiTextAction(

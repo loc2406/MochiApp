@@ -94,7 +94,9 @@ class MochiApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: MochiTheme.light(accent: accent, visuals: active),
             darkTheme: MochiTheme.dark(accent: accent, visuals: active),
-            themeMode: MochiTheme.modeFrom(store.profile.themeMode),
+            themeMode: store.cloudService.hasActiveUser
+                ? MochiTheme.modeFrom(store.profile.themeMode)
+                : ThemeMode.light,
             builder: (context, child) => MochiBackground(
               child: MediaQuery(
                 data: MediaQuery.of(context).copyWith(
