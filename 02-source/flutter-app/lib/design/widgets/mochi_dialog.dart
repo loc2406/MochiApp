@@ -81,6 +81,7 @@ class MochiDialog extends StatelessWidget {
   final String cancelLabel;
   final bool destructive;
   final IconData? icon;
+  final Color? titleColor;
   final VoidCallback? onConfirm;
 
   const MochiDialog({
@@ -92,12 +93,14 @@ class MochiDialog extends StatelessWidget {
     this.cancelLabel = 'Hủy',
     this.destructive = false,
     this.icon,
+    this.titleColor,
     this.onConfirm,
   });
 
   static Future<bool> show(
     BuildContext context, {
     required String title,
+    Color? titleColor,
     String? message,
     Widget? content,
     String confirmLabel = 'Đồng ý',
@@ -115,6 +118,7 @@ class MochiDialog extends StatelessWidget {
         cancelLabel: cancelLabel,
         destructive: destructive,
         icon: icon,
+        titleColor: titleColor,
       ),
     );
     return result ?? false;
@@ -159,7 +163,7 @@ class MochiDialog extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontSize: 18,
-                  color: palette.accent,
+                  color: titleColor ?? palette.accent,
                   fontWeight: FontWeight.w800,
                 ),
               ),

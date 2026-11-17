@@ -25,9 +25,22 @@ class TodayScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = context.watch<MochiStore>();
-    final pendingTasks = store.tasks.where((t) => !t.isDone).toList();
-    final completedTasks = store.tasks.where((t) => t.isDone).toList();
-    final total = store.tasks.length;
+    final today = DateUtils.dateOnly(DateTime.now());
+    final todayTasks = store.tasks.where((task) {
+      final scheduledDate = task.scheduledDate?.trim();
+      if (scheduledDate != null && scheduledDate.isNotEmpty) {
+        final parsedDate = DateTime.tryParse(scheduledDate);
+        if (parsedDate != null) {
+          return DateUtils.isSameDay(parsedDate, today);
+        }
+      }
+
+      // Tasks without a valid scheduled date are shown on the day they were created.
+      return DateUtils.isSameDay(task.createdAt.toLocal(), today);
+    }).toList();
+    final pendingTasks = todayTasks.where((t) => !t.isDone).toList();
+    final completedTasks = todayTasks.where((t) => t.isDone).toList();
+    final total = todayTasks.length;
     final progressPct = total > 0 ? (completedTasks.length / total) : 0.0;
 
     return Scaffold(
