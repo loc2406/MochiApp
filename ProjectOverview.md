@@ -62,7 +62,7 @@ Thông tin bản phát hành:
 | Thư mục | Nội dung |
 |---|---|
 | `01-release/` | APK Android + bản Web đã build |
-| `02-source/flutter-app/` | Toàn bộ source Flutter, assets, 30 file test, migration Supabase, tài liệu gốc |
+| `02-source/flutter-app/` | Toàn bộ source Flutter, assets, bộ test Flutter, migration Supabase, tài liệu gốc |
 | `02-source/ai-gateway/` | Gateway Node.js 22 (không cần npm dependency) + 6 test |
 | `03-documentation/` | Hướng dẫn tiếp nhận, build/triển khai, cấu hình dịch vụ, phạm vi & giới hạn |
 | `04-presentation/` | Slide HTML/PDF, kịch bản thuyết trình, ảnh chụp màn hình |
@@ -106,8 +106,9 @@ Flutter (Android + Web)
 | **Cài đặt** (`settings_screen.dart`, `personalization_card.dart`) | Chọn theme/màu/nền gradient hoặc ảnh `assets/bg/bg-01.jpg`; điều chỉnh trợ lý; quản lý thông báo; sao lưu/khôi phục. | ⚠️ Nền ảnh được áp dụng qua `backgroundPreset`; không còn chức năng đặt lại dữ liệu. |
 | **Tài khoản & đồng bộ** (`auth_screen.dart`, `cloud_sync_service.dart`) | Đăng ký/đăng nhập email-password; đồng bộ state tài khoản qua Supabase; có thể dùng guest. | ⚠️ Phụ thuộc Supabase, cấu hình email và mạng. |
 | **Chia sẻ tiến độ học sinh** (`student_sharing_card.dart`, `student_overview_screen.dart`) | Học sinh tạo mã một lần gắn email/role; mã hoạt động 5 phút; người xem nhập email+mã để xem dashboard học tập, không có chat AI. Danh sách gộp theo email và hiển thị lần xem gần nhất; thu hồi sẽ khóa mọi phiên của email đó. | ⚠️ Backend mời đã được người dùng xác nhận hoạt động; áp dụng migration `20261117193000_student_viewer_last_access.sql` để bật gộp email và lưu thời điểm xem. |
-| **Nhập phiên học trực tiếp** (`live_import_screen.dart`) | Nhận transcript chia sẻ, tạo bộ thẻ đề xuất, kiểm tra/lưu và đặt nhắc ôn. | ⚠️ Thử nghiệm; phụ thuộc nguồn chia sẻ, AI và Android notification. |
 | **Thông báo & nhắc thông minh** (`notification_settings_card.dart`, `smart_reminder_settings.dart`) | Quản lý quyền, exact alarm và lịch nhắc theo bài/lịch; có thể dùng AI soạn nội dung rồi lưu local. | ⚠️ Chỉ hỗ trợ notification trên Android; FCM hiện không có backend gửi nhắc. |
+
+> **Lưu ý build:** APK/Web trong `01-release/` là bản đóng gói cũ; cần build lại từ source hiện tại trước khi phân phối.
 
 ### 4.2. Lỗi, hạn chế và hướng xử lý
 
@@ -115,15 +116,14 @@ Flutter (Android + Web)
 2. **Guest chưa luôn sáng nếu thiết bị/hồ sơ cũ đặt dark.** `main.dart` đọc `profile.themeMode`; đổi default model không thay giá trị đã lưu. Nếu muốn ép sáng khi đăng xuất, dùng `ThemeMode.light` khi `!store.cloudService.hasActiveUser`.
 3. **AI và đồng bộ phụ thuộc dịch vụ ngoài.** AI cần Supabase session, gateway, quota và mạng; gateway mặc định dùng host Tailscale. Cấu hình `MOCHI_AI_GATEWAY` và `ALLOWED_ORIGINS` theo môi trường deploy.
 4. **Notification có thể trễ hoặc dừng trên Android.** Doze, force-stop và chính sách pin của hãng ảnh hưởng alarm; cần QA trên thiết bị thật. Web không có local notification.
-5. **Live Import là thử nghiệm.** Cần kiểm tra luồng chia sẻ transcript trên thiết bị Android; transcript hiện lưu local và không đồng bộ cloud.
-6. **Chưa xác minh source mới bằng analyzer/test/build.** SDK cài trong workspace là Flutter 3.29.2/Dart 3.7, còn `pubspec.yaml` yêu cầu Dart `^3.13.3`; log test/build ở phần dưới là kết quả lịch sử, không phải xác nhận source hiện tại.
+5. **Chưa xác minh source mới bằng analyzer/test/build.** SDK cài trong workspace là Flutter 3.29.2/Dart 3.7, còn `pubspec.yaml` yêu cầu Dart `^3.13.3`; log test/build ở phần dưới là kết quả lịch sử, không phải xác nhận source hiện tại.
 ## 5. Tổng hợp lỗi & rủi ro
 
-### 5.1. Lỗi test tự động đang trượt (0/152)
+### 5.1. Kết quả test lịch sử
 
 | # | Test | Kết quả |
 |---|---|---|
-| — | Toàn bộ suite Flutter | ✅ **152 pass / 0 fail / 2 skip** |
+| — | Toàn bộ suite Flutter tại lần kiểm định trước | ✅ **152 pass / 0 fail / 2 skip** |
 
 > **Đã sửa trong các đợt này:** FAB Planner chồng thanh điều hướng; fallback ngoại tuyến cho AI Planner; layout bàn phím AI Tutor; 4 test cũ tìm "AI trực tuyến"; CORS gateway cấu hình được. Test mới: `planner_screen_test`, `planner_offline_fallback_test`, `planner_goal_test`, `ai_tutor_ux_test`; gateway **7/7** pass.
 
@@ -140,24 +140,23 @@ Flutter (Android + Web)
 
 5. Giao thông báo nền/đồng hồ không ổn định theo hãng máy; force-stop dừng alarm; chưa khôi phục sau reboot.
 6. Đồng bộ hai thiết bị sửa cùng lúc: giữ xung đột, không tự giải quyết; chưa nghiệm thu đầy đủ.
-7. Live bridge thử nghiệm, phụ thuộc ADB/Gemini/uiautomator2.
-8. Kinh tế sao/XP không có xác thực server.
-9. Không có quên/đổi mật khẩu; phụ thuộc SMTP/redirect URL của Supabase.
-10. Không streaming câu trả lời AI; mỗi lượt chờ tới 30 giây/model (có nút Huỷ).
+7. Kinh tế sao/XP không có xác thực server.
+8. Không có quên/đổi mật khẩu; phụ thuộc SMTP/redirect URL của Supabase.
+9. Không streaming câu trả lời AI; mỗi lượt chờ tới 30 giây/model (có nút Huỷ).
 
 **🟡 Rủi ro / cần kiểm chứng**
 
-12. AI có thể trả lời sai, đặc biệt công thức/bài giải; quiz/đáp án chưa xác minh độc lập (UI đã có ghi chú kiểm chứng).
-13. Kế hoạch AI không phải lúc nào cũng khớp mọi xung đột lịch; người dùng phải xem trước.
-14. Hạn mức AI trong RAM, reset khi restart, không phù hợp nhiều instance.
-15. `/health` chỉ báo gateway đang sống, không xác nhận Gemini API key hoặc quota còn dùng được.
-16. Chat AI Tutor chỉ gửi 12 tin gần nhất và cắt tin > 6.000 ký tự để kiểm soát chi phí.
-17. SharedPreferences JSON có thể phình to khi dữ liệu học nhiều.
-18. Migration Supabase không chạy lặp an toàn.
-19. 120 issue analyze (lint/deprecated), dễ che lỗi mới.
-20. Breakpoint 768px cứng; tablet dọc có thể chật (riêng Planner đã nâng lên 900px).
-21. Đã bổ sung tìm kiếm/lọc flashcard trong bản mã nguồn cập nhật 15/11/2026.
-22. Onboarding tự điền dữ liệu mẫu, không có nút bỏ qua.
+11. AI có thể trả lời sai, đặc biệt công thức/bài giải; quiz/đáp án chưa xác minh độc lập (UI đã có ghi chú kiểm chứng).
+12. Kế hoạch AI không phải lúc nào cũng khớp mọi xung đột lịch; người dùng phải xem trước.
+13. Hạn mức AI trong RAM, reset khi restart, không phù hợp nhiều instance.
+14. `/health` chỉ báo gateway đang sống, không xác nhận Gemini API key hoặc quota còn dùng được.
+15. Chat AI Tutor chỉ gửi 12 tin gần nhất và cắt tin > 6.000 ký tự để kiểm soát chi phí.
+16. SharedPreferences JSON có thể phình to khi dữ liệu học nhiều.
+17. Migration Supabase không chạy lặp an toàn.
+18. 120 issue analyze (lint/deprecated), dễ che lỗi mới.
+19. Breakpoint 768px cứng; tablet dọc có thể chật (riêng Planner đã nâng lên 900px).
+20. Đã bổ sung tìm kiếm/lọc flashcard trong bản mã nguồn cập nhật 15/11/2026.
+21. Onboarding tự điền dữ liệu mẫu, không có nút bỏ qua.
 
 ---
 

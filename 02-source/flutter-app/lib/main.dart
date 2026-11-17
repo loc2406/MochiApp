@@ -15,7 +15,6 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'core/database/mochi_store.dart';
@@ -27,8 +26,6 @@ import 'features/today/today_screen.dart';
 import 'features/planner/planner_screen.dart';
 import 'features/ai_tutor/ai_tutor_screen.dart';
 import 'features/flashcards/review_screen.dart';
-import 'core/services/live_bridge_service.dart';
-import 'features/live_study/live_import_screen.dart';
 import 'features/profile/profile_calendar_screen.dart';
 
 void main() async {
@@ -143,7 +140,6 @@ class RootGate extends StatefulWidget {
 
 class _RootGateState extends State<RootGate> {
   int _currentIndex = 0;
-  bool _importOpening = false;
   bool _isBottomBarVisible = true;
   Timer? _barRestore;
   bool _hideBarAtScrollEnd = true;
@@ -151,10 +147,6 @@ class _RootGateState extends State<RootGate> {
   @override
   void initState() {
     super.initState();
-    LiveBridgeService.channel.setMethodCallHandler((call) async {
-      if (call.method == 'sessionReady') await _checkLiveImport();
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkLiveImport());
     if (widget.enableNotifications && NotificationService.supported) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => _offerNotifications(),
@@ -244,36 +236,9 @@ class _RootGateState extends State<RootGate> {
     }
   }
 
-  Future<void> _checkLiveImport() async {
-    if (_importOpening) return;
-    try {
-      final raw = await LiveBridgeService.takePending();
-      if (raw == null || !mounted) return;
-      final session = LiveSessionImport.parse(raw);
-      _importOpening = true;
-      await Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => LiveImportScreen(session: session)),
-      );
-    } on MissingPluginException {
-      // Non-Android platforms do not expose the external-app bridge.
-    } catch (_) {
-      if (mounted)
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Chưa nhận được lời thoại hợp lệ. Không thể nhập một đường dẫn thay cho nội dung.',
-            ),
-          ),
-        );
-    } finally {
-      _importOpening = false;
-    }
-  }
-
   @override
   void dispose() {
     _barRestore?.cancel();
-    LiveBridgeService.channel.setMethodCallHandler(null);
     super.dispose();
   }
 

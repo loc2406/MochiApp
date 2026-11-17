@@ -47,14 +47,6 @@ Có giữ `android/app/google-services.json` của dự án hiện hữu để b
 Xem tài liệu gốc `02-source/flutter-app/docs/FIREBASE_NOTIFICATIONS.md` và `SMART_REMINDERS.md`.
 Chưa cấu hình Firebase cho iOS/Web. Backend cron/push gửi nhắc học tự động không nằm trong bộ này.
 
-## Live bridge thử nghiệm
-
-`02-source/flutter-app/tool/gemini_live_bridge.py` là công cụ ADB/uiautomator2 phụ thuộc thiết bị,
-không phải API transcript chính thức và không phải server bắt buộc để mở app.
-Cần Python/uiautomator2, Android platform-tools, thiết bị được cho phép và Gemini phù hợp.
-Script gốc còn đường dẫn ADB/output theo máy phát triển; phải đổi trước khi dùng trên máy mới.
-Không có session, transcript cá nhân hoặc thiết bị đã ghép nối trong gói giao.
-
 ## Secret và dữ liệu
 
 Không đặt Groq key, service role, private signing key vào client hoặc thư mục web.

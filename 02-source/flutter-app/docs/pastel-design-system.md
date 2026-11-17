@@ -3,7 +3,7 @@
 Bộ Pastel đã được áp dụng vào toàn bộ màn hình hiện có: Hôm nay, Kế hoạch,
 AI Tutor (cả bottom sheet), Ôn tập, Quản lý kiến thức, Hồ sơ/Lịch học,
 Cài đặt, Lịch sinh hoạt, Cửa hàng, Tập trung, Learning Hub, Đăng nhập,
-Onboarding, Nhập phiên học và màn tải ứng dụng. Điều hướng vẫn giữ 5 tab.
+Onboarding và màn tải ứng dụng. Điều hướng vẫn giữ 5 tab.
 
 `lib/design/pastel/` là nguồn theme/mặt thẻ/nút đã được duyệt;
 `lib/design/mochi_design.dart` là API dùng chung cho toàn dự án.

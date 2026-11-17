@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mochi_app/core/database/mochi_store.dart';
-import 'package:mochi_app/core/services/live_bridge_service.dart';
 import 'package:mochi_app/design/mochi_design.dart';
 import 'package:mochi_app/features/today/today_screen.dart';
 import 'package:mochi_app/features/planner/planner_screen.dart';
@@ -19,7 +18,6 @@ import 'package:mochi_app/features/focus/focus_timer_screen.dart';
 import 'package:mochi_app/features/learning/learning_hub_screen.dart';
 import 'package:mochi_app/features/auth/auth_screen.dart';
 import 'package:mochi_app/features/onboarding/onboarding_screen.dart';
-import 'package:mochi_app/features/live_study/live_import_screen.dart';
 import 'package:mochi_app/shared/widgets/mochii_loading.dart';
 
 import 'review_journey_test.dart' show makeStore;
@@ -89,14 +87,6 @@ void main() {
     'learning': () => const LearningHubScreen(),
     'auth': () => AuthScreen(onAuthenticated: () {}),
     'onboarding': () => OnboardingScreen(onComplete: () {}),
-    'live': () => const LiveImportScreen(
-      session: LiveSessionImport(
-        id: 'preview',
-        text: 'Nội dung ôn tập đã lưu.',
-        complete: true,
-        source: 'Phiên học trực tiếp',
-      ),
-    ),
     'loading': () => const MochiiLoadingScreen(),
   };
   for (final mode in ['light', 'dark']) {
