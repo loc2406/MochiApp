@@ -13,6 +13,7 @@ import '../../core/database/mochi_store.dart';
 import '../../core/models/mochi_models.dart';
 import '../../core/learning/learning_models.dart';
 import '../../core/learning/curriculum_catalog.dart';
+import '../../shared/widgets/reminder_alarm_prompt.dart';
 import '../focus/focus_timer_screen.dart';
 
 class LearningHubScreen extends StatefulWidget {
@@ -233,6 +234,7 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     DateTime? due;
     final linked = <String>{}, topicIds = <String>{};
     String? error;
+    var added = false;
     await showDialog<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
@@ -430,6 +432,7 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                   goalIds: linked.toList(),
                   topicIds: topicIds.toList(),
                 );
+                added = true;
                 Navigator.pop(ctx);
               },
             ),
@@ -437,6 +440,9 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
         ),
       ),
     );
+    if (added && due != null && mounted) {
+      await offerExactAlarmsForTimedTasks(context);
+    }
     await Future<void>.delayed(Duration(milliseconds: 300));
     title.dispose();
     minutes.dispose();
@@ -653,6 +659,9 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                       try {
                         await store.acceptUnifiedPlan(plan);
                         if (ctx.mounted) Navigator.pop(ctx);
+                        if (mounted) {
+                          await offerExactAlarmsForTimedTasks(context);
+                        }
                       } catch (e) {
                         _error(e);
                       }

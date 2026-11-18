@@ -163,6 +163,24 @@ void main() {
     );
   });
 
+  test('tasks more than a week away keep their appointment reminder', () {
+    final result = plan([task('far', '2026-11-12', '09:00')]);
+    final due = result.where(
+      (r) => r.taskId == 'far' && r.kind == ReminderKind.due,
+    );
+    expect(due, hasLength(1));
+    expect(due.single.when, DateTime(2026, 11, 12, 9));
+    // Optional nudges still stay inside the 7-day window.
+    expect(
+      result.where(
+        (r) =>
+            r.kind != ReminderKind.due &&
+            r.when.isAfter(now.add(const Duration(days: 7))),
+      ),
+      isEmpty,
+    );
+  });
+
   test('resuming study resets study inactivity, returning to app resets app inactivity', () {
     final result = policy.plan(
       now: now,
@@ -332,6 +350,98 @@ void main() {
     expect(cancelled, isNot(contains(9999)));
     await service.setEnabled(false);
     expect(service.scheduled, isEmpty);
+    await service.stop();
+    binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
+  });
+
+  test('concurrent and repeated start calls are safe', () async {
+    AndroidFlutterLocalNotificationsPlugin.registerWith();
+    const channel = MethodChannel('dexterous.com/flutter/local_notifications');
+    binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+      call,
+    ) async {
+      if (call.method == 'initialize' ||
+          call.method == 'areNotificationsEnabled') {
+        return true;
+      }
+      if (call.method == 'canScheduleExactNotifications') return false;
+      if (call.method == 'pendingNotificationRequests') {
+        return <Map<String, dynamic>>[];
+      }
+      return null;
+    });
+    final store = MochiStore()
+      ..isLoaded = true
+      ..isFirstTime = false;
+    store.profile.name = 'Lộc';
+
+    final service = SmartReminderService();
+    // The second caller must wait for the first initialization instead of
+    // seeing a half-ready service.
+    await Future.wait([service.start(store), service.start(store)]);
+    expect(service.enabled, isTrue);
+    expect(service.scheduled, isNotEmpty);
+
+    await service.start(store);
+    expect(service.scheduled, isNotEmpty);
+
+    await service.stop();
+    binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
+  });
+
+  test('one failing alarm keeps every later reminder scheduled', () async {
+    SharedPreferences.setMockInitialValues({
+      'mochii_smart_v1_ai_enabled': false,
+    });
+    AndroidFlutterLocalNotificationsPlugin.registerWith();
+    const channel = MethodChannel('dexterous.com/flutter/local_notifications');
+    final calls = <MethodCall>[];
+    var scheduleCalls = 0;
+    binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
+      call,
+    ) async {
+      calls.add(call);
+      if (call.method == 'initialize' ||
+          call.method == 'areNotificationsEnabled') {
+        return true;
+      }
+      if (call.method == 'canScheduleExactNotifications') return false;
+      if (call.method == 'pendingNotificationRequests') {
+        return <Map<String, dynamic>>[];
+      }
+      if (call.method == 'zonedSchedule') {
+        scheduleCalls++;
+        // Simulate one alarm rejected by the OS (for example a stale
+        // SecurityException after the learner revoked exact alarms).
+        if (scheduleCalls == 2) {
+          throw PlatformException(code: 'schedule_failed');
+        }
+        return null;
+      }
+      return null;
+    });
+    final future = DateTime.now().add(const Duration(hours: 4));
+    final date =
+        '${future.year}-${future.month.toString().padLeft(2, '0')}-'
+        '${future.day.toString().padLeft(2, '0')}';
+    final time =
+        '${future.hour.toString().padLeft(2, '0')}:'
+        '${future.minute.toString().padLeft(2, '0')}';
+    final store = MochiStore()
+      ..isLoaded = true
+      ..isFirstTime = false;
+    store.profile.name = 'Lộc';
+    store.tasks = [task('a', date, time), task('b', date, time)];
+
+    final service = SmartReminderService();
+    await service.start(store);
+    final attempted = calls.where((c) => c.method == 'zonedSchedule').length;
+    expect(attempted, greaterThan(2));
+    expect(service.scheduled, isNotEmpty);
+    expect(service.scheduled.length, attempted - 1);
+    expect(service.statusError, isNull);
+    expect(service.statusWarning, contains('1/$attempted'));
+
     await service.stop();
     binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
   });

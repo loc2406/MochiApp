@@ -143,15 +143,34 @@ class _RootGateState extends State<RootGate> {
   bool _isBottomBarVisible = true;
   Timer? _barRestore;
   bool _hideBarAtScrollEnd = true;
+  bool _notificationPromptChecked = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.enableNotifications && NotificationService.supported) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _offerNotifications(),
-      );
+    NotificationService.requestedTab.addListener(_onNotificationTab);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onNotificationTab());
+  }
+
+  void _onNotificationTab() {
+    final tab = NotificationService.requestedTab.value;
+    if (!mounted || tab == null) return;
+    NotificationService.requestedTab.value = null;
+    _selectTab(tab);
+  }
+
+  /// Permission is offered only after onboarding so the system dialog is not
+  /// stacked on top of the first-run welcome flow.
+  void _maybeOfferNotifications() {
+    if (_notificationPromptChecked ||
+        !widget.enableNotifications ||
+        !NotificationService.supported) {
+      return;
     }
+    _notificationPromptChecked = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _offerNotifications();
+    });
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
@@ -239,6 +258,7 @@ class _RootGateState extends State<RootGate> {
 
   @override
   void dispose() {
+    NotificationService.requestedTab.removeListener(_onNotificationTab);
     _barRestore?.cancel();
     super.dispose();
   }
@@ -258,6 +278,8 @@ class _RootGateState extends State<RootGate> {
         },
       );
     }
+
+    _maybeOfferNotifications();
 
     final pages = [
       TodayScreen(

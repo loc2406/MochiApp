@@ -255,17 +255,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 icon: _isViewer ? Icons.arrow_back_rounded : Icons.family_restroom_rounded,
                 onPressed: _isLoading ? null : () => setState(() { _isViewer = !_isViewer; _errorMessage = null; }),
               )),
-
-              if (widget.isSkippable && !_isViewer) ...[
-                SizedBox(height: 16),
-                Center(
-                  child: MochiTextAction(
-                    label: 'Bỏ qua & Dùng thử trực tiếp',
-                    icon: Icons.arrow_forward_rounded,
-                    onPressed: widget.onAuthenticated,
-                  ),
-                ),
-              ],
             ],
               ),
             ),

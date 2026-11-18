@@ -14,6 +14,7 @@ class _AppVersionCaptionState extends State<AppVersionCaption> {
   @override
   Widget build(BuildContext context) => Text(
     'Trợ lý robot thông minh đồng hành cùng học sinh mỗi ngày.',
+    textAlign: TextAlign.center,
     style: TextStyle(
       fontSize: 12,
       color: MochiPalette.of(context).muted,

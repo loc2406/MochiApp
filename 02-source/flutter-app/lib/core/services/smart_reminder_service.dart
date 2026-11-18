@@ -23,31 +23,43 @@ class SmartReminderService extends ChangeNotifier with WidgetsBindingObserver {
   RobotEmotion? _previousEmotion;
   DateTime? _lastOpened;
   Future<void> _queue = Future<void>.value();
+  Future<void>? _starting;
   bool enabled = true;
   bool aiEnabled = true;
   bool preparingCopy = false;
   String copySource = 'rules';
   String? statusError;
+  String? statusWarning;
   List<PlannedReminder> scheduled = [];
 
-  Future<void> start(MochiStore store) async {
-    if (!NotificationService.supported || _store != null) return;
-    _store = store;
-    _prefs = await SharedPreferences.getInstance();
-    enabled = _prefs!.getBool('${_prefix}enabled') ?? true;
-    aiEnabled = _prefs!.getBool('${_prefix}ai_enabled') ?? true;
+  Future<void> start(MochiStore store) {
+    if (!NotificationService.supported) return Future<void>.value();
+    if (_store != null) return Future<void>.value();
+    // A concurrent caller must wait for the same initialization instead of
+    // returning while `_store` is already set but preferences are still loading.
+    return _starting ??= _start(store).whenComplete(() => _starting = null);
+  }
+
+  Future<void> _start(MochiStore store) async {
+    final prefs = await SharedPreferences.getInstance();
     final now = DateTime.now();
-    if (!_prefs!.containsKey('${_prefix}activated')) {
-      await _prefs!.setString(
+    if (!prefs.containsKey('${_prefix}activated')) {
+      await prefs.setString(
         '${_prefix}activated',
         now.toUtc().toIso8601String(),
       );
     }
-    _lastOpened = now;
-    await _prefs!.setString(
+    await prefs.setString(
       '${_prefix}last_opened',
       now.toUtc().toIso8601String(),
     );
+    _prefs = prefs;
+    enabled = prefs.getBool('${_prefix}enabled') ?? true;
+    aiEnabled = prefs.getBool('${_prefix}ai_enabled') ?? true;
+    _lastOpened = now;
+    // Only publish the store once prefs are ready; a failed load leaves it null
+    // so a later start() can retry instead of being permanently blocked.
+    _store = store;
     WidgetsBinding.instance.addObserver(this);
     store.addListener(_onStoreChanged);
     _fingerprint = _stateFingerprint();
@@ -200,6 +212,7 @@ class SmartReminderService extends ChangeNotifier with WidgetsBindingObserver {
     }
     await _prefs!.setString('${_prefix}pending', '[]');
     scheduled = [];
+    statusWarning = null;
     if (!enabled ||
         _store!.isFirstTime ||
         !await NotificationService().notificationsEnabled()) {
@@ -207,6 +220,9 @@ class SmartReminderService extends ChangeNotifier with WidgetsBindingObserver {
       notifyListeners();
       return;
     }
+    // A channel can be disabled on its own while app-level notifications stay
+    // on, which used to fail silently: alarms were scheduled but never shown.
+    final channelReady = await NotificationService().reminderChannelEnabled();
     if (_prefs!.getBool('${_prefix}migrated_legacy') != true) {
       await NotificationService().cancelLegacyTaskReminders();
       await _prefs!.setBool('${_prefix}migrated_legacy', true);
@@ -247,8 +263,17 @@ class SmartReminderService extends ChangeNotifier with WidgetsBindingObserver {
           .toList(),
     );
     final successful = <PlannedReminder>[];
+    var failures = 0;
     for (final reminder in plan) {
-      await NotificationService().scheduleSmartReminder(reminder);
+      try {
+        await NotificationService().scheduleSmartReminder(reminder);
+      } catch (e) {
+        // One broken alarm must not drop every reminder after it: the previous
+        // pending alarms were already cancelled above.
+        failures++;
+        debugPrint('Smart reminder schedule error (${reminder.key}): $e');
+        continue;
+      }
       successful.add(reminder);
       // Persist incrementally so every scheduled ID can be cancelled after a crash.
       await _prefs!.setString(
@@ -257,7 +282,16 @@ class SmartReminderService extends ChangeNotifier with WidgetsBindingObserver {
       );
     }
     scheduled = successful;
-    statusError = null;
+    statusError = plan.isNotEmpty && successful.isEmpty
+        ? 'Chưa đặt được lời nhắc nào. Kiểm tra quyền thông báo rồi thử lại.'
+        : null;
+    if (!channelReady) {
+      statusWarning =
+          'Kênh “${NotificationService.smartReminderChannelName}” đang bị tắt trong cài đặt Android nên lời nhắc sẽ không hiện.';
+    } else if (failures > 0) {
+      statusWarning =
+          'Chưa đặt được $failures/${plan.length} lời nhắc. Các lời nhắc còn lại vẫn hoạt động.';
+    }
     notifyListeners();
     _maybePrepareCopy();
   }

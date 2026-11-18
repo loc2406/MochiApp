@@ -101,9 +101,19 @@ class SmartReminderPolicy {
   }) {
     final candidates = <PlannedReminder>[];
     final horizon = now.add(const Duration(days: 7));
-    void add(ReminderKind kind, DateTime target, {TaskModel? task}) {
+    void add(
+      ReminderKind kind,
+      DateTime target, {
+      TaskModel? task,
+      bool beyondHorizon = false,
+    }) {
       final when = kind == ReminderKind.due ? target : nextAllowed(target);
-      if (!when.isAfter(now) || when.isAfter(horizon)) return;
+      // Task appointments are explicit promises, so they are scheduled even
+      // when they are more than a week away. Optional nudges stay in the 7-day
+      // window to keep the alarm list small.
+      if (!when.isAfter(now) || (!beyondHorizon && when.isAfter(horizon))) {
+        return;
+      }
       final key =
           '${kind.name}/${task?.id ?? "activity"}/${when.toIso8601String()}';
       candidates.add(
@@ -122,7 +132,7 @@ class SmartReminderPolicy {
       final due = taskDueTime(task);
       if (due == null) continue;
       if (due.isAfter(now)) {
-        add(ReminderKind.due, due, task: task);
+        add(ReminderKind.due, due, task: task, beyondHorizon: true);
       }
       // One follow-up, not an endless repeating alarm for every old task.
       final followUp = due.add(const Duration(hours: 3));

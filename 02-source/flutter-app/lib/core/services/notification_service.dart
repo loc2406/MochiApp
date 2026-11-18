@@ -1,5 +1,3 @@
-import '../models/mochi_models.dart';
-
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/foundation.dart';
@@ -20,9 +18,43 @@ class NotificationService {
 
   static const pushChannelId = 'mochii_push_notifications';
   static const pushChannelName = 'Thông báo Mochii';
+  static const smartReminderChannelId = 'mochii_smart_reminders';
+  static const smartReminderChannelName = 'Nhắc học thông minh';
   static const _settingsChannel = MethodChannel('mochi/notifications');
   static bool get supported =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+
+  /// Tab request produced by tapping a scheduled reminder.
+  ///
+  /// The root gate listens to this and switches tabs; it stays null when the
+  /// learner opens the app normally.
+  static final ValueNotifier<int?> requestedTab = ValueNotifier<int?>(null);
+  static const plannerTabIndex = 1;
+
+  /// Maps a notification payload to the tab that should open on tap.
+  static int? tabForPayload(String? payload) {
+    if (payload == null) return null;
+    // Only reminders that point at the planner are actionable; pushes keep the
+    // previous behaviour of simply opening the app.
+    return payload.startsWith('smart:') || payload.startsWith('task:')
+        ? plannerTabIndex
+        : null;
+  }
+
+  static void handleNotificationResponse(String? payload) {
+    final tab = tabForPayload(payload);
+    if (tab != null) requestedTab.value = tab;
+  }
+
+  static bool _timeZonesReady = false;
+
+  /// `initializeTimeZones()` parses the whole tz database, so doing it once per
+  /// process is enough; scheduling used to repeat it for every reminder.
+  static void _ensureTimeZones() {
+    if (_timeZonesReady) return;
+    tzdata.initializeTimeZones();
+    _timeZonesReady = true;
+  }
 
   AndroidFlutterLocalNotificationsPlugin? get _android => _notificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -55,6 +87,35 @@ class NotificationService {
 
   Future<void> openSystemSettings() async {
     if (supported) await _settingsChannel.invokeMethod<void>('openSettings');
+  }
+
+  /// Whether the smart-reminder channel is still enabled at channel level.
+  ///
+  /// Android lets the learner switch off a single channel while the app-level
+  /// notification toggle stays on. In that case scheduling keeps succeeding
+  /// but nothing is displayed, so the UI needs this extra check.
+  Future<bool> reminderChannelEnabled() async {
+    if (!supported) return false;
+    try {
+      return await _settingsChannel.invokeMethod<bool>('channelEnabled', {
+            'channelId': smartReminderChannelId,
+          }) ??
+          true;
+    } catch (_) {
+      // Older builds without the native handler keep the previous behaviour.
+      return true;
+    }
+  }
+
+  Future<void> openReminderChannelSettings() async {
+    if (!supported) return;
+    try {
+      await _settingsChannel.invokeMethod<void>('openChannelSettings', {
+        'channelId': smartReminderChannelId,
+      });
+    } catch (_) {
+      await openSystemSettings();
+    }
   }
 
   Future<AndroidScheduleMode> timerScheduleMode() async =>
@@ -112,7 +173,6 @@ class NotificationService {
 
   Future<void> scheduleSmartReminder(PlannedReminder reminder) async {
     await init();
-    tzdata.initializeTimeZones();
     await _notificationsPlugin.zonedSchedule(
       id: reminder.id,
       title: reminder.title,
@@ -122,8 +182,8 @@ class NotificationService {
       androidScheduleMode: await timerScheduleMode(),
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
-          'mochii_smart_reminders',
-          'Nhắc học thông minh',
+          smartReminderChannelId,
+          smartReminderChannelName,
           channelDescription:
               'Nhắc lịch, nhiệm vụ chưa hoàn thành và quay lại học',
           icon: 'ic_stat_mochii',
@@ -138,7 +198,6 @@ class NotificationService {
     if (!await notificationsEnabled()) {
       throw StateError('notifications_disabled');
     }
-    tzdata.initializeTimeZones();
     final mode = await timerScheduleMode();
     await _notificationsPlugin.zonedSchedule(
       id: 104,
@@ -169,14 +228,27 @@ class NotificationService {
   Future<void> _initialize() async {
     const androidSettings = AndroidInitializationSettings('ic_stat_mochii');
     const initSettings = InitializationSettings(android: androidSettings);
+    _ensureTimeZones();
 
     try {
       await _notificationsPlugin.initialize(
         settings: initSettings,
         onDidReceiveNotificationResponse: (NotificationResponse response) {
           debugPrint('Notification clicked: ${response.payload}');
+          handleNotificationResponse(response.payload);
         },
       );
+
+      // A tap that launches the app cold arrives before the listener exists.
+      try {
+        final launch = await _notificationsPlugin
+            .getNotificationAppLaunchDetails();
+        if (launch?.didNotificationLaunchApp == true) {
+          handleNotificationResponse(launch?.notificationResponse?.payload);
+        }
+      } catch (_) {
+        // Launch details are unavailable on some platform versions.
+      }
 
       final androidPlugin = _notificationsPlugin
           .resolvePlatformSpecificImplementation<
@@ -242,7 +314,6 @@ class NotificationService {
     if (await android?.areNotificationsEnabled() != true) {
       throw StateError('notifications_disabled');
     }
-    tzdata.initializeTimeZones();
     // Relative 24h scheduling in UTC preserves the intended instant in every device timezone.
     final when = tz.TZDateTime.now(tz.UTC).add(const Duration(hours: 24));
     var id = 17;
@@ -265,81 +336,6 @@ class NotificationService {
     );
   }
 
-  Future<void> scheduleTaskReminder({
-    required String taskId,
-    required String title,
-    required String scheduledDate, // YYYY-MM-DD
-    required String scheduledTime, // HH:mm
-  }) async {
-    await init();
-    final android = _notificationsPlugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
-    if (await android?.areNotificationsEnabled() != true) return;
-
-    tzdata.initializeTimeZones();
-    final dateParts = scheduledDate.split('-');
-    final timeParts = scheduledTime.split(':');
-    final y = int.tryParse(dateParts[0]) ?? DateTime.now().year;
-    final m = dateParts.length > 1 ? int.tryParse(dateParts[1]) ?? 1 : 1;
-    final d = dateParts.length > 2 ? int.tryParse(dateParts[2]) ?? 1 : 1;
-    final h = timeParts.isNotEmpty ? int.tryParse(timeParts[0]) ?? 19 : 19;
-    final min = timeParts.length > 1 ? int.tryParse(timeParts[1]) ?? 30 : 30;
-
-    final scheduleDt = DateTime(y, m, d, h, min);
-    if (!scheduleDt.isAfter(DateTime.now())) return;
-    final when = tz.TZDateTime.from(scheduleDt, tz.local);
-    final id = taskNotificationId(taskId);
-
-    const androidDetails = AndroidNotificationDetails(
-      'mochi_ai_schedule',
-      'Lịch học AI cá nhân',
-      channelDescription: 'Nhắc nhở học tập theo lịch sinh hoạt do AI sắp xếp',
-      importance: Importance.max,
-      priority: Priority.high,
-      playSound: true,
-      enableVibration: true,
-    );
-
-    try {
-      await _notificationsPlugin.zonedSchedule(
-        id: id,
-        title: 'Đến giờ học cùng Mochi: $title',
-        body:
-            'Khung giờ rảnh theo lịch sinh hoạt ($scheduledTime). Bắt đầu phiên học ngay nào!',
-        scheduledDate: when,
-        androidScheduleMode: await timerScheduleMode(),
-        notificationDetails: const NotificationDetails(android: androidDetails),
-        payload: "task:" + taskId,
-      );
-      debugPrint('SCHEDULED_NOTIFICATION_SUCCESS: $title at $when (id: $id)');
-    } catch (e) {
-      debugPrint('scheduleTaskReminder error: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> showDailyReminder() async {
-    const androidDetails = AndroidNotificationDetails(
-      'mochi_daily_channel',
-      'Nhắc nhở học tập hàng ngày',
-      channelDescription: 'Nhắc nhở duy trì chuỗi học tập',
-      importance: Importance.defaultImportance,
-      priority: Priority.defaultPriority,
-    );
-
-    try {
-      await _notificationsPlugin.show(
-        id: 102,
-        title: 'Đến giờ học cùng Mochi rồi!',
-        body: 'Chỉ cần 25 phút hôm nay để giữ vững ngọn lửa chuỗi ngày học của bạn!',
-        notificationDetails: const NotificationDetails(android: androidDetails),
-      );
-    } catch (_) {}
-  }
-
-  // Hẹn giờ chuông báo nền hoàn thành phiên học (chạy ngay cả khi thoát app / khóa màn hình)
   Future<bool> scheduleTimerEndNotification({
     required int secondsFromNow,
     required String taskTitle,
@@ -349,7 +345,6 @@ class NotificationService {
     await init();
     if (!await notificationsEnabled()) return false;
     try {
-      tzdata.initializeTimeZones();
       final scheduledDate = tz.TZDateTime.now(tz.local)
           .add(Duration(seconds: secondsFromNow));
       await _notificationsPlugin.zonedSchedule(
@@ -387,43 +382,5 @@ class NotificationService {
     try {
       await _notificationsPlugin.cancel(id: 9999);
     } catch (_) {}
-  }
-
-  static int taskNotificationId(String taskId) {
-    var id = 37;
-    for (final c in taskId.codeUnits) {
-      id = ((id * 31) + c) & 0x1fffffff;
-    }
-    return id + 100000;
-  }
-
-  Future<void> reconcileTasks(List<TaskModel> tasks) async {
-    if (!supported) return;
-    await init();
-    if (!await notificationsEnabled())
-      throw StateError('notifications_disabled');
-    final wanted = <int>{};
-    for (final t in tasks) {
-      if (t.isDone || t.scheduledDate == null || t.scheduledTime == null)
-        continue;
-      final when = DateTime.tryParse(
-        '${t.scheduledDate}T${t.scheduledTime}:00',
-      );
-      if (when == null || !when.isAfter(DateTime.now())) continue;
-      wanted.add(taskNotificationId(t.id));
-      await scheduleTaskReminder(
-        taskId: t.id,
-        title: t.title,
-        scheduledDate: t.scheduledDate!,
-        scheduledTime: t.scheduledTime!,
-      );
-    }
-    for (final pending
-        in await _notificationsPlugin.pendingNotificationRequests()) {
-      if ((pending.payload ?? '').startsWith('task:') &&
-          !wanted.contains(pending.id)) {
-        await _notificationsPlugin.cancel(id: pending.id);
-      }
-    }
   }
 }

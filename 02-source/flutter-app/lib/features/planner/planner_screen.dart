@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../design/mochi_design.dart';
 import '../../shared/widgets/floating_bar_inset.dart';
+import '../../shared/widgets/reminder_alarm_prompt.dart';
 import '../learning/learning_hub_screen.dart';
 import '../routine/routine_screen.dart';
 
@@ -442,6 +443,9 @@ class _PlannerScreenState extends State<PlannerScreen>
       scheduledTime: draft.scheduledTime,
       scheduleLocked: draft.scheduleLocked,
     );
+    if (draft.scheduledDate != null && draft.scheduledTime != null) {
+      await offerExactAlarmsForTimedTasks(context);
+    }
   }
 
   // --- ADD GOAL DIALOG ---
@@ -623,6 +627,8 @@ class _PlannerScreenState extends State<PlannerScreen>
       );
     }
     store.addTasksBatch(plannedTasks);
+    await offerExactAlarmsForTimedTasks(context);
+    if (!mounted) return;
 
     final count = plannedTasks.length;
     final suffix = offline ? ' (kế hoạch mẫu ngoại tuyến)' : '';
@@ -663,13 +669,24 @@ class _PlannerScreenState extends State<PlannerScreen>
       await reminders.refresh();
       if (!mounted) return;
       final scheduled = reminders.scheduled.length;
+      final warning = reminders.statusError ?? reminders.statusWarning;
       messenger.showSnackBar(
         SnackBar(
           content: Text(
-            scheduled > 0
-                ? 'Đã lưu $count nhiệm vụ$suffix và hẹn $scheduled lời nhắc gần nhất.'
-                : 'Đã lưu $count nhiệm vụ$suffix. Lịch nhắc sẽ cập nhật khi mở ứng dụng.',
+            warning ??
+                (scheduled > 0
+                    ? 'Đã lưu $count nhiệm vụ$suffix và hẹn $scheduled lời nhắc gần nhất.'
+                    : 'Đã lưu $count nhiệm vụ$suffix. Lịch nhắc sẽ cập nhật khi mở ứng dụng.'),
           ),
+          duration: warning == null
+              ? const Duration(seconds: 4)
+              : const Duration(seconds: 8),
+          action: warning == null
+              ? null
+              : SnackBarAction(
+                  label: 'Mở cài đặt',
+                  onPressed: notifications.openSystemSettings,
+                ),
         ),
       );
     } catch (_) {
@@ -1219,10 +1236,12 @@ class _AddTaskDialogState extends State<_AddTaskDialog> {
           now: DateTime.now(),
         );
       } on Object catch (error) {
-        setState(() => _error = error
-            .toString()
-            .replaceFirst('Bad state: ', '')
-            .replaceFirst('Invalid argument(s): ', ''));
+        setState(
+          () => _error = error
+              .toString()
+              .replaceFirst('Bad state: ', '')
+              .replaceFirst('Invalid argument(s): ', ''),
+        );
         return;
       }
     }
@@ -1257,10 +1276,7 @@ class _AddTaskDialogState extends State<_AddTaskDialog> {
 
   Future<void> _pickTime() async {
     final initial = _scheduledTime ?? TimeOfDay.fromDateTime(DateTime.now());
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: initial,
-    );
+    final picked = await showTimePicker(context: context, initialTime: initial);
     if (!mounted || picked == null) return;
     setState(() {
       _scheduledTime = picked;
@@ -1355,9 +1371,7 @@ class _AddTaskDialogState extends State<_AddTaskDialog> {
           const SizedBox(height: MochiSpacing.xs),
           Text(
             'Lịch đã chọn sẽ được giữ cố định khi xếp lịch chung.',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
+            style: Theme.of(context).textTheme.bodySmall
                 ?.copyWith(color: MochiPalette.of(context).muted),
           ),
         ],

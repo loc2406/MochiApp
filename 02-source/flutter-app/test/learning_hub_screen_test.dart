@@ -53,10 +53,12 @@ void main() {
           );
           await tester.tap(find.text('Toán').first);
           await tester.pumpAndSettle();
-          final chip = find.widgetWithText(ChoiceChip, 'Cần ôn').first;
+          final chip = find.byType(PopupMenuButton<TopicReadiness>).first;
           await tester.ensureVisible(chip);
           await tester.pumpAndSettle();
           await tester.tap(chip);
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Cần ôn').last);
           await tester.pump(const Duration(milliseconds: 300));
           expect(
             store.learning.progress.single.readiness,

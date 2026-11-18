@@ -19,6 +19,7 @@ class _NotificationSettingsCardState extends State<NotificationSettingsCard>
   final _local = NotificationService();
   bool _enabled = false;
   bool _exact = false;
+  bool _channelEnabled = true;
   bool _loaded = false;
   bool _busy = false;
   String? _statusError;
@@ -49,10 +50,12 @@ class _NotificationSettingsCardState extends State<NotificationSettingsCard>
     try {
       final enabled = await _local.notificationsEnabled();
       final exact = await _local.exactAlarmsEnabled();
+      final channelEnabled = await _local.reminderChannelEnabled();
       if (!mounted) return;
       setState(() {
         _enabled = enabled;
         _exact = exact;
+        _channelEnabled = channelEnabled;
         _loaded = true;
         _statusError = null;
       });
@@ -106,9 +109,11 @@ class _NotificationSettingsCardState extends State<NotificationSettingsCard>
         _statusError ??
         (!_loaded
             ? 'Đang kiểm tra quyền…'
-            : _enabled
-            ? 'Đã bật thông báo trên thiết bị'
-            : 'Thông báo đang bị tắt');
+            : !_enabled
+            ? 'Thông báo đang bị tắt'
+            : !_channelEnabled
+            ? 'Kênh nhắc học đang bị tắt'
+            : 'Đã bật thông báo trên thiết bị');
 
     return MochiCard(
       child: Column(
@@ -139,10 +144,16 @@ class _NotificationSettingsCardState extends State<NotificationSettingsCard>
                   ),
                 ),
               ),
-              if (_enabled)
+              if (_enabled && _channelEnabled)
                 MochiChip(
                   label: 'Đang bật',
                   tone: MochiChipTone.success,
+                  compact: true,
+                )
+              else if (_enabled)
+                MochiChip(
+                  label: 'Kênh bị tắt',
+                  tone: MochiChipTone.warning,
                   compact: true,
                 ),
             ],
@@ -151,7 +162,11 @@ class _NotificationSettingsCardState extends State<NotificationSettingsCard>
           Text(
             status,
             style: theme.textTheme.titleSmall?.copyWith(
-              color: _statusError != null ? palette.danger : palette.ink,
+              color: _statusError != null
+                  ? palette.danger
+                  : _enabled && !_channelEnabled
+                  ? palette.warning
+                  : palette.ink,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -190,6 +205,18 @@ class _NotificationSettingsCardState extends State<NotificationSettingsCard>
               ),
             ],
           ),
+          if (_enabled && !_channelEnabled) ...[
+            const SizedBox(height: MochiSpacing.sm),
+            MochiNoticeBanner(
+              message: 'Kênh “Nhắc học thông minh” đang bị tắt nên mọi lời nhắc sẽ không hiện ra.',
+              severity: MochiNoticeSeverity.error,
+              compact: true,
+              actionLabel: 'Mở kênh',
+              onAction: _busy
+                  ? null
+                  : () => _run(_local.openReminderChannelSettings),
+            ),
+          ],
           const SizedBox(height: MochiSpacing.md),
           MochiNoticeBanner(
             message: _exact ? 'Nhắc giờ: đã cấp quyền báo thức chính xác.' : 'Nhắc giờ: Android có thể trì hoãn. Cho phép báo thức chính xác để nhắc sát giờ hơn.',

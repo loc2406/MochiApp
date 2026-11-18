@@ -92,6 +92,14 @@ class SmartReminderSettings extends StatelessWidget {
                       compact: true,
                     ),
                   ],
+                  if (service.statusWarning != null) ...[
+                    const SizedBox(height: MochiSpacing.xs),
+                    MochiNoticeBanner(
+                      message: service.statusWarning!,
+                      severity: MochiNoticeSeverity.warning,
+                      compact: true,
+                    ),
+                  ],
                   const SizedBox(height: MochiSpacing.sm),
                   if (service.scheduled.isNotEmpty) ...[
                     Text(

@@ -6,7 +6,8 @@
 - Nhiệm vụ có ngày/giờ hợp lệ: nhắc đến lịch, một lần nhắc lại sau khoảng 3 giờ nếu vẫn chưa đánh dấu hoàn thành. Nhiệm vụ đã quá hạn khi mở app được lùi ít nhất 2 giờ để tránh nhắc dồn ngay lúc mở.
 - Hoạt động học dựa trên phiên học đã ghi nhận, lúc bắt đầu tập trung và thời điểm hoàn thành nhiệm vụ. Chuẩn bị lời mời học sau 2/4/6 ngày không có hoạt động mới.
 - Việc mở lại app được ghi nhận khi foreground/resume. Chuẩn bị lời mời quay lại sau 3/6 ngày không mở app.
-- Lên lịch trước tối đa 7 ngày, làm mới khi mở app và khi nhiệm vụ/hoạt động học thay đổi. Không có daemon AI vô hạn hay lịch FCM tự động ở server.
+- Lời nhắc cho nhiệm vụ có ngày/giờ được hẹn kể cả khi còn hơn 7 ngày; các lời mời chung chỉ chuẩn bị trong 7 ngày tới để danh sách alarm gọn. Làm mới khi mở app và khi nhiệm vụ/hoạt động học thay đổi. Không có daemon AI vô hạn hay lịch FCM tự động ở server.
+- Chạm vào lời nhắc mở thẳng tab Kế hoạch để xem nhiệm vụ; chạm vào push thường chỉ mở ứng dụng như trước.
 - Tối đa 2 lời nhắc tự động/ngày; cách nhau ít nhất 3 giờ; không **hẹn** trong 22:00–08:00. Các lời nhắc có giờ nhiệm vụ được ưu tiên trước lời mời chung.
 - Hạn mức ghi nhận cả các reservation đã tới giờ (kể cả OS có trì hoãn), không được reset chỉ bởi mở lại app. Chuông Pomodoro, thông báo thử và FCM từ xa là các luồng riêng, không nằm trong hạn mức 2/ngày.
 - Hoàn thành/xóa nhiệm vụ, quay lại app hoặc ghi nhận học làm mới lịch; các alarm thông minh cũ được hủy theo ID riêng, không xóa timer hoặc lịch ôn tập.

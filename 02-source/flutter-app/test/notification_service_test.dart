@@ -11,6 +11,7 @@ import 'package:mochi_app/core/database/mochi_store.dart';
 
 import 'package:mochi_app/core/services/fcm_service.dart';
 import 'package:mochi_app/core/services/notification_service.dart';
+import 'package:mochi_app/features/onboarding/onboarding_screen.dart';
 import 'package:mochi_app/features/settings/notification_settings_card.dart';
 
 void main() {
@@ -21,10 +22,13 @@ void main() {
   const messagingChannel = MethodChannel(
     'plugins.flutter.io/firebase_messaging',
   );
+  const settingsChannel = MethodChannel('mochi/notifications');
   final localCalls = <MethodCall>[];
+  final settingsCalls = <MethodCall>[];
   final messagingCalls = <MethodCall>[];
   var permission = true;
   var exactPermission = false;
+  var channelEnabled = true;
   var failToken = false;
 
   Future<void> nativeEvent(String method, Object arguments) async {
@@ -72,13 +76,22 @@ void main() {
       }
       return null;
     });
+    binding.defaultBinaryMessenger.setMockMethodCallHandler(settingsChannel, (
+      call,
+    ) async {
+      settingsCalls.add(call);
+      if (call.method == 'channelEnabled') return channelEnabled;
+      return null;
+    });
   });
 
   setUp(() {
     localCalls.clear();
+    settingsCalls.clear();
     messagingCalls.clear();
     permission = true;
     exactPermission = false;
+    channelEnabled = true;
     failToken = false;
   });
 
@@ -86,6 +99,10 @@ void main() {
     binding.defaultBinaryMessenger.setMockMethodCallHandler(localChannel, null);
     binding.defaultBinaryMessenger.setMockMethodCallHandler(
       messagingChannel,
+      null,
+    );
+    binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      settingsChannel,
       null,
     );
   });
@@ -137,6 +154,57 @@ void main() {
       localCalls.any((c) => c.method == 'requestNotificationsPermission'),
       isTrue,
     );
+  });
+
+  test('a channel muted in Android settings is reported instead of looking enabled', () async {
+    channelEnabled = false;
+    expect(await NotificationService().reminderChannelEnabled(), isFalse);
+    expect(
+      settingsCalls.any(
+        (c) =>
+            c.method == 'channelEnabled' &&
+            c.arguments['channelId'] ==
+                NotificationService.smartReminderChannelId,
+      ),
+      isTrue,
+    );
+  });
+
+  test(
+    'channel status fails open on builds without the native handler',
+    () async {
+      binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        settingsChannel,
+        null,
+      );
+      expect(await NotificationService().reminderChannelEnabled(), isTrue);
+      binding.defaultBinaryMessenger.setMockMethodCallHandler(settingsChannel, (
+        call,
+      ) async {
+        settingsCalls.add(call);
+        if (call.method == 'channelEnabled') return channelEnabled;
+        return null;
+      });
+    },
+  );
+
+  testWidgets('notification settings warn when the reminder channel is muted', (
+    tester,
+  ) async {
+    channelEnabled = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: const Scaffold(
+          body: SingleChildScrollView(child: NotificationSettingsCard()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Kênh nhắc học đang bị tắt'), findsOneWidget);
+    expect(find.text('Kênh bị tắt'), findsOneWidget);
+    expect(find.textContaining('đang bị tắt nên mọi lời nhắc'), findsOneWidget);
+    expect(find.text('Mở kênh'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   test(
@@ -240,6 +308,24 @@ void main() {
     expect(FCMService().fcmToken, 'test-registration-token');
   });
 
+  test('tapping a reminder routes to the planner tab', () {
+    NotificationService.requestedTab.value = null;
+    NotificationService.handleNotificationResponse(
+      'smart:due/task-1/2026-11-02T10:00:00.000',
+    );
+    expect(
+      NotificationService.requestedTab.value,
+      NotificationService.plannerTabIndex,
+    );
+    expect(NotificationService.tabForPayload('push:anything'), isNull);
+    NotificationService.handleNotificationResponse('push:anything');
+    expect(
+      NotificationService.requestedTab.value,
+      NotificationService.plannerTabIndex,
+    );
+    NotificationService.requestedTab.value = null;
+  });
+
   testWidgets(
     'first launch requests native permission once without developer UI',
     (tester) async {
@@ -276,6 +362,25 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     },
   );
+
+  testWidgets('permission is not requested while onboarding is still open', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    permission = false;
+    final store = MochiStore()
+      ..isLoaded = true
+      ..isFirstTime = true;
+    await tester.pumpWidget(MochiApp(store: store, enableNotifications: true));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(
+      localCalls.where((c) => c.method == 'requestNotificationsPermission'),
+      isEmpty,
+    );
+    expect(find.byType(OnboardingScreen), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+    permission = true;
+  });
 
   for (final scale in [1.0, 2.0]) {
     testWidgets(
