@@ -156,7 +156,7 @@ class _RobotShopScreenState extends State<RobotShopScreen> {
 
     return MochiCard(
       padding: EdgeInsets.all(compact ? 14 : 20),
-      gradient: palette.primaryGradient,
+      color: palette.cardSoft,
       child: compact
           ? Column(
               children: [

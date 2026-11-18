@@ -155,7 +155,11 @@ class _RootGateState extends State<RootGate> {
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
-    if (notification.depth != 0 ||
+    // ListView dọc của Planner nằm trong PageView của TabBarView nên có thể
+    // phát notification ở depth 1. Nhận depth này riêng cho Planner, nhưng
+    // bỏ qua các danh sách lồng sâu hơn.
+    final maxHandledDepth = _currentIndex == 1 ? 1 : 0;
+    if (notification.depth > maxHandledDepth ||
         notification.metrics.axis != Axis.vertical ||
         _currentIndex == 2) {
       return false;
@@ -176,35 +180,32 @@ class _RootGateState extends State<RootGate> {
     if (notification is ScrollUpdateNotification) {
       final dy = notification.scrollDelta ?? 0;
 
-      // Ưu tiên ẩn khi đã đến gần cuối trang.
-      if (_hideBarAtScrollEnd && isNearEnd) {
+      // Vuốt lên luôn hiện thanh, kể cả khi vẫn còn ở sát cuối danh sách.
+      // Trước đây điều kiện isNearEnd chạy trước nên nuốt mất thao tác này.
+      if (dy < -4) {
+        if (!_isBottomBarVisible) {
+          setState(() => _isBottomBarVisible = true);
+        }
+      } else if (_hideBarAtScrollEnd && isNearEnd) {
+        // Dành khoảng trống cho nội dung cuối danh sách khi đang cuộn xuống.
         if (_isBottomBarVisible) {
           setState(() => _isBottomBarVisible = false);
         }
       } else if (dy > 4 && _isBottomBarVisible) {
         // Vuốt xuống.
         setState(() => _isBottomBarVisible = false);
-      } else if (dy < -4 && !_isBottomBarVisible) {
-        // Vuốt lên.
-        setState(() => _isBottomBarVisible = true);
       }
     }
 
     if (notification is ScrollEndNotification) {
       _barRestore?.cancel();
-
-      // Không tự hiện lại nếu người dùng vẫn đang ở cuối trang.
-      if (_hideBarAtScrollEnd && isNearEnd) {
-        if (_isBottomBarVisible) {
-          setState(() => _isBottomBarVisible = false);
+      // Always restore after scrolling stops, including at the bottom. The
+      // bar is hidden only while navigating content, never stranded offscreen.
+      _barRestore = Timer(const Duration(milliseconds: 900), () {
+        if (mounted && !_isBottomBarVisible) {
+          setState(() => _isBottomBarVisible = true);
         }
-      } else {
-        _barRestore = Timer(const Duration(milliseconds: 900), () {
-          if (mounted && !_isBottomBarVisible) {
-            setState(() => _isBottomBarVisible = true);
-          }
-        });
-      }
+      });
     }
 
     return false;
@@ -260,14 +261,8 @@ class _RootGateState extends State<RootGate> {
 
     final pages = [
       TodayScreen(
-        onNavigateToPlanner: () => setState(() {
-          _currentIndex = 1;
-          _isBottomBarVisible = true;
-        }),
-        onNavigateToAITutor: () => setState(() {
-          _currentIndex = 2;
-          _isBottomBarVisible = true;
-        }),
+        onNavigateToPlanner: () => _selectTab(1),
+        onNavigateToAITutor: () => _selectTab(2),
       ),
       const PlannerScreen(),
       AITutorScreen(
@@ -393,6 +388,7 @@ class _RootGateState extends State<RootGate> {
   ];
 
   void _selectTab(int index) {
+    _barRestore?.cancel();
     setState(() {
       _currentIndex = index;
       _isBottomBarVisible = true;

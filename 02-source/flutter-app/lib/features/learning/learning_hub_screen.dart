@@ -104,9 +104,34 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                     final old = store.learning.courses
                         .where((x) => x.subject == s)
                         .firstOrNull;
-                    return grade == store.learning.gradeLevel && old != null
-                        ? old
-                        : CurriculumCatalog.courseFor(s, grade);
+                    if (grade == store.learning.gradeLevel && old != null) {
+                      return old;
+                    }
+
+                    final catalog = CurriculumCatalog.courseFor(
+                      s,
+                      grade,
+                      textbook: old?.textbook ?? '',
+                    );
+                    if (old == null) return catalog;
+
+                    final catalogTitles = catalog.topics
+                        .map((topic) => topic.title.trim().toLowerCase())
+                        .toSet();
+                    final userTopics = old.topics.where(
+                      (topic) =>
+                          topic.sourceRef == 'user-provided' &&
+                          !catalogTitles.contains(
+                            topic.title.trim().toLowerCase(),
+                          ),
+                    );
+                    return LearningCourse(
+                      id: catalog.id,
+                      subject: catalog.subject,
+                      textbook: old.textbook,
+                      sourceLabel: catalog.sourceLabel,
+                      topics: [...catalog.topics, ...userTopics],
+                    );
                   }).toList();
                   await store.saveLearningSetup(
                     gradeLevel: grade,
@@ -546,6 +571,20 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     );
   }
 
+  String _timetableImageDataUri(XFile file, List<int> bytes) {
+    final extension = file.name.split('.').last.toLowerCase();
+    final mimeType = switch (extension) {
+      'jpg' || 'jpeg' => 'image/jpeg',
+      'png' => 'image/png',
+      'webp' => 'image/webp',
+      'gif' => 'image/gif',
+      _ => throw FormatException(
+        'Định dạng ảnh .$extension chưa được hỗ trợ. Hãy dùng JPG, PNG, WEBP hoặc GIF.',
+      ),
+    };
+    return 'data:$mimeType;base64,${base64Encode(bytes)}';
+  }
+
   Future<void> _plan(MochiStore store) async {
     try {
       final plan = store.previewUnifiedPlan();
@@ -630,15 +669,21 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
   Future<void> _importTimetableWithAI(MochiStore store) async {
     final textController = TextEditingController();
     bool isExtracting = false;
+    bool isBusy = false;
+    bool isSaving = false;
     String? error;
     List<Map<String, dynamic>>? previewLessons;
     XFile? pickedImage;
     String? imageBase64;
 
-    await showDialog<void>(
+    try {
+      await showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setDialog) => MochiFormDialog(
+        builder: (ctx, setDialog) => PopScope(
+          canPop: !isBusy,
+          child: MochiFormDialog(
           title: 'Nhập thời khóa biểu bằng AI',
           content: SizedBox(
             width: 560,
@@ -689,7 +734,7 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                               icon: Icons.close_rounded,
                               tooltip: 'Bỏ ảnh đã chọn',
                               size: 36,
-                              onPressed: () {
+                              onPressed: isBusy ? null : () {
                                 setDialog(() {
                                   pickedImage = null;
                                   imageBase64 = null;
@@ -707,24 +752,37 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                           MochiButton(
                             variant: MochiButtonVariant.secondary,
                             size: MochiButtonSize.small,
-                            onPressed: isExtracting
+                            onPressed: isBusy
                                 ? null
                                 : () async {
-                                    final picker = ImagePicker();
-                                    final file = await picker.pickImage(
-                                      source: ImageSource.camera,
-                                      maxWidth: 1600,
-                                      maxHeight: 1600,
-                                      imageQuality: 85,
-                                    );
-                                    if (file != null) {
+                                    setDialog(() => isBusy = true);
+                                    try {
+                                      final file = await ImagePicker().pickImage(
+                                        source: ImageSource.gallery,
+                                        maxWidth: 1600,
+                                        maxHeight: 1600,
+                                        imageQuality: 85,
+                                      );
+                                      if (file == null || !ctx.mounted) return;
                                       final bytes = await file.readAsBytes();
+                                      if (!ctx.mounted) return;
+                                      final dataUri = _timetableImageDataUri(
+                                        file,
+                                        bytes,
+                                      );
                                       setDialog(() {
                                         pickedImage = file;
-                                        imageBase64 =
-                                            'data:image/jpeg;base64,${base64Encode(bytes)}';
+                                        imageBase64 = dataUri;
                                         error = null;
                                       });
+                                    } catch (e) {
+                                      if (ctx.mounted) {
+                                        setDialog(() => error = e.toString());
+                                      }
+                                    } finally {
+                                      if (ctx.mounted) {
+                                        setDialog(() => isBusy = false);
+                                      }
                                     }
                                   },
                             icon: Icons.photo_library_outlined,
@@ -733,24 +791,37 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                           MochiButton(
                             variant: MochiButtonVariant.secondary,
                             size: MochiButtonSize.small,
-                            onPressed: isExtracting
+                            onPressed: isBusy
                                 ? null
                                 : () async {
-                                    final picker = ImagePicker();
-                                    final file = await picker.pickImage(
-                                      source: ImageSource.gallery,
-                                      maxWidth: 1600,
-                                      maxHeight: 1600,
-                                      imageQuality: 85,
-                                    );
-                                    if (file != null) {
+                                    setDialog(() => isBusy = true);
+                                    try {
+                                      final file = await ImagePicker().pickImage(
+                                        source: ImageSource.camera,
+                                        maxWidth: 1600,
+                                        maxHeight: 1600,
+                                        imageQuality: 85,
+                                      );
+                                      if (file == null || !ctx.mounted) return;
                                       final bytes = await file.readAsBytes();
+                                      if (!ctx.mounted) return;
+                                      final dataUri = _timetableImageDataUri(
+                                        file,
+                                        bytes,
+                                      );
                                       setDialog(() {
                                         pickedImage = file;
-                                        imageBase64 =
-                                            'data:image/jpeg;base64,${base64Encode(bytes)}';
+                                        imageBase64 = dataUri;
                                         error = null;
                                       });
+                                    } catch (e) {
+                                      if (ctx.mounted) {
+                                        setDialog(() => error = e.toString());
+                                      }
+                                    } finally {
+                                      if (ctx.mounted) {
+                                        setDialog(() => isBusy = false);
+                                      }
                                     }
                                   },
                             icon: Icons.camera_alt_outlined,
@@ -814,7 +885,7 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                                 color: MochiPalette.of(context).danger,
                                 filled: false,
                                 size: 38,
-                                onPressed: () {
+                                onPressed: isBusy ? null : () {
                                   setDialog(() {
                                     previewLessons!.removeAt(idx);
                                   });
@@ -844,14 +915,14 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
             MochiButton(
               label: 'Hủy',
               variant: MochiButtonVariant.secondary,
-              onPressed: () => Navigator.pop(ctx),
+              onPressed: isBusy ? null : () => Navigator.pop(ctx),
             ),
             if (previewLessons == null)
               MochiButton(
                 label: isExtracting ? 'Đang bóc tách…' : 'Bóc tách với AI',
                 icon: Icons.auto_awesome_rounded,
                 loading: isExtracting,
-                onPressed: isExtracting
+                onPressed: isBusy
                     ? null
                     : () async {
                         final raw = textController.text.trim();
@@ -863,6 +934,7 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                           return;
                         }
                         setDialog(() {
+                          isBusy = true;
                           isExtracting = true;
                           error = null;
                         });
@@ -871,51 +943,155 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                             rawContent: raw.isNotEmpty ? raw : null,
                             imageDataUri: imageBase64,
                           );
+                          if (!ctx.mounted) return;
                           setDialog(() {
                             isExtracting = false;
-                            previewLessons = res;
+                            isBusy = false;
+                            if (res.isEmpty) {
+                              error = 'AI chưa nhận diện được tiết học. Hãy kiểm tra nội dung rồi thử lại.';
+                            } else {
+                              previewLessons = res;
+                            }
                           });
                         } catch (e) {
-                          setDialog(() {
-                            isExtracting = false;
-                            error = e.toString().replaceFirst(
-                              'Bad state: ',
-                              '',
-                            );
-                          });
+                          if (ctx.mounted) {
+                            setDialog(() {
+                              isExtracting = false;
+                              isBusy = false;
+                              error = e.toString().replaceFirst(
+                                'Bad state: ',
+                                '',
+                              );
+                            });
+                          }
                         }
                       },
               )
             else
               MochiButton(
-                label: 'Lưu vào thời khóa biểu',
-                onPressed: previewLessons!.isEmpty
+                label: isSaving
+                    ? 'Đang lưu thời khóa biểu…'
+                    : 'Lưu vào thời khóa biểu',
+                loading: isSaving,
+                onPressed: previewLessons!.isEmpty || isBusy
                     ? null
                     : () async {
+                        setDialog(() {
+                          isBusy = true;
+                          isSaving = true;
+                          error = null;
+                        });
                         try {
-                          for (final p in previewLessons!) {
-                            final lesson = SchoolLesson(
-                              id: 'lesson_${DateTime.now().microsecondsSinceEpoch}_${p['weekday']}_${p['subject']}',
-                              subject: p['subject']?.toString() ?? 'Môn học',
-                              weekday: p['weekday'] as int? ?? 1,
-                              startTime: p['startTime']?.toString() ?? '07:15',
-                              endTime: p['endTime']?.toString() ?? '08:00',
+                          final batchId = DateTime.now().microsecondsSinceEpoch;
+                          final lessons = List<SchoolLesson>.generate(
+                            previewLessons!.length,
+                            (i) {
+                              final item = previewLessons![i];
+                              return SchoolLesson(
+                                id: 'lesson_${batchId}_$i',
+                                subject:
+                                    item['subject']?.toString() ?? 'Môn học',
+                                weekday: item['weekday'] as int? ?? 1,
+                                startTime:
+                                    item['startTime']?.toString() ?? '07:15',
+                                endTime:
+                                    item['endTime']?.toString() ?? '08:00',
+                              );
+                            },
+                          );
+                          final saved = await store.upsertSchoolLessons(lessons);
+                          if (!ctx.mounted) return;
+                          setDialog(() {
+                            isBusy = false;
+                            isSaving = false;
+                          });
+                          Navigator.pop(ctx);
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  saved == 0
+                                      ? 'Thời khóa biểu này đã có sẵn.'
+                                      : 'Đã lưu $saved tiết học; các tiết trùng đã được bỏ qua.',
+                                ),
+                              ),
                             );
-                            await store.upsertSchoolLesson(lesson);
                           }
-                          if (ctx.mounted) Navigator.pop(ctx);
                         } catch (e) {
-                          setDialog(() => error = e.toString());
+                          if (ctx.mounted) {
+                            setDialog(() {
+                              isBusy = false;
+                              isSaving = false;
+                              error = e.toString().replaceFirst(
+                                'Bad state: ',
+                                '',
+                              );
+                            });
+                          }
                         }
                       },
               ),
           ],
+          ),
         ),
       ),
-    );
+      );
+    } finally {
+      textController.dispose();
+    }
   }
 
+  String _readinessLabel(TopicReadiness readiness) => switch (readiness) {
+    TopicReadiness.unknown => 'Chưa đánh giá',
+    TopicReadiness.notStudied => 'Chưa học',
+    TopicReadiness.needsReview => 'Cần ôn',
+    TopicReadiness.confident => 'Đã vững',
+  };
+
+  MochiChipTone _readinessTone(TopicReadiness readiness) => switch (readiness) {
+    TopicReadiness.unknown => MochiChipTone.neutral,
+    TopicReadiness.notStudied => MochiChipTone.low,
+    TopicReadiness.needsReview => MochiChipTone.warning,
+    TopicReadiness.confident => MochiChipTone.success,
+  };
+
+  IconData _readinessIcon(TopicReadiness readiness) => switch (readiness) {
+    TopicReadiness.unknown => Icons.help_outline_rounded,
+    TopicReadiness.notStudied => Icons.radio_button_unchecked_rounded,
+    TopicReadiness.needsReview => Icons.refresh_rounded,
+    TopicReadiness.confident => Icons.check_circle_rounded,
+  };
+
   Widget _progress(MochiStore store) {
+    final allTopics = store.learning.courses.expand((c) => c.topics);
+    final confidentCount = allTopics
+        .where(
+          (topic) =>
+              store.learning.readinessFor(topic.id) ==
+              TopicReadiness.confident,
+        )
+        .length;
+    final needsReviewCount = allTopics
+        .where(
+          (topic) =>
+              store.learning.readinessFor(topic.id) ==
+              TopicReadiness.needsReview,
+        )
+        .length;
+    final notStudiedCount = allTopics
+        .where(
+          (topic) =>
+              store.learning.readinessFor(topic.id) ==
+              TopicReadiness.notStudied,
+        )
+        .length;
+    final unknownCount = allTopics
+        .where(
+          (topic) =>
+              store.learning.readinessFor(topic.id) == TopicReadiness.unknown,
+        )
+        .length;
+
     return ListView(
       padding: EdgeInsets.all(16),
       children: [
@@ -926,29 +1102,64 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
         ),
         const SizedBox(height: 12),
         MochiCard(
-          child: MochiStatRow(
-            children: [
-              MochiStatTile(
-                label: 'Môn đang học',
-                value: '${store.learning.courses.length}',
-                icon: Icons.school_rounded,
-                iconTone: MochiChipTone.accent,
-              ),
-              MochiStatTile(
-                label: 'Chủ đề đã vững',
-                value:
-                    '${store.learning.courses.expand((c) => c.topics).where((t) => store.learning.readinessFor(t.id) == TopicReadiness.confident).length}',
-                icon: Icons.check_circle_rounded,
-                iconTone: MochiChipTone.success,
-              ),
-              MochiStatTile(
-                label: 'Cần ôn lại',
-                value:
-                    '${store.learning.courses.expand((c) => c.topics).where((t) => store.learning.readinessFor(t.id) == TopicReadiness.needsReview).length}',
-                icon: Icons.refresh_rounded,
-                iconTone: MochiChipTone.warning,
-              ),
-            ],
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth >= 920
+                  ? 5
+                  : constraints.maxWidth >= 600
+                  ? 3
+                  : constraints.maxWidth >= 340
+                  ? 2
+                  : 1;
+              const gap = MochiSpacing.sm;
+              final itemWidth =
+                  (constraints.maxWidth - gap * (columns - 1)) / columns;
+              final metrics = <Widget>[
+                MochiStatTile(
+                  label: 'Môn đang học',
+                  value: '${store.learning.courses.length}',
+                  icon: Icons.school_rounded,
+                  iconTone: MochiChipTone.accent,
+                  dense: true,
+                ),
+                MochiStatTile(
+                  label: 'Đã vững',
+                  value: '$confidentCount',
+                  icon: Icons.check_circle_rounded,
+                  iconTone: MochiChipTone.success,
+                  dense: true,
+                ),
+                MochiStatTile(
+                  label: 'Cần ôn',
+                  value: '$needsReviewCount',
+                  icon: Icons.refresh_rounded,
+                  iconTone: MochiChipTone.warning,
+                  dense: true,
+                ),
+                MochiStatTile(
+                  label: 'Chưa học',
+                  value: '$notStudiedCount',
+                  icon: Icons.radio_button_unchecked_rounded,
+                  iconTone: MochiChipTone.neutral,
+                  dense: true,
+                ),
+                MochiStatTile(
+                  label: 'Chưa đánh giá',
+                  value: '$unknownCount',
+                  icon: Icons.help_outline_rounded,
+                  iconTone: MochiChipTone.neutral,
+                  dense: true,
+                ),
+              ];
+              return Wrap(
+                spacing: gap,
+                runSpacing: gap,
+                children: [
+                  for (final metric in metrics)
+                    SizedBox(width: itemWidth, child: metric),
+                ],
+              );
+            },
           ),
         ),
         const SizedBox(height: 16),
@@ -979,6 +1190,11 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     final notStudied = course.topics
         .where(
           (t) => store.learning.readinessFor(t.id) == TopicReadiness.notStudied,
+        )
+        .length;
+    final notAssessed = course.topics
+        .where(
+          (t) => store.learning.readinessFor(t.id) == TopicReadiness.unknown,
         )
         .length;
     final total = course.topics.length;
@@ -1072,25 +1288,40 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                 bottomRight: Radius.circular(26),
               ),
             ),
-            child: MochiStatRow(
+            child: Column(
               children: [
-                MochiStatTile(
-                  label: 'Vừa',
-                  value: '$confident',
-                  icon: Icons.check_circle_rounded,
-                  iconTone: MochiChipTone.success,
+                MochiStatRow(
+                  children: [
+                    MochiStatTile(
+                      label: 'Đã vững',
+                      value: '$confident',
+                      icon: Icons.check_circle_rounded,
+                      iconTone: MochiChipTone.success,
+                    ),
+                    MochiStatTile(
+                      label: 'Cần ôn',
+                      value: '$needsReview',
+                      icon: Icons.refresh_rounded,
+                      iconTone: MochiChipTone.warning,
+                    ),
+                  ],
                 ),
-                MochiStatTile(
-                  label: 'Cần ôn',
-                  value: '$needsReview',
-                  icon: Icons.refresh_rounded,
-                  iconTone: MochiChipTone.warning,
-                ),
-                MochiStatTile(
-                  label: 'Chưa học',
-                  value: '$notStudied',
-                  icon: Icons.radio_button_unchecked_rounded,
-                  iconTone: MochiChipTone.neutral,
+                const SizedBox(height: MochiSpacing.sm),
+                MochiStatRow(
+                  children: [
+                    MochiStatTile(
+                      label: 'Chưa học',
+                      value: '$notStudied',
+                      icon: Icons.radio_button_unchecked_rounded,
+                      iconTone: MochiChipTone.neutral,
+                    ),
+                    MochiStatTile(
+                      label: 'Chưa đánh giá',
+                      value: '$notAssessed',
+                      icon: Icons.help_outline_rounded,
+                      iconTone: MochiChipTone.neutral,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -1103,18 +1334,45 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                 runSpacing: 8,
                 children: [
                   for (final topic in course.topics)
-                    MochiFilterChip(
-                      label: topic.title,
-                      selected:
-                          store.learning.readinessFor(topic.id) ==
-                          TopicReadiness.confident,
-                      onSelected: (selected) => store.setTopicReadiness(
-                        course.id,
-                        topic.id,
-                        selected
-                            ? TopicReadiness.confident
-                            : TopicReadiness.unknown,
-                      ),
+                    Builder(
+                      builder: (context) {
+                        final readiness =
+                            store.learning.readinessFor(topic.id);
+                        return PopupMenuButton<TopicReadiness>(
+                          tooltip: 'Cập nhật trạng thái ${topic.title}',
+                          onSelected: (value) async {
+                            try {
+                              await store.setTopicReadiness(
+                                course.id,
+                                topic.id,
+                                value,
+                              );
+                            } catch (e) {
+                              _error(e);
+                            }
+                          },
+                          itemBuilder: (context) => [
+                            for (final value in TopicReadiness.values)
+                              PopupMenuItem(
+                                value: value,
+                                child: Row(
+                                  children: [
+                                    Icon(_readinessIcon(value), size: 18),
+                                    const SizedBox(width: MochiSpacing.sm),
+                                    Text(_readinessLabel(value)),
+                                  ],
+                                ),
+                              ),
+                          ],
+                          child: MochiChip(
+                            label:
+                                '${topic.title} · ${_readinessLabel(readiness)}',
+                            icon: _readinessIcon(readiness),
+                            tone: _readinessTone(readiness),
+                            compact: true,
+                          ),
+                        );
+                      },
                     ),
                 ],
               ),
@@ -1222,6 +1480,43 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
       children: [
         _buildAgendaActions(store),
         const SizedBox(height: 16),
+        if (plan == null && store.learning.plans.isNotEmpty) ...[
+          MochiCard(
+            color: palette.warningSoft,
+            elevated: false,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final message = Text(
+                  'Lịch cũ không còn áp dụng sau khi thay đổi môn học, tiến độ hoặc thời khóa biểu. Hãy xếp và áp dụng lịch mới để cập nhật các phiên học.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: palette.ink,
+                    height: 1.4,
+                  ),
+                );
+                final button = MochiButton(
+                  label: 'Xếp lịch mới',
+                  icon: Icons.refresh_rounded,
+                  size: MochiButtonSize.small,
+                  onPressed: () => _plan(store),
+                );
+                if (constraints.maxWidth < 520) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [message, const SizedBox(height: MochiSpacing.sm), button],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(child: message),
+                    const SizedBox(width: MochiSpacing.md),
+                    button,
+                  ],
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
         Text(
           'Ngân sách toàn bộ môn: ${store.dailyRoutine.preferredDailyMinutes} phút/ngày. Đổi trong lịch sinh hoạt.',
           style: TextStyle(color: palette.muted, fontSize: 12),
@@ -1266,7 +1561,11 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
         ],
 
         if (pendingTasks.isNotEmpty) ...[
-          _sectionHeader(context, 'Sắp tới (${pendingTasks.length})', null),
+          _sectionHeader(
+            context,
+            'Việc chưa hoàn thành (${pendingTasks.length})',
+            null,
+          ),
           const SizedBox(height: 12),
           ...pendingTasks.map((task) => _taskCard(context, store, task)),
           const SizedBox(height: 16),
@@ -1356,6 +1655,16 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
                         label: task.scheduledTime!,
                         icon: Icons.schedule_rounded,
                         tone: MochiChipTone.accent,
+                        compact: true,
+                      ),
+                    if (task.dueAt != null)
+                      MochiChip(
+                        label:
+                            'Hạn ${task.dueAt!.day}/${task.dueAt!.month} · ${learningClock(task.dueAt!.hour * 60 + task.dueAt!.minute)}',
+                        icon: Icons.event_outlined,
+                        tone: task.dueAt!.isBefore(DateTime.now())
+                            ? MochiChipTone.danger
+                            : MochiChipTone.warning,
                         compact: true,
                       ),
                     MochiChip(
@@ -1485,6 +1794,79 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
     );
   }
 
+  Widget _timetableActions(MochiStore store) => LayoutBuilder(
+    builder: (context, constraints) {
+      final importButton = MochiButton(
+        label: 'Nhập TKB bằng AI',
+        icon: Icons.auto_awesome_rounded,
+        variant: MochiButtonVariant.secondary,
+        size: MochiButtonSize.small,
+        expand: constraints.maxWidth < 440,
+        onPressed: () => _importTimetableWithAI(store),
+      );
+      final addButton = MochiButton(
+        onPressed: () => _lesson(store),
+        icon: Icons.add_rounded,
+        size: MochiButtonSize.small,
+        label: 'Thêm giờ lên lớp',
+        expand: constraints.maxWidth < 440,
+      );
+      if (constraints.maxWidth < 440) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            importButton,
+            const SizedBox(height: MochiSpacing.sm),
+            addButton,
+          ],
+        );
+      }
+      return Row(
+        children: [
+          Expanded(child: importButton),
+          const SizedBox(width: MochiSpacing.sm),
+          Expanded(child: addButton),
+        ],
+      );
+    },
+  );
+
+  Widget _timetableEmptyState(MochiStore store) {
+    final palette = MochiPalette.of(context);
+    return MochiCard(
+      padding: const EdgeInsets.all(MochiSpacing.lg),
+      child: Column(
+        children: [
+          Icon(Icons.calendar_month_outlined, size: 42, color: palette.action),
+          const SizedBox(height: MochiSpacing.sm),
+          Text(
+            'Chưa có giờ học nào trong thời khóa biểu',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: palette.ink,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: MochiSpacing.xs),
+          Text(
+            'Thêm giờ lên lớp hoặc nhập thời khóa biểu để Mochi tránh xếp lịch tự học trùng giờ.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: palette.muted,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: MochiSpacing.md),
+          MochiButton(
+            label: 'Thêm giờ lên lớp',
+            icon: Icons.add_rounded,
+            onPressed: () => _lesson(store),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _timetable(MochiStore store) {
     final palette = MochiPalette.of(context);
     final days = <int, List<SchoolLesson>>{};
@@ -1502,26 +1884,10 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
           'Các khoảng này được loại khỏi giờ có thể tự học.',
         ),
         const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            MochiButton(
-              label: 'Nhập TKB bằng AI',
-              variant: MochiButtonVariant.secondary,
-              size: MochiButtonSize.small,
-              onPressed: () => _importTimetableWithAI(store),
-            ),
-            MochiButton(
-              onPressed: () => _lesson(store),
-              icon: Icons.add_rounded,
-              size: MochiButtonSize.small,
-              label: 'Thêm giờ lên lớp',
-            ),
-          ],
-        ),
+        _timetableActions(store),
         const SizedBox(height: 16),
         if (sortedDays.isEmpty)
-          _emptyState(context, store)
+          _timetableEmptyState(store)
         else
           ..._buildDayCards(store, palette, sortedDays, days),
       ],

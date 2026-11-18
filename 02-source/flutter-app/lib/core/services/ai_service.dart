@@ -594,10 +594,16 @@ Trả về JSON schema:
     required String subject,
     int count = 5,
   }) async {
+    final cleanTopic = topic.trim();
+    final cleanSubject = subject.trim();
+    if (cleanTopic.isEmpty || cleanTopic.length > 160 || cleanSubject.isEmpty) {
+      throw ArgumentError('Nhập chủ đề ngắn gọn và chọn môn học.');
+    }
+    final requestedCount = count.clamp(1, 10);
     final prompt =
         '''
-Chủ đề học tập: "$topic" môn $subject.
-Hãy tạo $count thẻ giúp hiểu bản chất, không chỉ học thuộc công thức.
+Chủ đề học tập: "$cleanTopic" môn $cleanSubject.
+Hãy tạo đúng $requestedCount thẻ giúp hiểu bản chất, không chỉ học thuộc công thức.
 Phối hợp thẻ về ý nghĩa định lý, điều kiện áp dụng, giải thích vì sao, ví dụ ngắn và lỗi thường gặp.
 Mặt trước hỏi một ý rõ ràng; mặt sau giải thích bằng lời, có ví dụ hoặc phản ví dụ.
 Chỉ dùng công thức khi phù hợp môn/chủ đề; giải thích các ký hiệu và điều kiện.
@@ -636,15 +642,18 @@ Không viết thêm văn bản nào ngoài JSON.
           final List<dynamic> list = jsonDecode(cleanJson);
           if (data['choices'][0]['finish_reason'] != 'length' &&
               list.isNotEmpty &&
+              list.length == requestedCount &&
               list.every(
                 (e) =>
                     e is Map &&
                     e['front'] is String &&
                     e['back'] is String &&
                     e['front'].toString().trim().isNotEmpty &&
-                    e['back'].toString().trim().isNotEmpty,
+                    e['back'].toString().trim().isNotEmpty &&
+                    e['front'].toString().length <= 1200 &&
+                    e['back'].toString().length <= 5000,
               )) {
-            return list
+            final cards = list
                 .map(
                   (e) => {
                     'front': e['front']?.toString() ?? '',
@@ -652,6 +661,10 @@ Không viết thêm văn bản nào ngoài JSON.
                   },
                 )
                 .toList();
+            final keys = cards
+                .map((card) => '${card['front']!.trim().toLowerCase()}|${card['back']!.trim().toLowerCase()}')
+                .toSet();
+            if (keys.length == cards.length) return cards;
           }
         }
       } catch (_) {}

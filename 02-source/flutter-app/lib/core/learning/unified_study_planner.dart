@@ -51,7 +51,7 @@ class UnifiedStudyPlanner {
           .where(
             (g) =>
                 !g.isDone &&
-                (g.id == task.goalId || task.goalIds.contains(g.id)),
+                task.isLinkedToGoal(g.id),
           )
           .toList();
       if (linked.isEmpty) return null;

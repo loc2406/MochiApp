@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../design/mochi_design.dart';
 import '../../shared/widgets/floating_bar_inset.dart';
 import '../learning/learning_hub_screen.dart';
@@ -9,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../core/database/mochi_store.dart';
 import '../../core/models/mochi_models.dart';
 import '../../core/services/notification_service.dart';
+import '../../core/services/schedule_change_policy.dart';
 import '../../core/services/smart_reminder_service.dart';
 
 /// Môn dùng chung cho dialog nhiệm vụ và mục tiêu để hai luồng nhập liệu
@@ -212,106 +215,6 @@ class _PlannerScreenState extends State<PlannerScreen>
   EdgeInsets _listPadding(BuildContext context) =>
       EdgeInsets.fromLTRB(16, 16, 16, FloatingBarInset.of(context) + 16);
 
-  Widget _plannerFormDialog(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Widget content,
-    required String submitLabel,
-    required VoidCallback onCancel,
-    required VoidCallback onSubmit,
-  }) {
-    final palette = MochiPalette.of(context);
-    final maxHeight = (MediaQuery.sizeOf(context).height - 40)
-        .clamp(200.0, 680.0)
-        .toDouble();
-
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      surfaceTintColor: Colors.transparent,
-      elevation: 0,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 480, maxHeight: maxHeight),
-        child: MochiCard(
-          padding: EdgeInsets.zero,
-          radius: 28,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(MochiSpacing.lg),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 46,
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: palette.softAccent,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Icon(icon, color: palette.action),
-                    ),
-                    const SizedBox(width: MochiSpacing.md),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(
-                                  color: palette.ink,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                          ),
-                          const SizedBox(height: MochiSpacing.xxs),
-                          Text(
-                            subtitle,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: palette.muted, height: 1.4),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: MochiSpacing.lg),
-                content,
-                const SizedBox(height: MochiSpacing.lg),
-                Divider(height: 1, color: palette.cardBorder),
-                const SizedBox(height: MochiSpacing.md),
-                Row(
-                  children: [
-                    Expanded(
-                      child: MochiButton(
-                        label: 'Hủy',
-                        variant: MochiButtonVariant.secondary,
-                        expand: true,
-                        onPressed: onCancel,
-                      ),
-                    ),
-                    const SizedBox(width: MochiSpacing.sm),
-                    Expanded(
-                      child: MochiButton(
-                        label: submitLabel,
-                        expand: true,
-                        onPressed: onSubmit,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   // --- TASKS TAB ---
 
   Widget _buildTasksTab(BuildContext context, MochiStore store) {
@@ -410,7 +313,7 @@ class _PlannerScreenState extends State<PlannerScreen>
       itemBuilder: (context, index) {
         final goal = store.goals[index];
         final relatedTasks = store.tasks
-            .where((t) => t.goalId == goal.id)
+            .where((task) => task.isLinkedToGoal(goal.id))
             .toList();
         final doneCount = relatedTasks.where((t) => t.isDone).length;
         final progressPct = relatedTasks.isNotEmpty
@@ -526,202 +429,31 @@ class _PlannerScreenState extends State<PlannerScreen>
   // --- ADD TASK DIALOG ---
 
   Future<void> _showAddTaskDialog(MochiStore store) async {
-    final titleCtrl = TextEditingController();
-    final durationCtrl = TextEditingController(text: '25');
-    String selectedSubject = 'Toán';
-    String? errorText;
-
-    await showDialog<void>(
+    final draft = await showDialog<_TaskDraft>(
       context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setDialogState) {
-          void submit() {
-            final title = titleCtrl.text.trim();
-            final duration = int.tryParse(durationCtrl.text.trim());
-            if (title.isEmpty) {
-              setDialogState(() => errorText = 'Hãy nhập tên nhiệm vụ.');
-              return;
-            }
-            if (duration == null || duration < 1 || duration > 180) {
-              setDialogState(
-                () => errorText = 'Thời lượng cần từ 1 đến 180 phút.',
-              );
-              return;
-            }
-            store.addTask(
-              title: title,
-              subject: selectedSubject,
-              duration: duration,
-            );
-            Navigator.pop(ctx);
-          }
-
-          return _plannerFormDialog(
-            ctx,
-            icon: Icons.add_task_rounded,
-            title: 'Thêm nhiệm vụ',
-            subtitle: 'Ghi lại việc cần làm và thời lượng dự kiến.',
-            submitLabel: 'Lưu nhiệm vụ',
-            onCancel: () => Navigator.pop(ctx),
-            onSubmit: submit,
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const _FieldLabel('Nhiệm vụ cụ thể'),
-                MochiTextField(
-                  controller: titleCtrl,
-                  textInputAction: TextInputAction.next,
-                  hint: 'Ví dụ: Làm bài tập 1 đến 5 trang 42',
-                ),
-                const SizedBox(height: MochiSpacing.md),
-                const _FieldLabel('Môn học'),
-                DropdownButtonFormField<String>(
-                  initialValue: selectedSubject,
-                  items: _kSubjects
-                      .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                      .toList(),
-                  onChanged: (val) {
-                    if (val != null) {
-                      setDialogState(() => selectedSubject = val);
-                    }
-                  },
-                ),
-                const SizedBox(height: MochiSpacing.md),
-                const _FieldLabel('Thời lượng (phút)'),
-                MochiTextField(
-                  controller: durationCtrl,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => submit(),
-                  hint: '25',
-                ),
-                if (errorText != null) ...[
-                  const SizedBox(height: MochiSpacing.sm),
-                  Text(
-                    errorText!,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: MochiPalette.of(context).danger,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          );
-        },
-      ),
+      builder: (_) => _AddTaskDialog(store: store),
     );
-    titleCtrl.dispose();
-    durationCtrl.dispose();
+    if (!mounted || draft == null) return;
+    store.addTask(
+      title: draft.title,
+      subject: draft.subject,
+      duration: draft.duration,
+      scheduledDate: draft.scheduledDate,
+      scheduledTime: draft.scheduledTime,
+      scheduleLocked: draft.scheduleLocked,
+    );
   }
 
   // --- ADD GOAL DIALOG ---
 
   Future<void> _showAddGoalDialog(MochiStore store) async {
-    final titleCtrl = TextEditingController();
-    DateTime targetDate = DateTime.now().add(Duration(days: 30));
-    String selectedSubject = _kSubjects.first;
-    String? errorText;
-
-    await showDialog<void>(
+    final draft = await showDialog<_GoalDraft>(
       context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setDialogState) {
-          void submit() {
-            final title = titleCtrl.text.trim();
-            if (title.isEmpty) {
-              setDialogState(() => errorText = 'Hãy nhập mục tiêu học tập.');
-              return;
-            }
-            store.addGoal(title, targetDate, subject: selectedSubject);
-            Navigator.pop(ctx);
-          }
-
-          return _plannerFormDialog(
-            ctx,
-            icon: Icons.flag_outlined,
-            title: 'Thêm mục tiêu',
-            subtitle: 'Chọn một đích đến rõ ràng để Mochi giúp bạn chia nhỏ.',
-            submitLabel: 'Lưu mục tiêu',
-            onCancel: () => Navigator.pop(ctx),
-            onSubmit: submit,
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const _FieldLabel('Mục tiêu học tập'),
-                MochiTextField(
-                  controller: titleCtrl,
-                  maxLines: 2,
-                  minLines: 1,
-                  hint: 'Ví dụ: Ôn tập đạt điểm A kỳ thi giữa kỳ',
-                ),
-                const SizedBox(height: MochiSpacing.md),
-                const _FieldLabel('Môn trọng tâm'),
-                DropdownButtonFormField<String>(
-                  initialValue: selectedSubject,
-                  items: _kSubjects
-                      .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                      .toList(),
-                  onChanged: (val) {
-                    if (val != null) {
-                      setDialogState(() => selectedSubject = val);
-                    }
-                  },
-                ),
-                const SizedBox(height: MochiSpacing.md),
-                Wrap(
-                  alignment: WrapAlignment.spaceBetween,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: MochiSpacing.sm,
-                  runSpacing: MochiSpacing.xs,
-                  children: [
-                    Text(
-                      'Hạn: ${targetDate.day}/${targetDate.month}/${targetDate.year}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: MochiPalette.of(context).ink,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    MochiButton(
-                      label: 'Chọn ngày',
-                      icon: Icons.calendar_month_outlined,
-                      size: MochiButtonSize.small,
-                      variant: MochiButtonVariant.secondary,
-                      onPressed: () async {
-                        final picked = await showDatePicker(
-                          context: ctx,
-                          initialDate: targetDate,
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime.now().add(Duration(days: 365)),
-                        );
-                        if (picked != null) {
-                          setDialogState(() => targetDate = picked);
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                if (errorText != null) ...[
-                  const SizedBox(height: MochiSpacing.sm),
-                  Text(
-                    errorText!,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: MochiPalette.of(context).danger,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          );
-        },
-      ),
+      builder: (_) => const _AddGoalDialog(),
     );
-    titleCtrl.dispose();
+    if (!mounted || draft == null) return;
+    store.addGoal(draft.title, draft.targetDate, subject: draft.subject);
   }
-
   // --- AI PLANNER ---
 
   Future<void> _showAIPlannerDialog(MochiStore store, GoalModel goal) async {
@@ -873,19 +605,26 @@ class _PlannerScreenState extends State<PlannerScreen>
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     final fallbackTime = store.dailyRoutine.eveningFreeStart;
 
-    for (final draft in drafts) {
-      store.addTask(
-        title: draft['title']?.toString() ?? 'Nhiệm vụ học tập',
-        goalId: goal.id,
-        subject: draft['subject']?.toString() ?? goal.subject,
-        duration: _asInt(draft['durationMinutes'], 25),
-        priority: _asInt(draft['priority'], 0),
-        scheduledDate: draft['scheduledDate']?.toString() ?? fallbackDate,
-        scheduledTime: draft['scheduledTime']?.toString() ?? fallbackTime,
+    final batchId = DateTime.now().microsecondsSinceEpoch;
+    final plannedTasks = <TaskModel>[];
+    for (var i = 0; i < drafts.length; i++) {
+      final draft = drafts[i];
+      plannedTasks.add(
+        TaskModel(
+          id: 'task_${batchId}_${i}_${store.tasks.length + i}',
+          title: draft['title']?.toString() ?? 'Nhiệm vụ học tập',
+          goalId: goal.id,
+          subject: draft['subject']?.toString() ?? goal.subject,
+          durationMinutes: _asInt(draft['durationMinutes'], 25),
+          priority: _asInt(draft['priority'], 0),
+          scheduledDate: draft['scheduledDate']?.toString() ?? fallbackDate,
+          scheduledTime: draft['scheduledTime']?.toString() ?? fallbackTime,
+        ),
       );
     }
+    store.addTasksBatch(plannedTasks);
 
-    final count = drafts.length;
+    final count = plannedTasks.length;
     final suffix = offline ? ' (kế hoạch mẫu ngoại tuyến)' : '';
     final messenger = ScaffoldMessenger.of(context);
 
@@ -961,10 +700,17 @@ class _PlannerScreenState extends State<PlannerScreen>
   }
 
   Future<void> _confirmDeleteGoal(MochiStore store, GoalModel goal) async {
-    final childCount = store.tasks.where((t) => t.goalId == goal.id).length;
-    final message = childCount > 0
-        ? '"${goal.title}" và $childCount nhiệm vụ con sẽ bị xóa khỏi kế hoạch. Thao tác này không thể hoàn tác.'
-        : '"${goal.title}" sẽ bị xóa khỏi kế hoạch. Thao tác này không thể hoàn tác.';
+    final deletedCount = store.countTasksDeletedWithGoal(goal.id);
+    final keptCount = store.countTasksKeptAndUnlinkedWithGoal(goal.id);
+    final consequences = <String>[
+      if (deletedCount > 0)
+        '$deletedCount nhiệm vụ chỉ thuộc mục tiêu này sẽ bị xóa',
+      if (keptCount > 0)
+        '$keptCount nhiệm vụ liên kết sẽ được giữ lại và gỡ liên kết khỏi mục tiêu',
+    ];
+    final message = consequences.isEmpty
+        ? '"${goal.title}" sẽ bị xóa khỏi kế hoạch. Thao tác này không thể hoàn tác.'
+        : '"${goal.title}" sẽ bị xóa. ${consequences.join('; ')}. Thao tác này không thể hoàn tác.';
     final confirmed = await _showDeleteDialog(
       title: 'Xóa mục tiêu?',
       message: message,
@@ -979,10 +725,10 @@ class _PlannerScreenState extends State<PlannerScreen>
     final confirmed = await MochiDialog.show(
       context,
       title: title,
+      titleColor: MochiPalette.of(context).danger,
       message: message,
       confirmLabel: 'Xóa',
       destructive: true,
-      icon: Icons.delete_outline_rounded,
     );
     return confirmed;
   }
@@ -1280,6 +1026,461 @@ class _ReviewNotice extends StatelessWidget {
 String _formatShortDate(String? value) {
   final parsed = DateTime.tryParse(value ?? '');
   return parsed == null ? (value ?? '') : '${parsed.day}/${parsed.month}';
+}
+
+class _TaskDraft {
+  const _TaskDraft({
+    required this.title,
+    required this.subject,
+    required this.duration,
+    this.scheduledDate,
+    this.scheduledTime,
+    this.scheduleLocked = false,
+  });
+
+  final String title;
+  final String subject;
+  final int duration;
+  final String? scheduledDate;
+  final String? scheduledTime;
+  final bool scheduleLocked;
+}
+
+class _GoalDraft {
+  const _GoalDraft(this.title, this.subject, this.targetDate);
+  final String title;
+  final String subject;
+  final DateTime targetDate;
+}
+
+Widget _plannerFormDialog(
+  BuildContext context, {
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required Widget content,
+  required String submitLabel,
+  required VoidCallback onCancel,
+  required VoidCallback onSubmit,
+}) {
+  final palette = MochiPalette.of(context);
+  final maxHeight = (MediaQuery.sizeOf(context).height - 40)
+      .clamp(200.0, 680.0)
+      .toDouble();
+  return Dialog(
+    backgroundColor: Colors.transparent,
+    surfaceTintColor: Colors.transparent,
+    elevation: 0,
+    insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+    child: ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 480, maxHeight: maxHeight),
+      child: MochiCard(
+        padding: EdgeInsets.zero,
+        radius: 28,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(MochiSpacing.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 46,
+                    height: 46,
+                    decoration: BoxDecoration(
+                      color: palette.softAccent,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(icon, color: palette.action),
+                  ),
+                  const SizedBox(width: MochiSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                color: palette.ink,
+                                fontWeight: FontWeight.w800,
+                              ),
+                        ),
+                        const SizedBox(height: MochiSpacing.xxs),
+                        Text(
+                          subtitle,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: palette.muted, height: 1.4),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: MochiSpacing.lg),
+              content,
+              const SizedBox(height: MochiSpacing.lg),
+              Divider(height: 1, color: palette.cardBorder),
+              const SizedBox(height: MochiSpacing.md),
+              Row(
+                children: [
+                  Expanded(
+                    child: MochiButton(
+                      label: 'Hủy',
+                      variant: MochiButtonVariant.secondary,
+                      expand: true,
+                      onPressed: onCancel,
+                    ),
+                  ),
+                  const SizedBox(width: MochiSpacing.sm),
+                  Expanded(
+                    child: MochiButton(
+                      label: submitLabel,
+                      expand: true,
+                      onPressed: onSubmit,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+class _AddTaskDialog extends StatefulWidget {
+  const _AddTaskDialog({required this.store});
+
+  final MochiStore store;
+
+  @override
+  State<_AddTaskDialog> createState() => _AddTaskDialogState();
+}
+
+class _AddTaskDialogState extends State<_AddTaskDialog> {
+  final _titleCtrl = TextEditingController();
+  final _durationCtrl = TextEditingController(text: '25');
+  String _subject = 'Toán';
+  DateTime? _scheduledDay;
+  TimeOfDay? _scheduledTime;
+  String? _error;
+
+  @override
+  void dispose() {
+    _titleCtrl.dispose();
+    _durationCtrl.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final title = _titleCtrl.text.trim();
+    final duration = int.tryParse(_durationCtrl.text.trim());
+    if (title.isEmpty) {
+      setState(() => _error = 'Hãy nhập tên nhiệm vụ.');
+      return;
+    }
+    if (duration == null || duration < 1 || duration > 180) {
+      setState(() => _error = 'Thời lượng cần từ 1 đến 180 phút.');
+      return;
+    }
+    if ((_scheduledDay == null) != (_scheduledTime == null)) {
+      setState(() => _error = 'Hãy chọn cả ngày và giờ, hoặc bỏ trống cả hai.');
+      return;
+    }
+
+    String? dateKey;
+    String? timeKey;
+    if (_scheduledDay != null && _scheduledTime != null) {
+      dateKey = _dateKey(_scheduledDay!);
+      timeKey = _timeKey(_scheduledTime!);
+      final id = 'schedule_validation_${DateTime.now().microsecondsSinceEpoch}';
+      final candidate = TaskModel(
+        id: id,
+        title: title,
+        subject: _subject,
+        durationMinutes: duration,
+      );
+      try {
+        ScheduleChangePolicy.validate(
+          action: {
+            'action': 'reschedule_task',
+            'taskId': id,
+            'date': dateKey,
+            'newTime': timeKey,
+            'expectedTask': jsonEncode(candidate.toJson()),
+          },
+          tasks: [...widget.store.tasks, candidate],
+          routine: widget.store.dailyRoutine,
+          learning: widget.store.learning,
+          now: DateTime.now(),
+        );
+      } on Object catch (error) {
+        setState(() => _error = error
+            .toString()
+            .replaceFirst('Bad state: ', '')
+            .replaceFirst('Invalid argument(s): ', ''));
+        return;
+      }
+    }
+
+    Navigator.of(context).pop(
+      _TaskDraft(
+        title: title,
+        subject: _subject,
+        duration: duration,
+        scheduledDate: dateKey,
+        scheduledTime: timeKey,
+        scheduleLocked: dateKey != null && timeKey != null,
+      ),
+    );
+  }
+
+  Future<void> _pickDay() async {
+    final now = DateTime.now();
+    final today = DateUtils.dateOnly(now);
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _scheduledDay ?? today,
+      firstDate: today,
+      lastDate: today.add(const Duration(days: 365)),
+    );
+    if (!mounted || picked == null) return;
+    setState(() {
+      _scheduledDay = DateUtils.dateOnly(picked);
+      _error = null;
+    });
+  }
+
+  Future<void> _pickTime() async {
+    final initial = _scheduledTime ?? TimeOfDay.fromDateTime(DateTime.now());
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: initial,
+    );
+    if (!mounted || picked == null) return;
+    setState(() {
+      _scheduledTime = picked;
+      _error = null;
+    });
+  }
+
+  static String _dateKey(DateTime date) =>
+      '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+  static String _timeKey(TimeOfDay time) =>
+      '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+
+  @override
+  Widget build(BuildContext context) => _plannerFormDialog(
+    context,
+    icon: Icons.add_task_rounded,
+    title: 'Thêm nhiệm vụ',
+    subtitle: 'Ghi lại việc cần làm và thời lượng dự kiến.',
+    submitLabel: 'Lưu nhiệm vụ',
+    onCancel: () => Navigator.of(context).pop(),
+    onSubmit: _submit,
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _FieldLabel('Nhiệm vụ cụ thể'),
+        MochiTextField(
+          controller: _titleCtrl,
+          textInputAction: TextInputAction.next,
+          hint: 'Ví dụ: Làm bài tập 1 đến 5 trang 42',
+        ),
+        const SizedBox(height: MochiSpacing.md),
+        const _FieldLabel('Môn học'),
+        DropdownButtonFormField<String>(
+          initialValue: _subject,
+          items: _kSubjects
+              .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+              .toList(),
+          onChanged: (v) {
+            if (v != null) setState(() => _subject = v);
+          },
+        ),
+        const SizedBox(height: MochiSpacing.md),
+        const _FieldLabel('Thời lượng (phút)'),
+        MochiTextField(
+          controller: _durationCtrl,
+          keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) => _submit(),
+          hint: '25',
+        ),
+        const SizedBox(height: MochiSpacing.md),
+        const _FieldLabel('Ngày giờ thực hiện (tùy chọn)'),
+        Wrap(
+          spacing: MochiSpacing.sm,
+          runSpacing: MochiSpacing.sm,
+          children: [
+            MochiButton(
+              label: _scheduledDay == null
+                  ? 'Chọn ngày'
+                  : 'Ngày ${_scheduledDay!.day}/${_scheduledDay!.month}/${_scheduledDay!.year}',
+              icon: Icons.event_outlined,
+              size: MochiButtonSize.small,
+              variant: MochiButtonVariant.secondary,
+              onPressed: _pickDay,
+            ),
+            MochiButton(
+              label: _scheduledTime == null
+                  ? 'Chọn giờ'
+                  : 'Giờ ${_scheduledTime!.format(context)}',
+              icon: Icons.schedule_rounded,
+              size: MochiButtonSize.small,
+              variant: MochiButtonVariant.secondary,
+              onPressed: _pickTime,
+            ),
+            if (_scheduledDay != null || _scheduledTime != null)
+              MochiButton(
+                label: 'Bỏ lịch',
+                icon: Icons.close_rounded,
+                size: MochiButtonSize.small,
+                variant: MochiButtonVariant.ghost,
+                onPressed: () => setState(() {
+                  _scheduledDay = null;
+                  _scheduledTime = null;
+                  _error = null;
+                }),
+              ),
+          ],
+        ),
+        if (_scheduledDay != null && _scheduledTime != null) ...[
+          const SizedBox(height: MochiSpacing.xs),
+          Text(
+            'Lịch đã chọn sẽ được giữ cố định khi xếp lịch chung.',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: MochiPalette.of(context).muted),
+          ),
+        ],
+        if (_error != null) ...[
+          const SizedBox(height: MochiSpacing.sm),
+          Text(
+            _error!,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: MochiPalette.of(context).danger,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ],
+    ),
+  );
+}
+
+class _AddGoalDialog extends StatefulWidget {
+  const _AddGoalDialog();
+  @override
+  State<_AddGoalDialog> createState() => _AddGoalDialogState();
+}
+
+class _AddGoalDialogState extends State<_AddGoalDialog> {
+  final _titleCtrl = TextEditingController();
+  DateTime _targetDate = DateTime.now().add(const Duration(days: 30));
+  String _subject = _kSubjects.first;
+  String? _error;
+
+  @override
+  void dispose() {
+    _titleCtrl.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final title = _titleCtrl.text.trim();
+    if (title.isEmpty) {
+      setState(() => _error = 'Hãy nhập mục tiêu học tập.');
+      return;
+    }
+    Navigator.of(context).pop(_GoalDraft(title, _subject, _targetDate));
+  }
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _targetDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (!mounted || picked == null) return;
+    setState(() => _targetDate = picked);
+  }
+
+  @override
+  Widget build(BuildContext context) => _plannerFormDialog(
+    context,
+    icon: Icons.flag_outlined,
+    title: 'Thêm mục tiêu',
+    subtitle: 'Chọn một đích đến rõ ràng để Mochi giúp bạn chia nhỏ.',
+    submitLabel: 'Lưu mục tiêu',
+    onCancel: () => Navigator.of(context).pop(),
+    onSubmit: _submit,
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _FieldLabel('Mục tiêu học tập'),
+        MochiTextField(
+          controller: _titleCtrl,
+          maxLines: 2,
+          minLines: 1,
+          hint: 'Ví dụ: Ôn tập đạt điểm A kỳ thi giữa kỳ',
+        ),
+        const SizedBox(height: MochiSpacing.md),
+        const _FieldLabel('Môn trọng tâm'),
+        DropdownButtonFormField<String>(
+          initialValue: _subject,
+          items: _kSubjects
+              .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+              .toList(),
+          onChanged: (v) {
+            if (v != null) setState(() => _subject = v);
+          },
+        ),
+        const SizedBox(height: MochiSpacing.md),
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: MochiSpacing.sm,
+          runSpacing: MochiSpacing.xs,
+          children: [
+            Text(
+              'Hạn: ${_targetDate.day}/${_targetDate.month}/${_targetDate.year}',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: MochiPalette.of(context).ink,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            MochiButton(
+              label: 'Chọn ngày',
+              icon: Icons.calendar_month_outlined,
+              size: MochiButtonSize.small,
+              variant: MochiButtonVariant.secondary,
+              onPressed: _pickDate,
+            ),
+          ],
+        ),
+        if (_error != null) ...[
+          const SizedBox(height: MochiSpacing.sm),
+          Text(
+            _error!,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: MochiPalette.of(context).danger,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ],
+    ),
+  );
 }
 
 class _MetaChip extends StatelessWidget {

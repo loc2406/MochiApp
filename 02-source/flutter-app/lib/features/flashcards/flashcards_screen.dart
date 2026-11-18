@@ -351,96 +351,112 @@ class _FlashcardsScreenState extends State<FlashcardsScreen> {
     back.dispose();
   }
 
-  void _showAIGenerateDialog(BuildContext context, MochiStore store) {
+  Future<void> _showAIGenerateDialog(BuildContext context, MochiStore store) async {
     final topicCtrl = TextEditingController();
     String selectedSubj = 'Toán';
-    final palette = MochiPalette.of(context);
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Row(
-          children: [
-            Icon(Icons.auto_awesome, color: palette.accent, size: 22),
-            SizedBox(width: MochiSpacing.xs),
-            Expanded(child: Text('Mochi AI tạo thẻ')),
-          ],
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Nhập chủ đề học tập để AI tạo câu hỏi và đáp án ôn tập tự động:',
-                style: Theme.of(ctx).textTheme.bodySmall
-                    ?.copyWith(color: palette.muted),
-              ),
-              SizedBox(height: MochiSpacing.sm),
-              MochiTextField(
-                controller: topicCtrl,
-                hint: 'Ví dụ: Định luật Newton, Thì quá khứ đơn...',
-              ),
-              SizedBox(height: MochiSpacing.sm),
-              DropdownButtonFormField<String>(
-                initialValue: selectedSubj,
-                items:
-                    [
-                          'Toán',
-                          'Vật lý',
-                          'Hóa học',
-                          'Tiếng Anh',
-                          'Ngữ văn',
-                          'Tin học',
-                          'Sinh học',
-                          'Chung',
-                        ]
-                        .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                        .toList(),
-                onChanged: (v) {
-                  if (v != null) selectedSubj = v;
-                },
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Hủy')),
-          MochiPrimaryButton(
-            onPressed: () async {
-              final topic = topicCtrl.text.trim();
-              if (topic.isNotEmpty) {
-                Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Mochi AI đang chuẩn bị các câu hỏi ôn tập...',
-                    ),
+    bool loading = false;
+    String? error;
+    List<Map<String, String>>? preview;
+    if (!store.cloudService.hasActiveUser) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đăng nhập để tạo flashcard bằng AI.')),
+      );
+      return;
+    }
+    try {
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => StatefulBuilder(
+          builder: (ctx, update) => PopScope(
+            canPop: !loading,
+            child: MochiFormDialog(
+              title: preview == null ? 'Mochi AI tạo thẻ' : 'Xem trước flashcard',
+              content: SizedBox(
+                width: 560,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (preview == null) ...[
+                        Text('Nội dung AI có thể chưa chính xác. Hãy kiểm tra trước khi lưu.'),
+                        const SizedBox(height: MochiSpacing.sm),
+                        MochiTextField(controller: topicCtrl, label: 'Chủ đề', hint: 'Ví dụ: Định luật Newton'),
+                        const SizedBox(height: MochiSpacing.sm),
+                        DropdownButtonFormField<String>(
+                          initialValue: selectedSubj,
+                          isExpanded: true,
+                          decoration: const InputDecoration(labelText: 'Môn học'),
+                          items: ['Toán', 'Vật lý', 'Hóa học', 'Tiếng Anh', 'Ngữ văn', 'Tin học', 'Sinh học', 'Chung']
+                              .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                              .toList(),
+                          onChanged: loading ? null : (v) { if (v != null) update(() => selectedSubj = v); },
+                        ),
+                      ] else ...[
+                        for (var i = 0; i < preview!.length; i++)
+                          MochiCard(
+                            margin: const EdgeInsets.only(bottom: MochiSpacing.sm),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text('Mặt trước ${i + 1}', style: Theme.of(ctx).textTheme.labelLarge),
+                                const SizedBox(height: 4),
+                                Text(preview![i]['front']!),
+                                const SizedBox(height: MochiSpacing.xs),
+                                Text('Mặt sau', style: Theme.of(ctx).textTheme.labelLarge),
+                                const SizedBox(height: 4),
+                                Text(preview![i]['back']!),
+                              ],
+                            ),
+                          ),
+                      ],
+                      if (loading) const LinearProgressIndicator(),
+                      if (error != null) MochiNoticeBanner(message: error!, severity: MochiNoticeSeverity.error),
+                    ],
                   ),
-                );
-                final cards = await store.aiService.generateFlashcardsForTopic(
-                  topic: topic,
-                  subject: selectedSubj,
-                );
-                final deckId = store.addDeck(topic, selectedSubj);
-                for (final c in cards) {
-                  store.addFlashcard(deckId, c['front'] ?? '', c['back'] ?? '');
-                }
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Đã tạo thành công bộ thẻ: $topic (${cards.length} thẻ)!',
-                      ),
-                    ),
-                  );
-                }
-              }
-            },
-            child: Text('Tạo với AI'),
+                ),
+              ),
+              actions: [
+                MochiButton(label: 'Hủy', variant: MochiButtonVariant.secondary, onPressed: loading ? null : () => Navigator.pop(ctx)),
+                if (preview == null)
+                  MochiButton(
+                    label: loading ? 'Đang tạo…' : 'Tạo bản xem trước',
+                    loading: loading,
+                    onPressed: loading ? null : () async {
+                      final topic = topicCtrl.text.trim();
+                      if (topic.isEmpty) { update(() => error = 'Nhập chủ đề trước khi tạo.'); return; }
+                      update(() { loading = true; error = null; });
+                      try {
+                        final cards = await store.aiService.generateFlashcardsForTopic(topic: topic, subject: selectedSubj).timeout(const Duration(seconds: 55));
+                        if (!ctx.mounted) return;
+                        update(() { preview = cards; loading = false; });
+                      } catch (_) {
+                        if (ctx.mounted) update(() { loading = false; error = 'Chưa tạo được thẻ. Kiểm tra kết nối/đăng nhập rồi thử lại.'; });
+                      }
+                    },
+                  )
+                else
+                  MochiButton(
+                    label: 'Lưu ${preview!.length} thẻ',
+                    onPressed: loading ? null : () async {
+                      update(() { loading = true; error = null; });
+                      try {
+                        await store.addKnowledgePack(topicCtrl.text.trim(), selectedSubj, const [], preview!);
+                        if (ctx.mounted) Navigator.pop(ctx);
+                      } catch (_) {
+                        if (ctx.mounted) update(() { loading = false; error = 'Chưa lưu được bộ thẻ. Hãy thử lại.'; });
+                      }
+                    },
+                  ),
+              ],
+            ),
           ),
-        ],
-      ),
-    );
+        ),
+      );
+    } finally {
+      topicCtrl.dispose();
+    }
   }
 
   void _showAddDeckDialog(BuildContext context, MochiStore store) {

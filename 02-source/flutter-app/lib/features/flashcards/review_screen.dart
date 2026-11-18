@@ -1,4 +1,5 @@
 import 'package:mochi_app/design/foundation/mochi_tokens.dart';
+import 'package:mochi_app/design/mochi_design.dart';
 import 'package:mochi_app/design/widgets/mochi_app_bar.dart';
 import 'package:mochi_app/design/widgets/mochi_button.dart';
 import 'package:mochi_app/design/widgets/mochi_card.dart';
@@ -114,56 +115,6 @@ class _ReviewScreenState extends State<_ReviewContent> {
         return;
       }
       if (cards.isEmpty) {
-        LearningCourse? weakCourse;
-        LearningTopic? weakTopic;
-        final weaknesses =
-            store.learning.progress
-                .where((p) => p.readiness == TopicReadiness.needsReview)
-                .toList()
-              ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-        for (final progress in weaknesses) {
-          if (store.decks.any((d) => d.topicIds.contains(progress.topicId)))
-            continue;
-          final course = store.learning.courses
-              .where((c) => c.id == progress.courseId)
-              .firstOrNull;
-          final topic = course?.topics
-              .where((t) => t.id == progress.topicId)
-              .firstOrNull;
-          if (course != null && topic != null) {
-            weakCourse = course;
-            weakTopic = topic;
-            break;
-          }
-        }
-        if (!offline &&
-            store.cloudService.hasActiveUser &&
-            weakTopic != null &&
-            weakCourse != null) {
-          final generated = await store.aiService.generateFlashcardsForTopic(
-            topic:
-                '${weakTopic.title} · Lớp ${store.learning.gradeLevel ?? store.profile.gradeBand}',
-            subject: weakCourse.subject,
-            count: 3,
-          );
-          if (!mounted || owner != _owner) return;
-          // Only a topic explicitly marked for revision, never a guessed chapter.
-          await store.addKnowledgePack(
-            weakTopic.title,
-            weakCourse.subject,
-            [weakTopic.id],
-            generated,
-            operationKey: 'revision_${weakTopic.id}',
-          );
-          cards = ReviewPolicy.dueCards(
-            now: DateTime.now(),
-            cards: store.flashcards,
-            decks: store.decks,
-            learning: store.learning,
-          );
-        }
-      }
-      if (cards.isEmpty) {
         setState(
           () => _empty = 'Không có thẻ phù hợp đến hạn lúc này. Phần đã nhớ được giãn lịch; bạn không cần ôn lại chỉ để giữ chuỗi.',
         );
@@ -242,6 +193,10 @@ class _ReviewScreenState extends State<_ReviewContent> {
     LearningTopic topic,
   ) async {
     if (_loading) return;
+    if (!store.cloudService.hasActiveUser) {
+      setState(() => _error = 'Đăng nhập để tạo và đồng bộ flashcard bằng AI.');
+      return;
+    }
     final owner = _owner;
     setState(() => _loading = true);
     try {
@@ -252,7 +207,58 @@ class _ReviewScreenState extends State<_ReviewContent> {
         count: 3,
       );
       if (!mounted || owner != _owner) return;
-      // Single durable write, with an explicit topic link rather than guessing from a title.
+      final accepted = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => MochiDialog(
+          title: 'Kiểm tra thẻ cho ${topic.title}',
+          content: SizedBox(
+            width: 560,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    'Nội dung do AI tạo, chưa được xác minh. Hãy đối chiếu trước khi lưu.',
+                  ),
+                  const SizedBox(height: MochiSpacing.sm),
+                  for (var i = 0; i < cards.length; i++)
+                    MochiCard(
+                      margin: const EdgeInsets.only(bottom: MochiSpacing.sm),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'Mặt trước ${i + 1}',
+                            style: Theme.of(ctx).textTheme.labelLarge,
+                          ),
+                          Text(cards[i]['front']!),
+                          const SizedBox(height: MochiSpacing.xs),
+                          Text(
+                            'Mặt sau',
+                            style: Theme.of(ctx).textTheme.labelLarge,
+                          ),
+                          Text(cards[i]['back']!),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            MochiButton(
+              label: 'Bỏ thẻ',
+              variant: MochiButtonVariant.secondary,
+              onPressed: () => Navigator.pop(ctx, false),
+            ),
+            MochiButton(
+              label: 'Lưu bộ thẻ',
+              onPressed: () => Navigator.pop(ctx, true),
+            ),
+          ],
+        ),
+      );
+      if (accepted != true || !mounted || owner != _owner) return;
       await store.addKnowledgePack(topic.title, course.subject, [
         topic.id,
       ], cards);

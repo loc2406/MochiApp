@@ -193,6 +193,9 @@ class TaskModel {
     this.scheduleLocked = false,
   }) : createdAt = createdAt ?? DateTime.now();
 
+  bool isLinkedToGoal(String goalId) =>
+      this.goalId == goalId || goalIds.contains(goalId);
+
   TaskModel copyWith({
     String? goalId,
     String? title,

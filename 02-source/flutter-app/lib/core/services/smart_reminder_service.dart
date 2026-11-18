@@ -82,6 +82,11 @@ class SmartReminderService extends ChangeNotifier with WidgetsBindingObserver {
     return jsonEncode({
       'name': store.profile.name,
       'firstTime': store.isFirstTime,
+      'routine': store.dailyRoutine.toJson(),
+      'timetable': store.learning.timetable
+          .map((lesson) => lesson.toJson())
+          .toList(),
+      'activePlanId': store.learning.activePlanId,
       'tasks': store.reminderTasks.map((t) => t.toJson()).toList(),
       'sessions': store.sessions
           .map((s) => s.endedAt.toIso8601String())

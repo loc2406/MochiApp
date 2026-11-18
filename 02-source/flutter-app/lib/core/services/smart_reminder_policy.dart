@@ -184,6 +184,7 @@ class SmartReminderPolicy {
   static String _day(DateTime d) => '${d.year}-${d.month}-${d.day}';
 
   static DateTime? taskDueTime(TaskModel task) {
+    if (task.dueAt != null) return task.dueAt;
     final date = task.scheduledDate;
     final time = task.scheduledTime;
     if (date == null ||

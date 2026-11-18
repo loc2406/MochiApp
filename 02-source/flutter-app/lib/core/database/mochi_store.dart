@@ -430,9 +430,41 @@ class MochiStore extends ChangeNotifier {
   }) async {
     if (gradeLevel < 1 || gradeLevel > 12 || academicYear.trim().isEmpty)
       throw ArgumentError('Chọn lớp và năm học.');
+
+    // Keep progress attached to topics that still exist, while updating each
+    // record's course ID when a learner changes grade or course catalog.
+    final courseByTopic = <String, String>{
+      for (final course in courses)
+        for (final topic in course.topics) topic.id: course.id,
+    };
+    final progressByTopic = <String, TopicProgress>{};
+    final orphanedProgress = <TopicProgress>[];
+    for (final progress in learning.progress) {
+      final courseId = courseByTopic[progress.topicId];
+      if (courseId == null) {
+        orphanedProgress.add(progress);
+        continue;
+      }
+      final old = progressByTopic[progress.topicId];
+      if (old == null || progress.updatedAt.isAfter(old.updatedAt)) {
+        progressByTopic[progress.topicId] = progress;
+      }
+    }
+    learning.progress = [
+      ...orphanedProgress,
+      for (final entry in progressByTopic.entries)
+        TopicProgress(
+          id: '${courseByTopic[entry.key]}/${entry.key}',
+          courseId: courseByTopic[entry.key]!,
+          topicId: entry.key,
+          readiness: entry.value.readiness,
+          updatedAt: entry.value.updatedAt,
+        ),
+    ];
     learning.gradeLevel = gradeLevel;
     learning.academicYear = academicYear.trim();
     learning.courses = courses;
+    _invalidateActivePlan();
     await save();
   }
 
@@ -470,26 +502,132 @@ class MochiStore extends ChangeNotifier {
         session['needsNewReview'] = true;
       }
     }
+    _invalidateActivePlan();
     await save();
   }
 
   Future<void> upsertSchoolLesson(SchoolLesson lesson) async {
-    final a = scheduleMinute(lesson.startTime),
-        b = scheduleMinute(lesson.endTime);
-    if (a >= b ||
+    await upsertSchoolLessons([lesson]);
+  }
+
+  /// Validates a whole timetable import before changing state, then persists
+  /// it once. Identical lessons are skipped; overlapping lessons are rejected.
+  Future<int> upsertSchoolLessons(Iterable<SchoolLesson> lessons) async {
+    final incoming = lessons.toList();
+    if (incoming.isEmpty) return 0;
+    if (incoming.map((lesson) => lesson.id).toSet().length != incoming.length) {
+      throw ArgumentError('Mỗi tiết học trong một lần lưu cần ID riêng.');
+    }
+
+    var proposed = List<SchoolLesson>.of(learning.timetable);
+    final accepted = <SchoolLesson>[];
+    for (final lesson in incoming) {
+      _validateSchoolLesson(lesson);
+
+      final sameIdIndex = proposed.indexWhere((item) => item.id == lesson.id);
+      final withoutSameId = [
+        for (var i = 0; i < proposed.length; i++)
+          if (i != sameIdIndex) proposed[i],
+      ];
+      final duplicate = withoutSameId.any(
+        (item) => _sameSchoolLessonSchedule(item, lesson),
+      );
+      if (duplicate) continue;
+
+      final conflict = withoutSameId.where(
+        (item) => _schoolLessonsOverlap(item, lesson),
+      );
+      if (conflict.isNotEmpty) {
+        final other = conflict.first;
+        throw StateError(
+          'Tiết ${lesson.subject} ${lesson.startTime}–${lesson.endTime} bị trùng với ${other.subject} ${other.startTime}–${other.endTime}.',
+        );
+      }
+
+      proposed = [...withoutSameId, lesson];
+      accepted.add(lesson);
+    }
+
+    if (accepted.isEmpty) return 0;
+    learning.timetable = proposed;
+    _invalidateActivePlan();
+    await save();
+    return accepted.length;
+  }
+
+  void _validateSchoolLesson(SchoolLesson lesson) {
+    final start = scheduleMinute(lesson.startTime);
+    final end = scheduleMinute(lesson.endTime);
+    if (start >= end ||
         lesson.weekday < 1 ||
         lesson.weekday > 7 ||
-        lesson.subject.trim().isEmpty)
+        lesson.subject.trim().isEmpty) {
       throw ArgumentError('Kiểm tra môn, thứ và giờ bắt đầu/kết thúc.');
-    if (lesson.weekPattern != 'all' && lesson.parityAnchor == null)
+    }
+    if (lesson.weekPattern != 'all' && lesson.parityAnchor == null) {
       throw ArgumentError('Chọn tuần bắt đầu cho lịch chẵn/lẻ.');
-    learning.timetable.removeWhere((x) => x.id == lesson.id);
-    learning.timetable.add(lesson);
-    await save();
+    }
+  }
+
+  bool _sameSchoolLessonSchedule(SchoolLesson a, SchoolLesson b) =>
+      a.subject.trim().toLowerCase() == b.subject.trim().toLowerCase() &&
+      a.weekday == b.weekday &&
+      a.startTime == b.startTime &&
+      a.endTime == b.endTime &&
+      a.weekPattern == b.weekPattern &&
+      a.effectiveFrom == b.effectiveFrom &&
+      a.effectiveTo == b.effectiveTo &&
+      a.specificDate == b.specificDate &&
+      a.parityAnchor == b.parityAnchor;
+
+  bool _schoolLessonsOverlap(SchoolLesson a, SchoolLesson b) {
+    final aStart = scheduleMinute(a.startTime);
+    final aEnd = scheduleMinute(a.endTime);
+    final bStart = scheduleMinute(b.startTime);
+    final bEnd = scheduleMinute(b.endTime);
+    if (aStart >= bEnd || bStart >= aEnd) return false;
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final specialDates = [a.specificDate, b.specificDate]
+        .whereType<String>()
+        .map(DateTime.tryParse)
+        .whereType<DateTime>()
+        .map((date) => DateTime(date.year, date.month, date.day))
+        .toList();
+    if (specialDates.isNotEmpty) {
+      final candidateDates = specialDates.toSet();
+      return candidateDates.any(
+        (day) =>
+            !day.isBefore(today) && a.occursOn(day) && b.occursOn(day),
+      );
+    }
+
+    var start = today;
+    for (final value in [a.effectiveFrom, b.effectiveFrom]) {
+      final date = DateTime.tryParse(value ?? '');
+      if (date != null && date.isAfter(start)) {
+        start = DateTime(date.year, date.month, date.day);
+      }
+    }
+    var end = start.add(const Duration(days: 27));
+    for (final value in [a.effectiveTo, b.effectiveTo]) {
+      final date = DateTime.tryParse(value ?? '');
+      if (date != null && date.isBefore(end)) {
+        end = DateTime(date.year, date.month, date.day);
+      }
+    }
+    if (end.isBefore(start)) return false;
+
+    for (var day = start; !day.isAfter(end); day = day.add(const Duration(days: 1))) {
+      if (a.occursOn(day) && b.occursOn(day)) return true;
+    }
+    return false;
   }
 
   Future<void> removeSchoolLesson(String id) async {
     learning.timetable.removeWhere((x) => x.id == id);
+    _invalidateActivePlan();
     await save();
   }
 
@@ -610,8 +748,13 @@ class MochiStore extends ChangeNotifier {
 
   void updateDailyRoutine(DailyRoutine routine) {
     dailyRoutine = routine;
+    _invalidateActivePlan();
     save();
     notifyListeners();
+  }
+
+  void _invalidateActivePlan() {
+    if (learning.activePlanId.isNotEmpty) learning.activePlanId = '';
   }
 
   Future<void> refreshCloudAuth({bool preserveRecovery = true}) async {
@@ -895,9 +1038,56 @@ class MochiStore extends ChangeNotifier {
     save();
   }
 
+  int countTasksDeletedWithGoal(String id) {
+    final remainingGoalIds = goals
+        .where((goal) => goal.id != id)
+        .map((goal) => goal.id)
+        .toSet();
+    return tasks.where((task) {
+      if (task.goalId != id) return false;
+      return !task.goalIds.any(
+        (linkedId) => linkedId != id && remainingGoalIds.contains(linkedId),
+      );
+    }).length;
+  }
+
+  int countTasksKeptAndUnlinkedWithGoal(String id) {
+    final deletedCount = countTasksDeletedWithGoal(id);
+    final linkedCount = tasks.where((task) => task.isLinkedToGoal(id)).length;
+    return linkedCount - deletedCount;
+  }
+
   void deleteGoal(String id) {
-    goals.removeWhere((x) => x.id == id);
-    tasks.removeWhere((t) => t.goalId == id);
+    final remainingGoalIds = goals
+        .where((goal) => goal.id != id)
+        .map((goal) => goal.id)
+        .toSet();
+    goals.removeWhere((goal) => goal.id == id);
+
+    tasks.removeWhere((task) {
+      if (task.goalId != id) return false;
+
+      final otherGoalIds = task.goalIds
+          .where(
+            (linkedId) =>
+                linkedId != id && remainingGoalIds.contains(linkedId),
+          )
+          .toList();
+      if (otherGoalIds.isEmpty) return true;
+
+      // Keep multi-goal tasks and promote a remaining valid link to the
+      // legacy primary field so all existing readers still find the task.
+      task.goalId = otherGoalIds.first;
+      return false;
+    });
+
+    for (var i = 0; i < tasks.length; i++) {
+      final task = tasks[i];
+      if (!task.goalIds.contains(id)) continue;
+      tasks[i] = task.copyWith(
+        goalIds: task.goalIds.where((linkedId) => linkedId != id).toList(),
+      );
+    }
     save();
   }
 
@@ -934,6 +1124,23 @@ class MochiStore extends ChangeNotifier {
       ),
     );
     setRobotEmotion(RobotEmotion.happy);
+    save();
+  }
+
+  /// Adds multiple prebuilt tasks and persists once (used by AI plan apply).
+  void addTasksBatch(Iterable<TaskModel> additions) {
+    final newTasks = additions.toList();
+    if (newTasks.isEmpty) return;
+
+    final ids = tasks.map((task) => task.id).toSet();
+    for (final task in newTasks) {
+      if (!ids.add(task.id)) {
+        throw ArgumentError('ID nhiệm vụ bị trùng: ${task.id}');
+      }
+    }
+
+    tasks.addAll(newTasks);
+    robotEmotion = RobotEmotion.happy;
     save();
   }
 
