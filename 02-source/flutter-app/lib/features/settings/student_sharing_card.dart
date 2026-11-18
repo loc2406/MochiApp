@@ -6,7 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/database/mochi_store.dart';
+import '../../core/models/student_share_sections.dart';
 import '../../design/mochi_design.dart';
+import 'student_sharing_permissions_screen.dart';
 
 class StudentSharingCard extends StatefulWidget {
   const StudentSharingCard({super.key});
@@ -77,11 +79,12 @@ class _StudentSharingCardState extends State<StudentSharingCard> {
       if (mounted) setState(() => _code = code);
       await _loadViewers();
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(
           () => _error =
               'Không tạo được mã. Hãy đăng nhập tài khoản học tập và thử lại.',
         );
+      }
     }
     if (mounted) setState(() => _busy = false);
   }
@@ -103,6 +106,24 @@ class _StudentSharingCardState extends State<StudentSharingCard> {
     } catch (_) {
       if (mounted) setState(() => _error = 'Chưa thu hồi được quyền xem.');
     }
+  }
+
+  Future<void> _openPermissions(Map<String, dynamic> viewer) async {
+    final changed = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => StudentSharingPermissionsScreen(
+          viewerId: viewer['id'].toString(),
+          email: '${viewer['email']}',
+          role: '${viewer['role']}',
+          initialSections: StudentShareSections.parse(viewer['sections'])
+              .toList(growable: false),
+          lastViewedAt: DateTime.tryParse(
+            viewer['lastViewedAt']?.toString() ?? '',
+          )?.toLocal(),
+        ),
+      ),
+    );
+    if (changed == true) await _loadViewers();
   }
 
   @override
@@ -130,7 +151,7 @@ class _StudentSharingCardState extends State<StudentSharingCard> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Tạo mã một lần cho phụ huynh hoặc giáo viên. Mã có hiệu lực trong 5 phút; hết hạn thì tạo mã mới. Người xem chỉ thấy tổng quan học tập và bạn có thể thu hồi quyền bất cứ lúc nào.',
+            'Tạo mã một lần cho phụ huynh hoặc giáo viên. Mã có hiệu lực trong 5 phút; hết hạn thì tạo mã mới. Nhấn vào một người xem để chọn đúng những thông tin họ được xem, và bạn có thể thu hồi quyền bất cứ lúc nào.',
             style: Theme.of(context).textTheme.bodySmall
                 ?.copyWith(color: palette.muted),
           ),
@@ -247,21 +268,24 @@ class _StudentSharingCardState extends State<StudentSharingCard> {
                 final lastViewedAt = DateTime.tryParse(
                   viewer['lastViewedAt']?.toString() ?? '',
                 )?.toLocal();
+                final sections = StudentShareSections.parse(viewer['sections']);
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
+                  onTap: () => _openPermissions(viewer),
                   leading: Icon(
                     viewer['role'] == 'teacher'
                         ? Icons.school_outlined
                         : Icons.family_restroom_rounded,
                     color: palette.action,
                   ),
-                  title: Text('${viewer['email']}'),
+                  title: Text('${viewer['email']}', maxLines: 1, overflow: TextOverflow.ellipsis),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        viewer['role'] == 'teacher' ? 'Giáo viên' : 'Phụ huynh',
+                        '${viewer['role'] == 'teacher' ? 'Giáo viên' : 'Phụ huynh'}'
+                        '• Được xem ${sections.length}/${StudentShareSections.all.length} mục',
                       ),
                       Text(
                         lastViewedAt == null
