@@ -167,7 +167,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Expanded(
                     child: MochiButton(
                       label: _currentStep == 2
-                          ? 'Bắt đầu hành trình cùng Mochi'
+                          ? 'Bắt đầu'
                           : 'Tiếp tục',
                       icon: _currentStep == 2
                           ? Icons.rocket_launch_rounded
