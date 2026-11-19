@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -13,11 +15,32 @@ class CloudSyncService {
   static const String embeddedPublishableKey =
       'sb_publishable_gPGHiTBvds62XsjFxJZjYg_v03Cu45B';
 
+  /// Custom scheme that the confirmation email redirects back to.
+  ///
+  /// It must match the intent-filter in `AndroidManifest.xml` and the
+  /// "Redirect URLs" allow-list in the Supabase dashboard. Without both, the
+  /// email link falls back to the project Site URL (historically localhost).
+  static const String authCallbackScheme = 'mochiapp';
+  static const String authCallbackHost = 'auth-callback';
+
+  /// Where Supabase should send the learner after they confirm their email.
+  ///
+  /// Web builds return to the page that is currently open; Android builds use
+  /// the custom scheme handled by the app.
+  static String get emailRedirectTo =>
+      kIsWeb ? Uri.base.origin : '$authCallbackScheme://$authCallbackHost';
+
   bool isInitialized = false;
   String? currentUserId;
   String supabaseUrl = embeddedUrl;
   String supabaseAnonKey = embeddedPublishableKey;
   bool isConnected = false;
+
+  /// Nullable user id that changes whenever Supabase restores, confirms or
+  /// clears a session. [MochiStore] listens so a link opened from the mailbox
+  /// also triggers the first cloud sync, even on a cold start.
+  final ValueNotifier<String?> activeUserId = ValueNotifier<String?>(null);
+  StreamSubscription<AuthState>? _authSubscription;
 
   Future<bool> initialize({String? url, String? anonKey}) async {
     if (isInitialized) return true;
@@ -36,7 +59,17 @@ class CloudSyncService {
 
       isInitialized = true;
       isConnected = true;
-      currentUserId = Supabase.instance.client.auth.currentUser?.id;
+      final auth = Supabase.instance.client.auth;
+      currentUserId = auth.currentUser?.id;
+      activeUserId.value = currentUserId;
+      // Supabase Flutter already exchanges the confirmation link for a session;
+      // this listener keeps the cached id and the rest of the app in sync.
+      _authSubscription?.cancel();
+      _authSubscription = auth.onAuthStateChange.listen((state) {
+        final id = state.session?.user.id;
+        currentUserId = id;
+        if (activeUserId.value != id) activeUserId.value = id;
+      });
       return true;
     } catch (e) {
       debugPrint('Cloud sync init error: $e');
@@ -44,6 +77,12 @@ class CloudSyncService {
       isConnected = false;
       return false;
     }
+  }
+
+  void dispose() {
+    _authSubscription?.cancel();
+    _authSubscription = null;
+    activeUserId.dispose();
   }
 
   bool get hasActiveUser =>
@@ -56,12 +95,14 @@ class CloudSyncService {
   Future<String?> signUp({
     required String email,
     required String password,
+    String? redirectTo,
   }) async {
     if (!isInitialized) await initialize();
     try {
       final res = await Supabase.instance.client.auth.signUp(
         email: email.trim(),
         password: password,
+        emailRedirectTo: redirectTo ?? emailRedirectTo,
       );
       currentUserId = res.user?.id;
       return null; // success
@@ -69,6 +110,23 @@ class CloudSyncService {
       return e.message;
     } catch (e) {
       return 'Đăng ký không thành công: $e';
+    }
+  }
+
+  /// Re-sends the confirmation email with the same app redirect target.
+  Future<String?> resendConfirmation({required String email}) async {
+    if (!isInitialized) await initialize();
+    try {
+      await Supabase.instance.client.auth.resend(
+        email: email.trim(),
+        type: OtpType.signup,
+        emailRedirectTo: emailRedirectTo,
+      );
+      return null;
+    } on AuthException catch (e) {
+      return e.message;
+    } catch (e) {
+      return 'Chưa gửi lại được email xác nhận: $e';
     }
   }
 

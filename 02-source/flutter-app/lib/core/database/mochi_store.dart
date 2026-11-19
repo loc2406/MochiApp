@@ -27,8 +27,20 @@ class MochiStore extends ChangeNotifier {
   final AIService aiService;
   MochiStore({AIService? aiService, CloudSyncService? cloudService})
     : aiService = aiService ?? AIService(),
-      cloudService = cloudService ?? CloudSyncService();
+      cloudService = cloudService ?? CloudSyncService() {
+    this.cloudService.activeUserId.addListener(_onActiveUserChanged);
+  }
   final CloudSyncService cloudService;
+
+  /// Runs when a confirmation link or a restored session produces a user id.
+  ///
+  /// This is what makes "tap the email link" finish the job on a cold start:
+  /// Supabase signs the learner in, then the local store pulls cloud data.
+  void _onActiveUserChanged() {
+    if (!isLoaded || cloudService.currentUserId == null) return;
+    unawaited(refreshCloudAuth());
+  }
+
   Map<String, dynamic>? _baseState;
   String _cacheKey(String? owner) =>
       owner == null ? prefKey : 'mochi_account_cache_$owner';
@@ -41,6 +53,7 @@ class MochiStore extends ChangeNotifier {
   int _localGeneration = 0;
   @override
   void dispose() {
+    cloudService.activeUserId.removeListener(_onActiveUserChanged);
     _cloudPoll?.cancel();
     super.dispose();
   }
@@ -598,8 +611,7 @@ class MochiStore extends ChangeNotifier {
     if (specialDates.isNotEmpty) {
       final candidateDates = specialDates.toSet();
       return candidateDates.any(
-        (day) =>
-            !day.isBefore(today) && a.occursOn(day) && b.occursOn(day),
+        (day) => !day.isBefore(today) && a.occursOn(day) && b.occursOn(day),
       );
     }
 
@@ -619,7 +631,11 @@ class MochiStore extends ChangeNotifier {
     }
     if (end.isBefore(start)) return false;
 
-    for (var day = start; !day.isAfter(end); day = day.add(const Duration(days: 1))) {
+    for (
+      var day = start;
+      !day.isAfter(end);
+      day = day.add(const Duration(days: 1))
+    ) {
       if (a.occursOn(day) && b.occursOn(day)) return true;
     }
     return false;
@@ -1069,8 +1085,7 @@ class MochiStore extends ChangeNotifier {
 
       final otherGoalIds = task.goalIds
           .where(
-            (linkedId) =>
-                linkedId != id && remainingGoalIds.contains(linkedId),
+            (linkedId) => linkedId != id && remainingGoalIds.contains(linkedId),
           )
           .toList();
       if (otherGoalIds.isEmpty) return true;
@@ -1727,5 +1742,4 @@ class MochiStore extends ChangeNotifier {
       return false;
     }
   }
-
 }

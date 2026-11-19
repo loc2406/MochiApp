@@ -692,8 +692,12 @@ Các khối theo thứ tự:
 
 **Đăng nhập học sinh**
 - Chế độ **Đăng nhập** / **Đăng ký**: email + mật khẩu (tối thiểu 6 ký tự).
-- Đăng ký xong có thể yêu cầu xác nhận email; app báo "Kiểm tra email để xác nhận tài khoản, sau đó đăng nhập để đồng bộ."
+- Khi bật "Confirm email", sau khi đăng ký app hiện: "Đã gửi email xác nhận tới … Mở email trên chính điện thoại này và chạm vào liên kết để kích hoạt tài khoản." kèm nút **Gửi lại email xác nhận**.
+- Liên kết trong email trỏ về `mochiapp://auth-callback` (không còn `localhost`/`127.0.0.1`); trên web dùng `Uri.base.origin`. Android đã có intent-filter nhận scheme này nên chạm link sẽ mở app.
+- `supabase_flutter` tự đổi `code` trong link thành phiên đăng nhập; app lắng nghe `onAuthStateChange`, tự đóng màn đăng nhập và chạy đồng bộ cloud đầu tiên (kể cả khi app được mở nguội từ link).
 - Đăng nhập thành công → bật đồng bộ cloud, theme tối/sáng theo hồ sơ.
+- ⚠️ Cần cấu hình Supabase Dashboard: **Site URL** không được là localhost và **Redirect URLs** phải chứa `mochiapp://auth-callback`; nếu thiếu, Supabase bỏ qua `emailRedirectTo` và quay về Site URL. Xem `02-source/flutter-app/docs/AUTH_EMAIL_VERIFICATION.md`.
+- PKCE (mặc định của `supabase_flutter`) lưu code verifier trên máy, nên link phải được mở trên **cùng thiết bị** đã đăng ký.
 
 **Chế độ người xem (phụ huynh/giáo viên)**
 - Nhập email đã được cấp quyền + **mã mời dùng một lần**.
@@ -716,6 +720,7 @@ Các khối theo thứ tự:
 
 #### Lỗi đã biết
 
+- ~~Link xác minh email trỏ về `localhost`/`127.0.0.1` nên Android không mở được~~ — đã sửa bằng custom scheme `mochiapp://auth-callback` + intent-filter + `emailRedirectTo`; vẫn cần bật đúng Redirect URL trong Supabase Dashboard.
 - Không có đăng nhập Google/OTP email; chỉ email + mật khẩu, nên người dùng phải nhớ mật khẩu.
 - Quên mật khẩu chưa thấy luồng khôi phục trong UI.
 - Mã mời 5 phút khá ngắn nếu phụ huynh nhận qua tin nhắn chậm.
@@ -726,9 +731,9 @@ Các khối theo thứ tự:
 
 | Trạng thái | Hiển thị |
 |---|---|
-| **Có dữ liệu** | Thông tin hồ sơ + 4 khối dữ liệu; danh sách người xem kèm lần xem cuối; danh sách quyền có công tắc |
-| **Không có dữ liệu** | Mục tiêu: **"Chưa có mục tiêu được chia sẻ."** · Môn học: **"Chưa có môn học được chia sẻ."** · Tiến độ: **"Chưa có tiến độ chủ đề được chia sẻ."** · Hoạt động: **"Chưa có hoạt động học nào được chia sẻ."** · Không chia sẻ gì: **"Học sinh chưa chia sẻ thông tin nào"** + **"Tải lại"** · Người xem: **"Chưa có người xem nào. Danh sách sẽ cập nhật sau khi mã được sử dụng."** |
-| **Gặp lỗi** | Đăng nhập: dòng lỗi đỏ ngay trên form (các câu ở trên). Người xem: **"Quyền xem đã bị thu hồi hoặc chưa thể tải dữ liệu."** + **"Quay lại"**/**"Tải lại"**. Chia sẻ: **"Chưa thu hồi được quyền xem."**, **"Chưa lưu được thay đổi. Kiểm tra kết nối và thử lại."** |
+| **Có dữ liệu** | Thông tin hồ sơ + 4 khối dữ liệu; danh sách người xem kèm lần xem cuối; danh sách quyền có công tắc. Đăng nhập: banner xanh "Đã gửi lại email xác nhận tới …" sau khi gửi lại |
+| **Không có dữ liệu** | Mục tiêu: **"Chưa có mục tiêu được chia sẻ."** · Môn học: **"Chưa có môn học được chia sẻ."** · Tiến độ: **"Chưa có tiến độ chủ đề được chia sẻ."** · Hoạt động: **"Chưa có hoạt động học nào được chia sẻ."** · Không chia sẻ gì: **"Học sinh chưa chia sẻ thông tin nào"** + **"Tải lại"** · Người xem: **"Chưa có người xem nào. Danh sách sẽ cập nhật sau khi mã được sử dụng."** · Đăng nhập: form trống, chưa có banner |
+| **Gặp lỗi** | Đăng nhập: dòng lỗi đỏ ngay trên form (các câu ở trên). Chưa xác nhận email → banner vàng "Email chưa được xác nhận…" + nút **Gửi lại email xác nhận**. Người xem: **"Quyền xem đã bị thu hồi hoặc chưa thể tải dữ liệu."** + **"Quay lại"**/**"Tải lại"**. Chia sẻ: **"Chưa thu hồi được quyền xem."**, **"Chưa lưu được thay đổi. Kiểm tra kết nối và thử lại."** |
 
 ---
 
@@ -778,6 +783,8 @@ Bảng tra nhanh: mỗi màn có trạng thái rỗng/lỗi riêng hay không.
 | P2-2 | Code legacy chết (`scheduleTaskReminder`, `reconcileTasks`, `taskNotificationId`, `showDailyReminder`) | Đã xoá; giữ `cancelLegacyTaskReminders()` để dọn alarm cũ |
 | P2-3 | Chạm reminder không mở đúng nơi | Mở tab Kế hoạch, hỗ trợ cả cold start |
 
+**Ngoài đợt P0/P1/P2 — sửa link xác minh email:** `signUp`/`resend` giờ gửi `emailRedirectTo` (`mochiapp://auth-callback` trên Android, `Uri.base.origin` trên web), `AndroidManifest.xml` có intent-filter nhận scheme, và app lắng nghe `onAuthStateChange` để tự đóng màn đăng nhập, chạy đồng bộ đầu tiên. Chi tiết + cách cấu hình Supabase: `02-source/flutter-app/docs/AUTH_EMAIL_VERIFICATION.md`.
+
 ### 6.2 Lỗi còn mở (theo mức ưu tiên)
 
 | # | Mức | Lỗi | Vị trí | Ảnh hưởng |
@@ -796,6 +803,7 @@ Bảng tra nhanh: mỗi màn có trạng thái rỗng/lỗi riêng hay không.
 ### 6.3 Trạng thái test & build
 
 - `flutter test test/notification_service_test.dart test/smart_reminder_test.dart test/reminder_alarm_prompt_test.dart` → **46/46 pass**.
+- `flutter test test/auth_redirect_test.dart test/notification_service_test.dart test/smart_reminder_test.dart` → **45/45 pass** (kiểm tra scheme `mochiapp://auth-callback` và intent-filter trong manifest).
 - `flutter analyze` toàn project: **0 error**, còn ~118 warning/info có sẵn.
 - Các suite fail có sẵn, **không liên quan thay đổi P0–P2**:
   - `global_pastel_test.dart` — overflow 320px/theme.

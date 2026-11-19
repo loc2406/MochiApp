@@ -109,65 +109,79 @@ class _ProfileCalendarScreenState extends State<ProfileCalendarScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                store.profile.name.isNotEmpty
-                                    ? store.profile.name
-                                    : 'Người học Mochi',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: palette.ink,
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isCompact = constraints.maxWidth < 340;
+
+                          final profileInfo = Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  store.profile.name.isNotEmpty
+                                      ? store.profile.name
+                                      : 'Người học Mochi',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                    color: palette.ink,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${store.profile.gradeBand} · Đồng hành: ${store.profile.robotName}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: palette.muted,
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${store.profile.gradeBand} · Đồng hành: ${store.profile.robotName}',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: palette.muted,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                              ],
+                            ),
+                          );
+
+                          final actionButtons = MochiIconButton(
+                            icon: Icons.settings_outlined,
+                            tooltip: 'Cài đặt',
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => SettingsScreen(),
+                                ),
+                              );
+                            },
+                          );
+
+                          if (isCompact) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    profileInfo,
+                                    const SizedBox(width: 8),
+                                    actionButtons,
+                                  ],
+                                ),
+                              ],
+                            );
+                          }
+
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              MochiIconButton(
-                                icon: Icons.storefront_outlined,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (ctx) => RobotShopScreen(),
-                                    ),
-                                  );
-                                },
-                                tooltip: 'Cửa hàng robot',
-                              ),
-                              const SizedBox(width: 8),
-                              MochiIconButton(
-                                icon: Icons.settings_outlined,
-                                tooltip: 'Cài đặt',
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (ctx) => SettingsScreen(),
-                                    ),
-                                  );
-                                },
-                              ),
+                              profileInfo,
+                              const SizedBox(width: 12),
+                              actionButtons,
                             ],
-                          ),
-                        ],
+                          );
+                        },
                       ),
+
                       const SizedBox(height: 6),
                       if (store.cloudService.hasActiveUser)
                         Row(
